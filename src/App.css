@@ -1,0 +1,515 @@
+.App {
+  text-align: center;
+}
+
+svg {
+  display: inline;
+}
+
+.logo {
+  width: 100px;
+  height: 40px;
+}
+
+.listimg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.sub {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.sub-mob {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn {
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  /* border: 1px solid black; */
+  border-top: 2px solid black;
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 26px 26px 26px 26px transparent;
+  z-index: 1;
+  margin-left: -15px;
+  margin-top: 10px;
+}
+
+.dropdown-content a {
+  color: #666769;
+  padding: 5px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f3ececcb;
+  color: rgb(185 28 28);
+}
+
+.dropdown:focus-within .dropdown-content {
+  display: block;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal-container {
+
+  position: fixed;
+  top: 0px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(0px);
+  overflow-y: auto;
+}
+
+.modal-content {
+
+  background-color: rgba(67, 67, 67, 0.6);
+  /* Adjust the transparency as needed */
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+
+.drop-container {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Styles for the modal content */
+.drop-content {
+
+  width: 95% !important;
+  margin: 0 auto;
+  /* Adjust this as needed */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  /* padding: 20px; */
+}
+
+
+
+
+
+.slider {
+  z-index: -10 !important;
+}
+
+.calender {
+  z-index: 10;
+}
+
+.offer-section,
+.buses-section,
+.extra-section {
+  border-top: 1px solid rgba(128, 128, 128, 0.715);
+}
+
+.bus-service-card {}
+
+.bus-service-card:hover {
+  /* box-shadow: 10px 10px 15px 13px transparent, 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 10px 15px -3px transparent; */
+  /* background: #000; */
+  border-radius: 5px;
+  background: #e6e6e65a;
+  /* box-shadow: rgba(219, 219, 219, 0.1) 0px 20px 25px -5px, rgba(192, 192, 192, 0.04) 0px 10px 10px -5px; */
+}
+
+.bus-service-logo {
+  width: 100px;
+}
+
+.extraimg {
+  border-radius: 100%;
+  background-blend-mode: lighten;
+  width: 130px;
+  height: 130px;
+}
+
+.links li::before {
+  content: "\2022";
+  color: #FD5056;
+  font-weight: bold;
+  display: inline-block;
+  width: 1rem;
+  margin-left: -1em;
+  font-size: 25px;
+}
+
+.faq li::before {
+  content: "\2022";
+  color: #FD5056;
+  font-weight: bold;
+  display: inline-block;
+  width: 1rem;
+  margin-left: -0.5rem;
+  font-size: 25px;
+}
+
+.faq li {
+  width: 100%;
+  word-wrap: break-word;
+}
+
+.bottom-icons-size {
+  font-size: 24px;
+}
+
+.bottom-text {
+  font-size: 11px;
+}
+
+@media screen and (max-width: 300px) {
+  .bottom-icons-size {
+    font-size: 20px;
+  }
+
+  .bottom-text {
+    font-size: 10px;
+  }
+
+  .smaller-screen {
+    display: block;
+  }
+
+  .smaller-screen img {
+    margin: 0 auto;
+    word-wrap: break-word;
+  }
+
+  .swiper-slide {
+    width: 80% !important;
+    margin-right: 10px !important;
+  }
+}
+
+.react-calendar.hide {
+  display: none;
+}
+
+.route-list-container {
+  position: absolute;
+  top: 40px;
+  left: 2px;
+  background-color: white;
+  width: 25%;
+  /* Set the width as per your requirement */
+  max-height: 150px;
+  /* Set the maximum height of the list container */
+  overflow-y: auto;
+  /* Add scrollbar when the list overflows */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* Style for each list item */
+.route-list-item {
+  cursor: pointer;
+  padding: 8px;
+
+  &:hover {
+    background-color: #f87171;
+    color: white;
+  }
+}
+
+.shadowseat {
+  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px,
+    rgba(255, 255, 255, 0.5) -3px -3px 6px 1px;
+}
+
+.shadowseatreverse {
+  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
+    rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+}
+
+.list {
+  z-index: 10 !important;
+}
+
+#wrapper {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #1c84c6;
+}
+
+.wrapper {
+  padding: 0 20px;
+}
+
+.wrapper-content {
+  padding: 20px 10px 40px;
+}
+
+#page-wrapper {
+  padding: 0 15px;
+  min-height: 568px;
+  position: relative !important;
+}
+
+@media (min-width: 768px) {
+  #page-wrapper {
+    position: inherit;
+    margin: 0 0 0 240px;
+    min-height: 2002px;
+  }
+}
+
+/* Payments */
+.payment-card {
+  background: #ffffff;
+  padding: 20px;
+  margin-bottom: 25px;
+  border: 1px solid #e7eaec;
+}
+
+.payment-icon-big {
+  font-size: 60px;
+  color: #d1dade;
+}
+
+.payments-method.panel-group .panel+.panel {
+  margin-top: -1px;
+}
+
+.payments-method .panel-heading {
+  padding: 15px;
+}
+
+.payments-method .panel {
+  border-radius: 0;
+}
+
+.payments-method .panel-heading h5 {
+  margin-bottom: 5px;
+}
+
+.payments-method .panel-heading i {
+  font-size: 26px;
+}
+
+.payment-icon-big {
+  font-size: 60px !important;
+  color: #d1dade;
+}
+
+.form-control,
+.single-line {
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #e5e6e7;
+  border-radius: 1px;
+  color: inherit;
+  display: block;
+  padding: 6px 12px;
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+  width: 100%;
+  font-size: 14px;
+}
+
+.text-navy {
+  color: #1ab394;
+}
+
+.text-success {
+  color: #1c84c6;
+}
+
+.text-warning {
+  color: #f8ac59;
+}
+
+.ibox {
+  clear: both;
+  margin-bottom: 25px;
+  margin-top: 0;
+  padding: 0;
+}
+
+.ibox.collapsed .ibox-content {
+  display: none;
+}
+
+.ibox.collapsed .fa.fa-chevron-up:before {
+  content: "\f078";
+}
+
+.ibox.collapsed .fa.fa-chevron-down:before {
+  content: "\f077";
+}
+
+.ibox:after,
+.ibox:before {
+  display: table;
+}
+
+.ibox-title {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background-color: #ffffff;
+  border-color: #e7eaec;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 3px 0 0;
+  color: inherit;
+  margin-bottom: 0;
+  padding: 14px 15px 7px;
+  min-height: 48px;
+}
+
+.ibox-content {
+  background-color: #ffffff;
+  color: inherit;
+  padding: 15px 20px 20px 20px;
+  border-color: #e7eaec;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 1px 0;
+}
+
+.ibox-footer {
+  color: inherit;
+  border-top: 1px solid #e7eaec;
+  font-size: 90%;
+  background: #ffffff;
+  padding: 10px 15px;
+}
+
+.text-danger {
+  color: #ed5565;
+}
+
+.swiper-pagination-bullet-active-main {
+  background-color: #ed5565 !important;
+}
+
+.ReactCollapse--collapse {
+  transition: height 500ms;
+}
+
+.walletbtn {
+  transition: background-color 0.5s ease-in-out, border-bottom 0.1s ease-in-out;
+}
+
+.childscroll::-webkit-scrollbar {
+  width: 0;
+  /* Remove scrollbar space */
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+/* Optional: show position indicator in red */
+.childscroll::-webkit-scrollbar-thumb {
+  background: #FD5056
+  ;
+}
+
+
+
+.material-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #777777;
+  cursor: pointer;
+}
+
+.material-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  position: relative;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 12px;
+  border: 2px solid gray;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.material-checkbox input[type="checkbox"]:checked~.checkmark {
+  background-color: #FD5056;
+  border-color: #FD5056;
+}
+
+.material-checkbox input[type="checkbox"]:checked~.checkmark:after {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 3px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.material-checkbox input[type="checkbox"]:focus~.checkmark {
+  /* box-shadow: 0 0 0 2px #dfec5065; */
+}
+
+.material-checkbox:hover input[type="checkbox"]~.checkmark {
+  border-color: #FD5056;
+}
+
+.material-checkbox input[type="checkbox"]:disabled~.checkmark {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.material-checkbox input[type="checkbox"]:disabled~.checkmark:hover {
+  border-color: #931212;
+}

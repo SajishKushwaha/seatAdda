@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html {
+  --scrollbarBG: #c9cacb9c;
+  --thumbBG: #FD5056;
+
+}
+
+body::-webkit-scrollbar {
+  width: 6px;
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+  border: 1px solid var(--scrollbarBG);
+}
+
+.custom-scroll-container {
+  overflow: hidden;
+  position: relative;
+  max-height: 250px;
+  /* Set the desired maximum height */
+}
+
+.custom-scrollbar {
+
+  position: relative;
+  margin-right: -12px;
+  /* Offset the scrollbar width */
+  list-style: none;
+  /* Remove the list-style to avoid alignment issues */
+  overflow-y: auto;
+}
+
+.custom-scrollbar1 {
+
+  position: relative;
+
+  list-style: none;
+  /* Remove the list-style to avoid alignment issues */
+  overflow-y: auto;
+}
+
+.custom-scrollbar::-webkit-scrollbar,
+.custom-scrollbar1::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track,
+.custom-scrollbar1::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+  border-radius: 6px;
+
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb,
+.custom-scrollbar1::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+  /* Match the border-radius of the container div */
+}
+
+.react-calendar__tile--now {
+  background: #fd5056c7 !important;
+}
