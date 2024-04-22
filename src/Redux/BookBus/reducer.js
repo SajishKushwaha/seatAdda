@@ -11,6 +11,7 @@ const initState = {
   isError: false,
   matchedBuses: [],
   selectedSeats: [],
+  selectedTypes:[],
   totalFare: 0,
   From: "",
   To: "",
@@ -20,6 +21,8 @@ const initState = {
   passengerDetails: [],
   email: "",
   phoneNumber: "",
+  busData:[],
+  routeDetails:[]
 };
 export const busDetailsReducer = (state = initState, { type, payload }) => {
   switch (type) {
@@ -53,6 +56,12 @@ export const busDetailsReducer = (state = initState, { type, payload }) => {
         date: payload.date,
         dropPoint: payload.dropPoint,
         boardPoint: payload.boardPoint,
+        busData:payload.busData,
+        routeDetails:payload.routeDetails,
+        selectedTypes:payload.selectedTypes,
+        passengerDetails:payload.passengerDetails,
+        phoneNumber:payload.phoneNumber,
+        email:payload.email
       };
     case GET_BUS_DETAILS_FAIL:
       return {

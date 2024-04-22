@@ -450,6 +450,7 @@ const Right = ({ setIsModalOpen, isCal }) => {
       )}
       <div className="p-2 sm:p-4 sm:px-2 mb-20 sm:mb-0">
         {filteredMatchedBuses.map((bus, index) => {
+          // console.log(bus);
           return (
             <BusBox
               {...bus}

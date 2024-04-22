@@ -2,8 +2,9 @@ import React from "react";
 import { BiSolidUserAccount } from "react-icons/bi";
 import { MdAccountCircle, MdFamilyRestroom, MdPhone } from "react-icons/md";
 import { useSelector } from "react-redux";
+
 import './index.css';
-const PassengerDetails = () => {
+const PassengerDetails = ({storePassenger}) => {
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
@@ -18,6 +19,7 @@ const PassengerDetails = () => {
   const [passDetails, setPassDetails] = React.useState(passengerArray);
   const [passEmail, setPassEmail] = React.useState("");
   const [passPhNo, setPassPhNo] = React.useState("");
+  
   const handlePassName = (e, indexNo) => {
     const newArr = [...passDetails];
     newArr[indexNo]["name"] = e.target.value;
@@ -35,6 +37,11 @@ const PassengerDetails = () => {
     newArr[indexNo]["gender"] = e.target.value;
     setPassDetails(newArr);
   };
+  
+  const Passenger=()=>{
+    storePassenger(passDetails,passEmail,passPhNo);
+  }
+ 
 
   return (
     <div className="shadow-md rounded-md border-[1px] border-primarycolors-black p-2 sm:p-5">
@@ -177,7 +184,7 @@ const PassengerDetails = () => {
         <p className="text-sm sm:text-base">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, cum.
         </p>
-        <div className="flex text-sm items-center my-2 py-2">
+        <div className="flex text-sm items-center my-2 py-2 " >
           {" "}
           <input
             type="checkbox"
@@ -185,6 +192,7 @@ const PassengerDetails = () => {
             id="insurancebox"
             name="insurancebox"
             value="true"
+            onClick={Passenger}
           />
           <label className="" for="insurancebox">
             Yes and I accept the terms and conditions

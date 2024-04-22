@@ -16,6 +16,7 @@ const Bookings = () => {
   const { pathname } = location;
   //Javascript split method to get the name of the path in array
   const path = pathname.split("/");
+  // console.log(path)
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
   const [isModalOpen, setIsModalOpen] = useState(!isLoggedIn); // Open modal initially if not logged in

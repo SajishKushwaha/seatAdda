@@ -78,3 +78,20 @@
   .email_input{
     border-color: orange;
   }
+  .button {
+    /* Normal state styles */
+    background-color: #ccc;
+    color: #000;
+  }
+  
+  .button.hover {
+    /* Hover state styles */
+    background-color: #999;
+  }
+  
+  .button.active {
+    /* Active state styles */
+    background-color: #666;
+    color: #fff;
+  }
+  

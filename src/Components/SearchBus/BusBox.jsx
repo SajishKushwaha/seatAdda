@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { BiUser, BiXCircle } from "react-icons/bi";
-
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
+import parse from "html-react-parser";
 import BottomTabs from "./BottomTabs";
 import { MdOutlinePeopleOutline, MdStar } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 import ViewSeat from "./ViewSeat";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import RouteTable from "./RouteTable";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 const BusBox = ({
+  bus_schedule_id,
   uniqueId,
   service_name,
   travels_name,
@@ -51,6 +54,10 @@ const BusBox = ({
   const [showViewSeat, setshowViewSeat] = useState(false);
 
   const busData = {
+    bus_schedule_id: bus_schedule_id,
+    travels_name: travels_name,
+    service_name: service_name,
+    reg_no: reg_no,
     totalSeats: totalSeats,
     filledSeats: booked_seat,
     seatPrice: fare,
@@ -59,7 +66,6 @@ const BusBox = ({
     busId: uniqueId,
     busArrivalTime: arrivalTime,
     busDepartureTime: departureTime,
-    operatorName: service_name,
     departure: departure,
     arrival: arrival,
     seat_json: seat_json,
@@ -68,6 +74,8 @@ const BusBox = ({
     // Add other data properties as needed
   };
   const [showPopup, setShowPopup] = useState(false);
+  const [bookingpolicy, setBookingPolicy] = useState("");
+  // console.log(parse(jsonData.props));
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   // const [feedback, setFeedback] = useState("");
   const [showBoardingDropdown, setShowBoardingDropdown] = useState(false);
@@ -268,6 +276,26 @@ const BusBox = ({
 
   const totalTime = `${hours} hour ${minutes} minutes`;
   // console.log(totalTime);
+  const fetchData = async () => {
+    // Make the API call
+    const response = await fetch("https://seatadda.co.in/api/booking-policy");
+    // Check if the response is successful
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    // Parse the JSON response
+    const jsonData = await response.json();
+    // Update the state with the fetched data
+
+    setBookingPolicy(jsonData.date[0].content);
+    console.log(jsonData.date[0].content);
+  };
+
+  // Use useEffect to fetch data when the component mounts
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -405,10 +433,11 @@ const BusBox = ({
                       {via_route.length > 0 && (
                         <>
                           {sourceDate != null && (
-                            <p className="  text-[12px]">{formatDate(sourceDate)}</p>
+                            <p className="  text-[12px]">
+                              {formatDate(sourceDate)}
+                            </p>
                           )}
 
-                          
                           <p className=" font-bold">{sourceTime}</p>
                           <p className="text-[12px]">{departure}</p>
                         </>
@@ -428,16 +457,16 @@ const BusBox = ({
                     </div>
                     <div className=" w-[150px] text-right">
                       {via_route.length > 0 && (
-                        <>
+                        <p>
                           {destinationDate != null && (
                             <p className="  text-[12px]">
                               {formatDate(destinationDate)}
                             </p>
                           )}
-                         
+
                           <p className=" font-bold">{destinationTime}</p>
                           <p className="text-[12px]">{arrival}</p>
-                        </>
+                        </p>
                       )}
                     </div>
                   </div>
@@ -462,7 +491,7 @@ const BusBox = ({
               </div>
 
               <div className=" text-sm flex justify-start gap-3 p-1 items-center">
-                <button
+                {/* <button
                   className={` p-1 ${
                     showBoardingDropdown
                       ? "text-primarycolors-red"
@@ -477,11 +506,77 @@ const BusBox = ({
                   ) : (
                     <IoIosArrowDown />
                   )}{" "}
-                </button>
-
-                 <div className=" text-primarycolors-gray">|</div>
-                <button
-                  onClick={handleCancellationDropdownClick}
+                </button> */}
+                <Popup
+                  trigger={
+                    <button
+                      className={` p-1 ${
+                        showBoardingDropdown
+                          ? "text-primarycolors-red"
+                          : "hover:text-primarycolors-red"
+                      }`}
+                    >
+                      {" "}
+                      Boarding & Dropping Points{" "}
+                      {showBoardingDropdown ? (
+                        <IoIosArrowUp />
+                      ) : (
+                        <IoIosArrowDown />
+                      )}{" "}
+                    </button>
+                  }
+                  position="bottom center"
+                  on="hover"
+                  closeOnDocumentClick
+                  mouseLeaveDelay={300}
+                  mouseEnterDelay={0}
+                  contentStyle={{
+                    padding: "10px",
+                    border: "none",
+                    marginTop: "35px",
+                    width: "400px",
+                  }}
+                  arrow={false}
+                >
+                  <div className="">
+                    <div className="text-left text-sm grid grid-cols-2">
+                      <div className="border-r-[1px] border-primarycolors-gray">
+                        <div className=" border-b-[1px]  border-primarycolors-gray p-2 font-bold">
+                          Boarding Points
+                        </div>
+                        <div className="p-2 h-[100px] overflow-auto ">
+                          {via_route.map((route, index) => (
+                            <div key={index} className=" mb-2 ">
+                              <p>{route.boading_points}</p>
+                              <p className=" text-primarycolors-textcolor text-xs">
+                                {" "}
+                                {route.city}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="">
+                        <div className=" border-b-[1px]  border-primarycolors-gray p-2 font-bold">
+                          Dropping Points
+                        </div>
+                        <div className="p-2 h-[100px] overflow-auto ">
+                          {via_route.map((route, index) => (
+                            <div key={index} className=" mb-2 ">
+                              <p>{route.boading_points}</p>
+                              <p className=" text-primarycolors-textcolor text-xs">
+                                {" "}
+                                {route.city}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Popup>
+                <div className=" text-primarycolors-gray">|</div>
+                {/* <button
                   className={` p-1 ${
                     showCancellationDropdown
                       ? "text-primarycolors-red"
@@ -494,9 +589,48 @@ const BusBox = ({
                   ) : (
                     <IoIosArrowDown />
                   )}
-                </button>
+                </button> */}
+                <Popup
+                  trigger={
+                    <button
+                      className={` p-1 ${
+                        showCancellationDropdown
+                          ? "text-primarycolors-red"
+                          : "hover:text-primarycolors-red"
+                      }`}
+                    >
+                      Cancelation Policy{" "}
+                      {showCancellationDropdown ? (
+                        <IoIosArrowUp />
+                      ) : (
+                        <IoIosArrowDown />
+                      )}
+                    </button>
+                  }
+                  position="bottom center"
+                  on="hover"
+                  closeOnDocumentClick
+                  mouseLeaveDelay={300}
+                  mouseEnterDelay={0}
+                  contentStyle={{
+                    padding: "10px",
+                    border: "none",
+                    marginTop: "35px",
+                    width: "400px",
+                  }}
+                  arrow={false}
+                >
+                  <div>
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    Reiciendis veniam ea quaerat atque modi, consectetur
+                    mollitia saepe explicabo eos tempore corrupti accusamus, et
+                    eligendi. Dicta, harum est! Possimus quasi doloremque
+                    officiis. Ea molestias dolore animi. Possimus, iure itaque
+                    ipsum expedita et porro voluptas error rem.
+                  </div>
+                </Popup>
                 <div className=" text-primarycolors-gray">|</div>
-                <button
+                {/* <button
                   onClick={handleTravelPolicyDropdownClick}
                   className={` p-1 ${
                     showTravelPolicyDropdown
@@ -504,14 +638,46 @@ const BusBox = ({
                       : "hover:text-primarycolors-red"
                   }`}
                 >
-                  {" "}
-                  Travel Policy{" "}
+                Booking Policy
                   {showTravelPolicyDropdown ? (
                     <IoIosArrowUp />
                   ) : (
                     <IoIosArrowDown />
                   )}
-                </button>
+                </button> */}
+                <Popup
+                  trigger={
+                    <button
+                      className={`p-1 ${
+                        showTravelPolicyDropdown
+                          ? "text-primarycolors-red"
+                          : "hover:text-primarycolors-red"
+                      }`}
+                    >
+                      Booking Policy
+                      {showTravelPolicyDropdown ? (
+                        <IoIosArrowUp />
+                      ) : (
+                        <IoIosArrowDown />
+                      )}
+                    </button>
+                  }
+                  position="bottom center"
+                  on="hover"
+                  closeOnDocumentClick
+                  mouseLeaveDelay={300}
+                  mouseEnterDelay={0}
+                  contentStyle={{
+                    padding: "10px",
+                    border: "none",
+                    marginTop: "35px",
+                  }}
+                  arrow={false}
+                >
+                  {typeof bookingpolicy === "string"
+                    ? parse(bookingpolicy)
+                    : null}
+                </Popup>
               </div>
             </div>
             <div className=" border-l-[0.5px] border-primarycolors-gray p-4 flex w-[200px] justify-end items-center ">
@@ -527,25 +693,36 @@ const BusBox = ({
                 >
                   Show Route
                 </button>
-
-
-                
-          {seat_json && <button
-            type="submit"
-            onClick={handleViewSeat}
-            className="py-1  px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-lg  rounded-md "
-          >
-            {!showViewSeat ? "View Seat" : "Hide seat"}
-          </button>}
+                {seat_json && (
+                  <button
+                    type="submit"
+                    onClick={handleViewSeat}
+                    className="py-1  px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-lg  rounded-md "
+                  >
+                    {!showViewSeat ? "View Seat" : "Hide seat"}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
-     
-        {showViewSeat && <ViewSeat seat_json={seat_json} routeDetails={via_route} booked_seat={booked_seat} seatPrice={fare} departure={departure} arrival={arrival} date={date} setIsModalOpen={setIsModalOpen}  />}
-        
-        {showBoardingDropdown && (
-          /* Add your dropdown content here for Boarding & Dropping Points */
+
+        {showViewSeat && (
+          <ViewSeat
+            busData={busData}
+            seat_json={seat_json}
+            routeDetails={via_route}
+            booked_seat={booked_seat}
+            seatPrice={fare}
+            departure={departure}
+            arrival={arrival}
+            date={date}
+            setIsModalOpen={setIsModalOpen}
+          />
+        )}
+
+        {/* {showBoardingDropdown && (
+         
           <div className=" absolute bg-primarycolors-white w-1/3 rounded-md shadow-xl mt-1 border-primarycolors-gray border-[1px]">
             <div className="text-left text-sm grid grid-cols-2">
               <div className="border-r-[1px] border-primarycolors-gray">
@@ -582,9 +759,9 @@ const BusBox = ({
               </div>
             </div>
           </div>
-        )}
-        {showCancellationDropdown && (
-          /* Add your dropdown content here for Boarding & Dropping Points */
+        )} */}
+        {/* {showCancellationDropdown && (
+          
           <div className=" absolute right-[200px] bg-primarycolors-white w-1/3 rounded-md shadow-xl mt-1 border-primarycolors-gray border-[1px]">
             <div>
               Lorem ipsum, dolor sit amet consectetur adipisicing elit.
@@ -595,20 +772,15 @@ const BusBox = ({
               voluptas error rem.
             </div>
           </div>
-        )}
-        {showTravelPolicyDropdown && (
-          /* Add your dropdown content here for Boarding & Dropping Points */
-          <div className=" absolute right-[50px] bg-primarycolors-white w-1/3 rounded-md shadow-xl mt-1 border-primarycolors-gray border-[1px]">
-            <div>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              Reiciendis veniam ea quaerat atque modi, consectetur mollitia
-              saepe explicabo eos tempore corrupti accusamus, et eligendi.
-              Dicta, harum est! Possimus quasi doloremque officiis. Ea molestias
-              dolore animi. Possimus, iure itaque ipsum expedita et porro
-              voluptas error rem.
+        )} */}
+        {/* {showTravelPolicyDropdown && (
+          
+          <div >
+            <div className=" absolute right-[60px] bg-primarycolors-white w-1/3 rounded-md shadow-xl mt-1 border-primarycolors-gray border-[1px]">
+           {parse(jsonData)}
             </div>
           </div>
-        )}
+        )} */}
         {showPopup && (
           <div className="modal-container">
             <div className="modal-content flex items-center   justify-center  w-full  overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 outline-none focus:outline-none">
