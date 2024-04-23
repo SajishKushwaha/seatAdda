@@ -34,7 +34,6 @@ const HeroSection = () => {
   const [showFromRoutes, setShowFromRoutes] = useState(false);
   const [showToRoutes, setShowToRoutes] = useState(false);
   const [filterRoutes, setfilterRoutes] = useState([]);
-
   const isSmallDevice = window.innerWidth <= 768;
 
   const filterBySearch = (event) => {
@@ -59,7 +58,14 @@ const HeroSection = () => {
     if (!fromLocation.trim() || !toLocation.trim()) {
       alert("Please provide both 'Leaving From' and 'Going to' locations.");
     } else {
-      const formattedDate = date.toISOString().split('T')[0];
+      // console.log(`date:${date}`);
+      // const formattedDate = date.toISOString().split("T")[0];
+      var year = date.getFullYear();
+      var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 because months are zero-based
+      var day = ("0" + date.getDate()).slice(-2);
+
+      // Format the date as "Y-m-d"
+      var formattedDate = year + "-" + month + "-" + day;
       navigate(
         `/select-bus?departure=${fromLocation}&arrival=${toLocation}&date=${formattedDate}`
       );
@@ -200,7 +206,6 @@ const HeroSection = () => {
                             <li
                               key={route.city}
                               className="cursor-pointer py-1 pl-5 hover:bg-primarycolors-red/50"
-
                               onClick={() => {
                                 setToLocation(route.city);
                                 setShowToRoutes(false);

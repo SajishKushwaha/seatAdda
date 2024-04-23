@@ -43,7 +43,6 @@ const Passenger = () => {
   const [passEmail, setPassEmail] = React.useState("");
   const [isdisable, setIsDisable] = React.useState("true");
   const [passPhNo, setPassPhNo] = React.useState("");
-  // console.log(arrival);
 
   useEffect(() => {
     // Check conditions to determine if button should be disabled
@@ -262,14 +261,18 @@ const Passenger = () => {
         </div>
         <div className="relative top-[3rem]">
           <div className="">
-            <PassengerDetailsMobile />
+            <PassengerDetailsMobile storePassenger={storePassenger} />
           </div>
 
           <div className="fixed  bg-primarycolors-white shadow-inner w-[98%] ml-1 -bottom-1 flex justify-center py-2">
             <button
-              onClick={handlePay}
               disabled={isdisable}
-              className="w-full  p-2 rounded-md bg-primarycolors-red hover:bg-primarycolors-red text-primarycolors-white"
+              onClick={handlePay}
+              className={`w-full p-2 rounded-md ${
+                isdisable
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-primarycolors-red/90 hover:bg-primarycolors-red"
+              } text-primarycolors-white`}
             >
               Proceed to Payment
             </button>

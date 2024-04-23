@@ -11,11 +11,22 @@ import {
   AiOutlineInfoCircle,
   AiOutlineInsurance,
 } from "react-icons/ai";
-const PassengerDetailsMobile = () => {
+const PassengerDetailsMobile = ({ storePassenger }) => {
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
+  const boardPoint = useSelector((state) => state.busDetailsReducer.boardPoint);
+  const dropPoint = useSelector((state) => state.busDetailsReducer.dropPoint);
 
+  const From = useSelector((state) => state.busDetailsReducer.From);
+  const To = useSelector((state) => state.busDetailsReducer.To);
+  const routeDetails = useSelector(
+    (state) => state.busDetailsReducer.routeDetails
+  );
+  let arrival = routeDetails.find((item) => item.boading_points === dropPoint);
+  let foundObject = routeDetails.find(
+    (item) => item.boading_points === boardPoint
+  );
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
     passengerArray.push({
@@ -45,24 +56,27 @@ const PassengerDetailsMobile = () => {
     newArr[indexNo]["gender"] = e.target.value;
     setPassDetails(newArr);
   };
+  const Passenger = () => {
+    storePassenger(passDetails, passEmail, passPhNo);
+  };
 
   const navigate = useNavigate();
 
-  const handlePay = () => {
-    navigate("/payment");
-  };
+  // const handlePay = () => {
+  //   navigate("/payment");
+  // };
 
   return (
     <div className="m-3 my-5 mb-[7rem]">
       <div className="shadow-md border-[0.2px] rounded-md p-4  border-primarycolors-gray">
         <div className="flex gap-2 justify-between">
           <div className="text-left justify-start flex flex-col">
-            <h2 className="text-base font-bold">Jaipur</h2>
+            <h2 className="text-base font-bold">{From}</h2>
             <p className="text-sm text-primarycolors-textcolor">
-              MI Road Sindhi Camp
+              {foundObject.boading_points}
             </p>
             <p className="text-xs  text-primarycolors-textcolor">
-              23:10 22 Aug 2023
+              {foundObject.time + " " + foundObject.date}
             </p>
           </div>
 
@@ -72,12 +86,12 @@ const PassengerDetailsMobile = () => {
             </div>
           </div>
           <div className=" text-right flex flex-col">
-            <h2 className="text-base font-bold">Jaipur</h2>
+            <h2 className="text-base font-bold">{To}</h2>
             <p className="text-sm text-primarycolors-textcolor">
-              MI Road Sindhi Camp
+              {arrival.boading_points}
             </p>
             <p className="text-xs  text-primarycolors-textcolor">
-              23:10 22 Aug 2023
+              {arrival.time + " " + arrival.date}
             </p>
           </div>
         </div>
@@ -90,20 +104,24 @@ const PassengerDetailsMobile = () => {
               type="email"
               name="text"
               className="input"
+              value={passEmail}
               placeholder="Email Address"
+              onChange={(e) => setPassEmail(e.target.value)}
             />
           </div>
           <div className="mt-3 flex items-center gap-4">
-            <div className="w-[80%]">
+            <div className="w-[100%]">
               <input
                 type="tel"
                 name="text"
                 class="input"
                 placeholder="Phone Number"
+                value={passPhNo}
+                onChange={(e) => setPassPhNo(e.target.value)}
               />
             </div>
             <div>
-              <div class="checkbox-wrapper">
+              {/* <div class="checkbox-wrapper">
                 <input id="terms-checkbox-37" name="checkbox" type="checkbox" />
                 <label class="terms-label" for="terms-checkbox-37">
                   <svg
@@ -130,7 +148,7 @@ const PassengerDetailsMobile = () => {
                   </svg>
                   <span class="label-text ">Send me Details</span>
                 </label>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -140,38 +158,66 @@ const PassengerDetailsMobile = () => {
         <div className="shadow-md border-[1px] rounded-md py-1 p-2 border-primarycolors-gray">
           {selectedSeats.map((seatNo, index) => {
             return (
-              <div key={index} className="grid gap-2 grid-cols-5 my-5 mx-auto">
-                <div className="col-span-3">
-                  <input
-                    type="text"
-                    name="text"
-                    class="input"
-                    placeholder="Full Name"
-                  />
+              <div>
+                <div className="flex text-sm justify-start items-center py-3">
+                  <span className=" font-semibold">Passenger {index + 1}</span>
+                  <div
+                    className="mx-2"
+                    style={{
+                      height: "20px",
+                      backgroundColor: "silver",
+                      width: "2px",
+                    }}
+                  ></div>
+                  <span className="font-semibold">Seat {seatNo}</span>
                 </div>
-                <div className="">
-                  <input
-                    type="number"
-                    name="text"
-                    class="input"
-                    placeholder="Age"
-                  />
-                </div>
-                <div className="flex flex-col items-center justify-center    -mt-1 ">
-                  <div className="flex  items-center  justify-center  gap-1 w-full">
-                    <div className="flex w-1/2">
-                      <img
-                        src={man}
-                        alt="Male"
-                        className={`w-full rounded-full   cursor-pointer`}
+
+                <div
+                  key={index}
+                  className="grid gap-2 grid-cols-5 my-5 mx-auto"
+                >
+                  <div className="col-span-3">
+                    <input
+                      type="text"
+                      name="text"
+                      class="input"
+                      placeholder="Full Name"
+                      value={passDetails[index]["name"]}
+                      onChange={(e) => handlePassName(e, index)}
+                    />
+                  </div>
+                  <div className="">
+                    <input
+                      type="text"
+                      name="age"
+                      class="input"
+                      placeholder="Age"
+                      value={passDetails[index]["age"]}
+                      onChange={(e) => handlePassAge(e, index)}
+                    />
+                  </div>
+                  <div className="flex flex-col items-center justify-center -mt-1"></div>
+                  <div
+                    className="sm:w-1/3 sm:m-2 my-2  flex items-center justify-start"
+                    onChange={(e) => handlePassGender(e, index)}
+                  >
+                    <div className="mr-3 flex">
+                      <input
+                        className="py-1 text-sm px-3 border-[1px]"
+                        type="radio"
+                        name={"gender" + index}
+                        value="Male"
                       />
+                      <span className="ml-2">Male</span>
                     </div>
-                    <div className="flex w-1/2">
-                      <img
-                        src={women}
-                        alt="Female"
-                        className={` w-full rounded-full   cursor-pointer`}
+                    <div className="mx-3 flex">
+                      <input
+                        className="py-1 text-sm px-3 border-[1px]"
+                        type="radio"
+                        name={"gender" + index}
+                        value="Female"
                       />
+                      <span className="ml-2">Female</span>
                     </div>
                   </div>
                 </div>
@@ -204,12 +250,19 @@ const PassengerDetailsMobile = () => {
       </div>
 
       <div className=" ">
-        <input type="checkbox" /> I agree to all the{" "}
+        <input
+          type="checkbox"
+          className="mr-2 "
+          id="insurancebox"
+          name="insurancebox"
+          value="true"
+          onClick={Passenger}
+        />{" "}
+        I agree to all the{" "}
         <span className=" text-primarycolors-skyblue">
           Terms and Conditions
         </span>
       </div>
-   
     </div>
   );
 };

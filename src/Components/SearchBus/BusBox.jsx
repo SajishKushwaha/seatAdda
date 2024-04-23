@@ -288,7 +288,6 @@ const BusBox = ({
     // Update the state with the fetched data
 
     setBookingPolicy(jsonData.date[0].content);
-    console.log(jsonData.date[0].content);
   };
 
   // Use useEffect to fetch data when the component mounts
@@ -1191,9 +1190,31 @@ const BusBox = ({
                 >
                   Show Route
                 </button>
+                {seat_json && (
+                  <button
+                    type="submit"
+                    onClick={handleViewSeat}
+                    className="py-1  px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-lg  rounded-md "
+                  >
+                    {!showViewSeat ? "View Seat" : "Hide seat"}
+                  </button>
+                )}
               </div>
             </div>
           </div>
+          {showViewSeat && (
+            <ViewSeat
+              busData={busData}
+              seat_json={seat_json}
+              routeDetails={via_route}
+              booked_seat={booked_seat}
+              seatPrice={fare}
+              departure={departure}
+              arrival={arrival}
+              date={date}
+              setIsModalOpen={setIsModalOpen}
+            />
+          )}
           {showPopup && (
             <div className="modal-container">
               <div className="modal-content flex items-center   justify-center  w-full  overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 outline-none focus:outline-none">

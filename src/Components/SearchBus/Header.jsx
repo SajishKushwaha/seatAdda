@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   BiSolidMap,
@@ -30,14 +30,14 @@ const Header = ({ setIsCalender }) => {
   const query = new URLSearchParams(search);
   const departure = query.get("departure");
   const arrival = query.get("arrival");
+  const urldate = query.get("date");
   /*  let dateStr = query.get("date");
  
    const currdate = dayjs(dateStr).format('DD/MM/YYYY') */
 
-
   // console.log(isoString);
   const [routes, setRoutes] = useState([]);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(urldate);
   const [showCalendar, setShowCalendar] = useState(false);
   const [fromLocation, setFromLocation] = useState(departure);
   const [toLocation, setToLocation] = useState(arrival);
@@ -45,7 +45,6 @@ const Header = ({ setIsCalender }) => {
   const [showToRoutes, setShowToRoutes] = useState(false);
   const [filterRoutes, setfilterRoutes] = useState(routes);
   const isSmallDevice = window.innerWidth <= 768;
-
   const filterBySearch = (event) => {
     // Access input value
     const query = event.target.value;
@@ -55,13 +54,12 @@ const Header = ({ setIsCalender }) => {
     updatedList = updatedList.filter((item) => {
       return item.city.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
-
+    // console.log(updatedList);
     setfilterRoutes(updatedList);
   };
 
   const handleDate = (value) => {
-
-    setDate(value);
+    setDate(value.toLocaleDateString("en-GB"));
     setShowCalendar(false);
     setIsCalender(false);
   };
@@ -72,23 +70,33 @@ const Header = ({ setIsCalender }) => {
   };
 
   const handleSearch = () => {
-    const formattedDate = date.toISOString().split('T')[0];
+    // var year = date.getFullYear();
+    // var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 because months are zero-based
+    // var day = ("0" + date.getDate()).slice(-2);
+
+    // // Format the date as "Y-m-d"
+    // var formattedDate = year + "-" + month + "-" + day;
+    const [day, month, year] = date.split("/");
+    const outputDate = `${year}-${month}-${day}`;
+    // const formattedDate = urldate.toISOString().split("T")[0];
     navigate(
-      `/select-bus?departure=${fromLocation}&arrival=${toLocation}&date=${formattedDate}`
+      `/select-bus?departure=${fromLocation}&arrival=${toLocation}&date=${outputDate}`
     );
   };
 
   const hanldeIsCalender = () => {
     setShowCalendar(true);
     setIsCalender(true);
-  }
+  };
 
   useEffect(() => {
     async function fetchRoutes() {
       try {
-        const response = await fetch('https://seatadda.co.in/api/source-destination');
+        const response = await fetch(
+          "https://seatadda.co.in/api/source-destination"
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const data = await response.json();
@@ -96,7 +104,7 @@ const Header = ({ setIsCalender }) => {
         setRoutes(data.date);
         setfilterRoutes(data.date);
       } catch (error) {
-        console.error('Error fetching routes:', error);
+        console.error("Error fetching routes:", error);
       }
     }
     fetchRoutes();
@@ -130,12 +138,11 @@ const Header = ({ setIsCalender }) => {
                       filterBySearch(e);
                       setFromLocation(e.target.value);
                       setShowFromRoutes(true);
-
                     }}
                     onFocus={() => {
                       setShowFromRoutes(true);
                       setShowToRoutes(false);
-                      setIsCalender(true)
+                      setIsCalender(true);
                     }}
                   />
                   {showFromRoutes && (
@@ -149,10 +156,10 @@ const Header = ({ setIsCalender }) => {
                               onClick={() => {
                                 setFromLocation(route.city);
                                 setShowFromRoutes(false);
-                                setIsCalender(false)
+                                setIsCalender(false);
                               }}
                             >
-                               <div className=" flex gap-4 justify-start items-center ">
+                              <div className=" flex gap-4 justify-start items-center ">
                                 <div>
                                   <MdLocationCity
                                     size={20}
@@ -168,7 +175,8 @@ const Header = ({ setIsCalender }) => {
                               </div>
                             </li>
                           ))}
-                        </ul></div>
+                        </ul>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -199,9 +207,9 @@ const Header = ({ setIsCalender }) => {
                     onFocus={() => {
                       setShowToRoutes(true);
                       setShowFromRoutes(false);
-                      setIsCalender(true)
+                      setIsCalender(true);
                     }}
-                  // onBlur={() => setShowFromRoutes(false)}
+                    // onBlur={() => setShowFromRoutes(false)}
                   />{" "}
                   {showToRoutes && (
                     <div className="absolute w-full rounded-lg top-[41px] overflow-hidden ml-[4px]">
@@ -214,10 +222,10 @@ const Header = ({ setIsCalender }) => {
                               onClick={() => {
                                 setToLocation(route.city);
                                 setShowToRoutes(false);
-                                setIsCalender(false)
+                                setIsCalender(false);
                               }}
                             >
-                               <div className=" flex gap-4 justify-start items-center ">
+                              <div className=" flex gap-4 justify-start items-center ">
                                 <div>
                                   <MdLocationCity
                                     size={20}
@@ -233,7 +241,6 @@ const Header = ({ setIsCalender }) => {
                               </div>
                             </li>
                           ))}
-
                         </ul>
                       </div>
                     </div>
@@ -284,8 +291,7 @@ const Header = ({ setIsCalender }) => {
                       <input
                         id=""
                         className="w-auto outline-none mt-2"
-                        value={date.toLocaleDateString('en-GB')}
-
+                        value={date}
                         onFocus={hanldeIsCalender}
                       />
                     )}
@@ -294,7 +300,7 @@ const Header = ({ setIsCalender }) => {
                         className="w-auto outline-none mt-2"
                         onClick={() => setShowCalendar(true)}
                       >
-                        {date.toLocaleDateString('en-GB')}
+                        {date}
                       </button>
                     )}
                     {isSmallDevice && showCalendar && (
@@ -310,9 +316,7 @@ const Header = ({ setIsCalender }) => {
                     )}
                     {!isSmallDevice && showCalendar && (
                       <Calendar
-
                         className="absolute"
-
                         onChange={handleDate}
                         minDate={new Date()}
                       />
@@ -320,12 +324,12 @@ const Header = ({ setIsCalender }) => {
                   </button>
                 </div>
               </div>
-              <div onClick={handleSearch} className="md:flex mb-2 bg-primarycolors-red rounded-xl md:rounded-none md:rounded-r-xl">
+              <div
+                onClick={handleSearch}
+                className="md:flex mb-2 bg-primarycolors-red rounded-xl md:rounded-none md:rounded-r-xl"
+              >
                 <div className="md:w-full p-2 mb-6 md:mb-0">
-                  <button
-
-                    className="py-1 px-3 mx-5 text-primarycolors-white text-lg"
-                  >
+                  <button className="py-1 px-3 mx-5 text-primarycolors-white text-lg">
                     Modify
                   </button>
                 </div>

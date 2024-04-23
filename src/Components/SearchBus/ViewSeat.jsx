@@ -239,6 +239,7 @@ const ViewSeat = ({
     return selectedRows.map((row, rowIndex) => {
       const seats = seat_json[row];
       const seatValues = Object.values(seats);
+      // console.log(seatValues[4].is_available);
       // Check if all seats in the row are empty
       const allSeatsEmpty = seatValues.every((seat) => seat.seat === "");
       // console.log(allSeatsEmpty)
@@ -250,6 +251,7 @@ const ViewSeat = ({
       const seatsToRender = [];
       for (i = 0; i < seatValues.length; i++) {
         let seat = seatValues[i].seat; // Access the 'seat' property
+        // console.log(seatValues[i]);
         // console.log(seat);
         // break;
         if (seat !== "") {
@@ -257,7 +259,11 @@ const ViewSeat = ({
             // Check for consecutive seats in the same row
             // Otherwise, it's a double seat horizontally
             i++; // Skip the next seat as it's already combined
-            seatsToRender.push({ type: "DoubleSeat", value: seat });
+            seatsToRender.push({
+              type: "DoubleSeat",
+              value: seat,
+              available: seatValues[i].is_available,
+            });
           } else {
             if (rowIndex < totalRows.length - 1) {
               // Check for consecutive rows in the same column
@@ -267,7 +273,11 @@ const ViewSeat = ({
               if (seat === nextSeat) {
                 // If both the current and next rows have the same seat occupied, it's a vertical sleeper
                 // console.log(seat);
-                seatsToRender.push({ type: "VerticalSleeper", value: seat });
+                seatsToRender.push({
+                  type: "VerticalSleeper",
+                  value: seat,
+                  available: seatValues[i].is_available,
+                });
                 // Skip the next seat as it's already combined
 
                 //  if (Number.isInteger(parseInt(seat))) {
@@ -275,13 +285,17 @@ const ViewSeat = ({
                 // }
                 match.push(seat);
               } else if (!match.includes(seat)) {
-                seatsToRender.push({ type: "Seat", value: seat });
+                seatsToRender.push({
+                  type: "Seat",
+                  value: seat,
+                  available: seatValues[i].is_available,
+                });
               }
             }
           }
         }
       }
-
+      console.log(seatsToRender);
       // return (
       //     <div key={row} className="flex flex-col md:flex-row w-fit md:w-full justify-between">
       //         {seatsToRender.map((seat, index) => (
@@ -330,6 +344,7 @@ const ViewSeat = ({
             seat.type === "DoubleSeat" ? (
               <td key={index} class={index} colspan={2}>
                 <Sleeper
+                  available={seat.available}
                   seatType={seat.type}
                   seatNo={seat.value}
                   count={seat.count}
@@ -346,6 +361,7 @@ const ViewSeat = ({
                   seatType={seat.type}
                   seatNo={seat.value}
                   count={seat.count}
+                  available={seat.available}
                   alreadyBookedSeats={alreadyBookedSeats}
                   handleSelectedSeats={handleSelectedSeats}
                   selectedSeats={selectedSeats}
@@ -356,6 +372,7 @@ const ViewSeat = ({
             ) : (
               <td key={index} class={index}>
                 <Seat
+                  available={seat.available}
                   seatType={seat.type}
                   seatNo={seat.value}
                   alreadyBookedSeats={alreadyBookedSeats}
@@ -632,7 +649,7 @@ const ViewSeat = ({
                   <span>Available</span>
                 </div>
                 <div className="p-3">
-                  <MdCheckBoxOutlineBlank className="bg-primarycolors-red/50 outline-none text-xl" />
+                  <MdCheckBoxOutlineBlank className="bg-primarycolors-red outline-none text-xl" />
                   &nbsp;&nbsp;
                   <span>Unavailable</span>
                 </div>

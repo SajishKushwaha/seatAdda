@@ -6,6 +6,7 @@ import swal from "sweetalert";
 import { useSelector } from "react-redux";
 import LoginModal from "../LoginModal";
 const Sleeper = ({
+  available,
   seatType,
   seatNo,
   alreadyBookedSeats,
@@ -15,14 +16,15 @@ const Sleeper = ({
   setIsModalOpen,
 }) => {
   var color;
-
-  // console.log(alreadyBookedSeats);
-  if (selectedSeats.includes(seatNo)) {
+  console.log(available);
+  if (!available) {
+    color = { backgroundColor: "red", color: "white" };
+  } else if (selectedSeats.includes(seatNo)) {
+    // color = { backgroundColor: "rgb(59 130 246)",color:'white' };
     color = { backgroundColor: "rgb(59 130 246 )", color: "white" };
   } else {
     color = { backgroundColor: "#DEDEDE" };
   }
-
   if (alreadyBookedSeats.includes(seatNo)) {
     color = { backgroundColor: "rgb(254 202 202)", cursor: "not-allowed" };
   }
@@ -41,15 +43,16 @@ const Sleeper = ({
   return (
     <div>
       <div className="">
-        <div
+        <button
+          disabled={!available}
           onClick={handleSeatBooking}
           style={color}
-          className="relative cursor-pointer m-1  flex items-center justify-center rounded-sm border-[1px] border-primarycolors-black  w-[50px] h-[24px]  "
+          className="relative cursor-pointer m-1  flex items-center justify-center rounded-sm border-[1px] border-primarycolors-black  w-[63px] h-[27px]  "
         >
           <p className="text-center  align-middle text-xs">{seatNo}</p>
 
           <div className=" absolute right-[2px] w-[6px] h-[90%]  rounded-[1px] border-[1px] border-primarycolors-black"></div>
-        </div>
+        </button>
       </div>
     </div>
   );

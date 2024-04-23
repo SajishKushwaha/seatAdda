@@ -48,13 +48,13 @@ const resetState = {
 };
 const Right = ({ setIsModalOpen, isCal }) => {
   let { search } = useLocation();
-  
+
   const query = new URLSearchParams(search);
 
   const departure = query.get("departure");
   const arrival = query.get("arrival");
   const date = query.get("date");
-  
+
   const isLoading = useSelector((state) => state.busDetailsReducer.isLoading);
   const isError = useSelector((state) => state.busDetailsReducer.isError);
   const isSuccess = useSelector((state) => state.busDetailsReducer.isSuccess);
@@ -383,8 +383,6 @@ const Right = ({ setIsModalOpen, isCal }) => {
         </>
       )}
 
-    
-
       {isFilterClicked && (
         <div className="md:hidden m-2">
           {/* Display the selected filters */}
@@ -437,8 +435,8 @@ const Right = ({ setIsModalOpen, isCal }) => {
             )}
           </div>
         </div>
-      )}  
-      
+      )}
+
       {isSuccess && filteredMatchedBuses.length === 0 && (
         <div className=" mt-[2rem] font-bold">
           {" "}
