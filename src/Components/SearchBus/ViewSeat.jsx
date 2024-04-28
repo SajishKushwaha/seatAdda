@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Seat from "./Seat";
+import Select from "react-select";
 import {
   MdArrowDropDown,
   MdCheckBoxOutlineBlank,
@@ -27,16 +28,61 @@ const ViewSeat = ({
 }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectBoardingPoint, setSelectBoardingPoint] = useState("");
-  const [selectDropPoint, setSelectDropPoint] = useState("");
-
+  const [selectBoardingPoint, setSelectBoardingPoint] = useState(
+    "Select Boarding Point"
+  );
+  const [selectDropPoint, setSelectDropPoint] = useState(
+    "Select Droping Point"
+  );
   const [isOpenDrop, setIsOpenDrop] = useState(false);
-  const [isOpenBoard, setIsOpenBoard] = useState(false);
-
+  // const [isOpenBoard, setIsOpenBoard] = useState(false);
+  const [boardingoptions, setBoardingOptions] = useState([]);
+  const [dropingoptions, setdropingOptions] = useState([]);
+  // console.log(boardingoptions);
+  console.log(selectBoardingPoint);
+  console.log(selectDropPoint);
   const alreadyBookedSeats = booked_seat;
-  const boardingPoints = routeDetails;
-  // console.log(alreadyBookedSeats);
-  const droppingPoints = routeDetails;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "long" });
+    return `${day} ${month}`;
+  };
+  function convertTo12HourFormat(time) {
+    // Parse the time string
+    const [hours, minutes] = time.split(":").map((num) => parseInt(num));
+
+    // Determine AM or PM
+    const suffix = hours >= 12 ? "PM" : "AM";
+
+    // Convert hours to 12-hour format
+    const adjustedHours = hours % 12 || 12;
+
+    // Return formatted time
+    return `${adjustedHours}:${minutes < 10 ? "0" : ""}${minutes} ${suffix}`;
+  }
+  useEffect(() => {
+    const boardingPoints = routeDetails.map((item) => ({
+      value: item.boading_points,
+      label:
+        item.boading_points.charAt(0).toUpperCase() +
+        item.boading_points.slice(1),
+    }));
+    setBoardingOptions(boardingPoints);
+  }, [routeDetails, setBoardingOptions]); // Include setOptions as a dependency
+  useEffect(() => {
+    const droppingPoints = routeDetails.map((item) => ({
+      value: item.boading_points,
+      label:
+        item.boading_points.charAt(0).toUpperCase() +
+        item.boading_points.slice(1) +
+        " " +
+        formatDate(item.date) +
+        " " +
+        convertTo12HourFormat(item.time),
+    }));
+    setdropingOptions(droppingPoints);
+  }, [routeDetails, setdropingOptions]);
 
   let dispatch = useDispatch();
 
@@ -78,23 +124,23 @@ const ViewSeat = ({
     setShowUpperBerth((prev) => !prev);
   };
 
-  const handleToggelBoard = () => {
-    setIsOpenBoard(!isOpenBoard);
-  };
+  // const handleToggelBoard = () => {
+  //   setIsOpenBoard(!isOpenBoard);
+  // };
 
-  const handleSelectBoardOption = (option) => {
-    setSelectBoardingPoint(option);
-    setIsOpenBoard(false);
-  };
+  // const handleSelectBoardOption = (value) => {
+  //   setSelectBoardingPoint(value);
+  //   setIsOpenBoard(false);
+  // };
 
-  const handleToggelDrop = () => {
-    setIsOpenDrop(!isOpenDrop);
-  };
+  // const handleToggelDrop = () => {
+  //   setIsOpenDrop(!isOpenDrop);
+  // };
 
-  const handleSelectDropOption = (option) => {
-    setSelectDropPoint(option);
-    setIsOpenDrop(false);
-  };
+  // const handleSelectDropOption = (option) => {
+  //   setSelectDropPoint(option);
+  //   setIsOpenDrop(false);
+  // };
   const handleSelectedSeats = (seatNo, seatType) => {
     if (selectedSeats.includes(seatNo)) {
       const arr = selectedSeats.filter((item) => item !== seatNo);
@@ -295,7 +341,6 @@ const ViewSeat = ({
           }
         }
       }
-      console.log(seatsToRender);
       // return (
       //     <div key={row} className="flex flex-col md:flex-row w-fit md:w-full justify-between">
       //         {seatsToRender.map((seat, index) => (
@@ -664,9 +709,9 @@ const ViewSeat = ({
         )}
 
         {selectedSeats.length > 0 && (
-          <div className="flex flex-col justify-between p-4 text-left h-[98%] shadow-2xl">
+          <div className="flex flex-col justify-between p-4 text-left  ">
             <div className="my-5">
-              <h1 className="font-bold uppercase text-center text-primarycolors-red">
+              {/* <h1 className="font-bold uppercase text-center text-primarycolors-red">
                 Journey Details:
               </h1>
               <div className="mb-2 p-3 text-sm">
@@ -680,25 +725,24 @@ const ViewSeat = ({
                   Date: <span className="font-bold uppercase">{date}</span>
                 </p>
               </div>
-              <hr className="my-2" />
+              <hr className="my-2" /> */}
               <div className="p-1">
                 <div className="p-2">
                   Selected Seats:
                   {selectedSeats.map((seat) => (
                     <span className="font-bold" key={seat}>
-                      {" "}
                       {seat},
                     </span>
                   ))}
                 </div>
                 <div className="p-2">
-                  Total Amount:{" "}
+                  Total Amount:
                   <span className="font-bold">
                     <span className="">&#8377;</span>
                     {seatPrice * selectedSeats.length}
                   </span>
                 </div>
-                <div className="relative flex py-2 ">
+                {/* <div className="relative flex py-2 ">
                   <p className="mx-2">Boarding Point: </p>
                   <div
                     className="cursor-pointer px-7 flex justify-center items-center bg-primarycolors-textcolor/20 font-bold rounded w-auto"
@@ -726,8 +770,61 @@ const ViewSeat = ({
                       ))}
                     </div>
                   )}
+                </div> */}
+                {/* <div>
+                  <select onChange={handleSelectBoardOption}>
+                    <option>
+                      <input type="search" />
+                    </option>
+                    {boardingPoints.map((item, index) => (
+                      <option key={index} value={item.boading_points}>
+                        {item.boading_points}
+                      </option>
+                    ))}
+                  </select>
+                </div> */}
+
+                {/* <div>
+                  <input
+                    type="search"
+                    placeholder="Search..."
+                    onChange={handleSelectBoardOption}
+                  />
+                  <select onChange={handleSelectBoardOption}>
+                  {boardingPoints.map(
+                    (item, index) =>
+                    <option key={index} value={item.boading_points}>
+                      {item.boading_points}
+                    </option>
+                  )}
+                  </select>
+                </div> */}
+                <div className="App">
+                  <Select
+                    className="boradingPoint"
+                    defaultValue={selectBoardingPoint}
+                    onChange={(selectedOption) => {
+                      setSelectBoardingPoint(selectedOption.value);
+                      setIsOpenDrop(true); // Close the dropdown menu
+                    }}
+                    placeholder="Search Boarding Point"
+                    options={boardingoptions}
+                  />
                 </div>
-                <div className="my-4 relative flex">
+                {isOpenDrop && (
+                  <div className="App mt-3">
+                    <Select
+                      className="boradingPoint"
+                      defaultValue={selectDropPoint}
+                      onChange={(selectedOption) =>
+                        setSelectDropPoint(selectedOption.value)
+                      }
+                      placeholder="Search Droping Point"
+                      options={dropingoptions}
+                    />
+                  </div>
+                )}
+                {/* <div className="my-4 relative flex">
                   <p className="mx-2">Dropping Point: </p>
                   <div
                     className="cursor-pointer px-7 flex justify-center items-center bg-primarycolors-textcolor/20 font-bold rounded w-auto"
@@ -755,9 +852,9 @@ const ViewSeat = ({
                       ))}
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
-              <hr className="my-2" />
+              {/* <hr className="my-2" /> */}
             </div>
             <div className="my-3 w-full items-center flex justify-center md:my-0 mr-[2rem] bg-primarycolors-red rounded-md">
               <button

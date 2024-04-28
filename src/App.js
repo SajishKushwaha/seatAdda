@@ -48,7 +48,7 @@ function App() {
 
         <Route path="/payment" Component={Payment}></Route>
         <Route path="/passenger-details" Component={Passenger}></Route>
-
+         
         <Route path="/menu" Component={Menu}></Route>
 
         <Route path="/help" Component={Help}></Route>

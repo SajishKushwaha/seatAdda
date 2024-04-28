@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "../Navigation";
 import Footer from "../Footer";
@@ -11,7 +11,6 @@ const Payment = () => {
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
-
   const totalFare = useSelector((state) => state.busDetailsReducer.totalFare);
   const From = useSelector((state) => state.busDetailsReducer.From);
   const To = useSelector((state) => state.busDetailsReducer.To);
@@ -19,14 +18,41 @@ const Payment = () => {
   const boardPoint = useSelector((state) => state.busDetailsReducer.boardPoint);
 
   const dropPoint = useSelector((state) => state.busDetailsReducer.dropPoint);
+  const [paymentLink, setPaymentLink] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/getpaymentlink");
+        if (!response.ok) {
+          throw new Error("Failed to fetch payment link");
+        }
+        const data = await response.json();
+        setPaymentLink(data);
+      } catch (error) {
+        console.error("Error fetching payment link:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <div>
       <Navbar />
       <div className="container mx-auto ">
         <div className="md:grid md:grid-cols-4 p-2 sm:p-5 gap-4">
           <div className="col-span-3">
-            <PaymentForm />
+            {/* <PaymentForm /> */}
+            {paymentLink !== null ? (
+              <iframe
+                src={paymentLink.payment_links.iframe}
+                title="Payment Page"
+                width="100%"
+                height="500px"
+              ></iframe>
+            ) : (
+              ""
+            )}
           </div>
           <div className="my-5 md:my-0 border-[1px] border-dashed  px-4  text-left h-fit  shadow-2xl  flex flex-col justify-between ">
             <div className="my-5">
@@ -115,9 +141,11 @@ const Payment = () => {
               </div>
             </div>{" "}
           </div>
+          <div></div>
         </div>
-        <div>{/* <PaymentForm/> */}</div>
+        <div></div>
       </div>
+      <div></div>
       <FooterDesktop />
     </div>
   );

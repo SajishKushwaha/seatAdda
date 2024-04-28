@@ -1,18 +1,21 @@
-.tble{
-    margin-top: -1.25rem;
-    margin-bottom: -1.25rem;
+.tble {
+  margin-top: -1.25rem;
+  margin-bottom: -1.25rem;
 }
-.horizontal{
-    display: flex;
-    flex-direction: row;
+.horizontal {
+  display: flex;
+  flex-direction: row;
 }
 
-    .seat{
-        background: 0 0;
-        border-color: black !important;
-        cursor: pointer;
-        font-size: .625rem;
-        margin: .1875rem;
-        padding: 0;
-        position: relative;
-    }
+.seat {
+  background: 0 0;
+  border-color: black !important;
+  cursor: pointer;
+  font-size: 0.625rem;
+  margin: 0.1875rem;
+  padding: 0;
+  position: relative;
+}
+.boradingPoint {
+  text-align: start;
+}
