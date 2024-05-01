@@ -175,6 +175,7 @@ const Passenger = () => {
     //   })
     //   .catch((error) => console.error(error));
     const data = await response.json();
+
     if (data.status === true) {
       alert(data.message);
       navigate("/bookings");
