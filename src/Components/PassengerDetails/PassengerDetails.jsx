@@ -3,8 +3,8 @@ import { BiSolidUserAccount } from "react-icons/bi";
 import { MdAccountCircle, MdFamilyRestroom, MdPhone } from "react-icons/md";
 import { useSelector } from "react-redux";
 
-import './index.css';
-const PassengerDetails = ({storePassenger}) => {
+import "./index.css";
+const PassengerDetails = ({ storePassenger }) => {
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
@@ -19,7 +19,7 @@ const PassengerDetails = ({storePassenger}) => {
   const [passDetails, setPassDetails] = React.useState(passengerArray);
   const [passEmail, setPassEmail] = React.useState("");
   const [passPhNo, setPassPhNo] = React.useState("");
-  
+
   const handlePassName = (e, indexNo) => {
     const newArr = [...passDetails];
     newArr[indexNo]["name"] = e.target.value;
@@ -37,11 +37,10 @@ const PassengerDetails = ({storePassenger}) => {
     newArr[indexNo]["gender"] = e.target.value;
     setPassDetails(newArr);
   };
-  
-  const Passenger=()=>{
-    storePassenger(passDetails,passEmail,passPhNo);
-  }
- 
+
+  const Passenger = () => {
+    storePassenger(passDetails, passEmail, passPhNo);
+  };
 
   return (
     <div className="shadow-md rounded-md border-[1px] border-primarycolors-black p-2 sm:p-5">
@@ -65,7 +64,6 @@ const PassengerDetails = ({storePassenger}) => {
               name="Email"
               value={passEmail}
               onChange={(e) => setPassEmail(e.target.value)}
-
               id=""
               placeholder="Enter Your Email"
             />
@@ -107,7 +105,9 @@ const PassengerDetails = ({storePassenger}) => {
                     </span>
                   </div> */}
                   <div className="flex text-sm justify-start items-center py-3">
-                    <span className=" font-semibold">Passenger {index + 1}</span>
+                    <span className=" font-semibold">
+                      Passenger {index + 1}
+                    </span>
                     <div
                       className="mx-2"
                       style={{
@@ -184,7 +184,7 @@ const PassengerDetails = ({storePassenger}) => {
         <p className="text-sm sm:text-base">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, cum.
         </p>
-        <div className="flex text-sm items-center my-2 py-2 " >
+        <div className="flex text-sm items-center my-2 py-2 ">
           {" "}
           <input
             type="checkbox"

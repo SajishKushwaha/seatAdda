@@ -39,19 +39,78 @@ const Passenger = () => {
     (state) => state.busDetailsReducer.selectedTypes
   );
   const navigate = useNavigate();
-  const [passDetails, setPassDetails] = React.useState([]);
-  const [passEmail, setPassEmail] = React.useState("");
-  const [isdisable, setIsDisable] = React.useState("true");
-  const [passPhNo, setPassPhNo] = React.useState("");
-
   useEffect(() => {
+    if (routeDetails.length === 0) {
+      navigate("/");
+    }
+  }, [routeDetails]);
+  const [passDetails, setPassDetails] = React.useState([]);
+  const [totalfare, setTotalFare] = React.useState(totalFare);
+  const [passEmail, setPassEmail] = React.useState("");
+  const [isdisable, setIsDisable] = React.useState(false);
+  const [passPhNo, setPassPhNo] = React.useState("");
+  const [wallet, setWallet] = React.useState({});
+  const [userWallet, setUserWallet] = React.useState("");
+  // const walletBalance = () => {
+  //   setUserWallet(wallet.balance_amount);
+  //   if (userWallet <= totalFare) {
+  //     setTotalFare(totalFare - userWallet);
+  //   } else {
+  //     setTotalFare(0);
+  //   }
+  // };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append(
+          "Authorization",
+          userIdString.access_token.split("Bearer")[1].trim() // Remove leading/trailing whitespaces
+        );
+
+        const formdata = new FormData();
+        formdata.append("user_id", userIdString.user.user_id);
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://seatadda.co.in/auth/api/user-wallet-details",
+          requestOptions
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Parse response body as JSON
+        setWallet(data);
+        console.log(data);
+        // Log the response data
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    };
+
+    fetchData();
+
     // Check conditions to determine if button should be disabled
-    if (passDetails.length === 0 || passEmail === "" || passPhNo === "") {
+    if (
+      passDetails.length === 0 ||
+      passEmail === "" ||
+      passPhNo === "" ||
+      isdisable === false
+    ) {
       setIsDisable(true); // Disable the button
     } else {
       setIsDisable(false); // Enable the button
     }
-  }, [passDetails, passEmail, passPhNo]);
+  }, [passDetails, passEmail, passPhNo]); // Dependency array includes variables passDetails, passEmail, and passPhNo
+
   const handlePay = async () => {
     const myHeaders = new Headers();
     myHeaders.append(
@@ -207,19 +266,19 @@ const Passenger = () => {
                         {totalFare + 180}
                       </span>{" "}
                     </p>
-                    <p className="m-2 flex justify-between">
+                    {/* <p className="m-2 flex justify-between">
                       Discount:{" "}
                       <span className="font-bold">
                         <span className="">&#8377;</span>
                         50
                       </span>{" "}
-                    </p>
+                    </p> */}
                   </div>
 
                   <hr className="my-2 border-dashed" />
                   <div className="p-3 mt-5 py-2 bg-primarycolors-textcolor/40 flex justify-between">
                     <h1 className="font-bold text-center text-primarycolors-black ">
-                      Net Payable:{" "}
+                      Net Payable:
                     </h1>
                     <p>
                       <span className="font-bold">
@@ -228,6 +287,15 @@ const Passenger = () => {
                       </span>{" "}
                     </p>
                   </div>
+                  {/* <input
+                    style={{ marginTop: "10px" }}
+                    type="checkbox"
+                    id="wallet"
+                    onClick={walletBalance}
+                  />
+                  <label htmlFor="wallet" style={{ marginLeft: "10px" }}>
+                    {wallet.balance_amount}
+                  </label> */}
                 </div>{" "}
               </div>{" "}
               <div className="mx-1">

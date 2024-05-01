@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import "./index.css";
+
 import man from "../../assets/man.png";
 import women from "../../assets/women.png";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +28,7 @@ const PassengerDetailsMobile = ({ storePassenger }) => {
   let foundObject = routeDetails.find(
     (item) => item.boading_points === boardPoint
   );
+
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
     passengerArray.push({
@@ -65,36 +67,43 @@ const PassengerDetailsMobile = ({ storePassenger }) => {
   // const handlePay = () => {
   //   navigate("/payment");
   // };
+  useEffect(() => {
+    if (routeDetails.length === 0) {
+      navigate("/");
+    }
+  }, [routeDetails]);
 
   return (
     <div className="m-3 my-5 mb-[7rem]">
       <div className="shadow-md border-[0.2px] rounded-md p-4  border-primarycolors-gray">
-        <div className="flex gap-2 justify-between">
-          <div className="text-left justify-start flex flex-col">
-            <h2 className="text-base font-bold">{From}</h2>
-            <p className="text-sm text-primarycolors-textcolor">
-              {foundObject.boading_points}
-            </p>
-            <p className="text-xs  text-primarycolors-textcolor">
-              {foundObject.time + " " + foundObject.date}
-            </p>
-          </div>
+        {routeDetails.length !== 0 && (
+          <div className="flex gap-2 justify-between">
+            <div className="text-left justify-start flex flex-col">
+              <h2 className="text-base font-bold">{From}</h2>
+              <p className="text-sm text-primarycolors-textcolor">
+                {foundObject.boading_points}
+              </p>
+              <p className="text-xs  text-primarycolors-textcolor">
+                {foundObject.time + " " + foundObject.date}
+              </p>
+            </div>
 
-          <div className="px-3">
-            <div className="text-xl rotate-180  font-normal">
-              <BiArrowBack />
+            <div className="px-3">
+              <div className="text-xl rotate-180  font-normal">
+                <BiArrowBack />
+              </div>
+            </div>
+            <div className=" text-right flex flex-col">
+              <h2 className="text-base font-bold">{To}</h2>
+              <p className="text-sm text-primarycolors-textcolor">
+                {arrival.boading_points}
+              </p>
+              <p className="text-xs  text-primarycolors-textcolor">
+                {arrival.time + " " + arrival.date}
+              </p>
             </div>
           </div>
-          <div className=" text-right flex flex-col">
-            <h2 className="text-base font-bold">{To}</h2>
-            <p className="text-sm text-primarycolors-textcolor">
-              {arrival.boading_points}
-            </p>
-            <p className="text-xs  text-primarycolors-textcolor">
-              {arrival.time + " " + arrival.date}
-            </p>
-          </div>
-        </div>
+        )}
       </div>
       <div className="my-6">
         <h2 className="text-left my-2">Your ticket info will be sent here</h2>

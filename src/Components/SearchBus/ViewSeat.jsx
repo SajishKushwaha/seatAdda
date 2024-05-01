@@ -28,19 +28,14 @@ const ViewSeat = ({
 }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectBoardingPoint, setSelectBoardingPoint] = useState(
-    "Select Boarding Point"
-  );
-  const [selectDropPoint, setSelectDropPoint] = useState(
-    "Select Droping Point"
-  );
-  const [isOpenDrop, setIsOpenDrop] = useState(false);
+  const [selectBoardingPoint, setSelectBoardingPoint] = useState("");
+  const [selectDropPoint, setSelectDropPoint] = useState("");
+  const [isOpenDrop, setIsOpenDrop] = useState(true);
+  const [isOpenBookSeat, setIsOpenBookSeat] = useState(true);
   // const [isOpenBoard, setIsOpenBoard] = useState(false);
   const [boardingoptions, setBoardingOptions] = useState([]);
   const [dropingoptions, setdropingOptions] = useState([]);
   // console.log(boardingoptions);
-  console.log(selectBoardingPoint);
-  console.log(selectDropPoint);
   const alreadyBookedSeats = booked_seat;
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -856,15 +851,17 @@ const ViewSeat = ({
               </div>
               {/* <hr className="my-2" /> */}
             </div>
-            <div className="my-3 w-full items-center flex justify-center md:my-0 mr-[2rem] bg-primarycolors-red rounded-md">
-              <button
-                type="submit"
-                onClick={handleBookSeat}
-                className="py-1 px-2 mx-3 text-primarycolors-white text-lg"
-              >
-                Proceed to Book Seat
-              </button>
-            </div>
+            {isOpenBookSeat && (
+              <div className="my-3 w-full items-center flex justify-center md:my-0 mr-[2rem] bg-primarycolors-red rounded-md">
+                <button
+                  type="submit"
+                  onClick={handleBookSeat}
+                  className="py-1 px-2 mx-3 text-primarycolors-white text-lg"
+                >
+                  Proceed to Book Seat
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
