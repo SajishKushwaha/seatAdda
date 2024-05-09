@@ -36,7 +36,7 @@ const Payment = () => {
         const formdata = new FormData();
         formdata.append("user_id", userIdString.user.user_id);
         formdata.append("amount", total);
-        formdata.append("return_url", "http://localhost:3000/PaymentResponse");
+        formdata.append("return_url", "/PaymentResponse");
 
         const requestOptions = {
           method: "POST",
