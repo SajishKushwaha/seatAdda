@@ -5,12 +5,15 @@ import Footer from "../Footer";
 import PassengerDetails from "../PassengerDetails/PassengerDetails";
 import PaymentForm from "./PaymentForm";
 import FooterDesktop from "../FooterDesktop";
-
+import { useLocation } from "react-router-dom";
 const Payment = () => {
   const isLoading = useSelector((state) => state.busDetailsReducer.isLoading);
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
+  let { search } = useLocation();
+  const query = new URLSearchParams(search);
+  const total = query.get("total");
   const totalFare = useSelector((state) => state.busDetailsReducer.totalFare);
   const From = useSelector((state) => state.busDetailsReducer.From);
   const To = useSelector((state) => state.busDetailsReducer.To);
@@ -19,23 +22,52 @@ const Payment = () => {
 
   const dropPoint = useSelector((state) => state.busDetailsReducer.dropPoint);
   const [paymentLink, setPaymentLink] = useState(null);
-
+  const userId = localStorage.getItem("userData");
+  const userIdString = JSON.parse(userId);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/getpaymentlink");
+        const myHeaders = new Headers();
+        myHeaders.append(
+          "Authorization",
+          userIdString.access_token.split("Bearer")[1].trim() // Remove leading/trailing whitespaces
+        );
+
+        const formdata = new FormData();
+        formdata.append("user_id", userIdString.user.user_id);
+        formdata.append("amount", total);
+        formdata.append("return_url", "http://localhost:3000/PaymentResponse");
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://seatadda.co.in/auth/api/get-payment-link",
+          requestOptions
+        );
+
         if (!response.ok) {
-          throw new Error("Failed to fetch payment link");
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const data = await response.json();
-        setPaymentLink(data);
+
+        const data = await response.json(); // Parse response body as JSON
+        setPaymentLink(data.payment_link);
+        // console.log(data.payment_link);
+        // Log the response data
       } catch (error) {
-        console.error("Error fetching payment link:", error);
+        console.error("Error fetching data:", error.message);
       }
     };
 
     fetchData();
-  }, []);
+
+    // Check conditions to determine if button should be disabled
+  }, []); // Dependency array includes variables passDetails, passEmail, and passPhNo
+
   return (
     <div>
       <Navbar />
@@ -45,7 +77,7 @@ const Payment = () => {
             {/* <PaymentForm /> */}
             {paymentLink !== null ? (
               <iframe
-                src={paymentLink.payment_links.iframe}
+                src={paymentLink}
                 title="Payment Page"
                 width="100%"
                 height="500px"

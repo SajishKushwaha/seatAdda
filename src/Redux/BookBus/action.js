@@ -80,14 +80,23 @@ export const getBusDetails = (depart, arrival, date) => async (dispatch) => {
         },
       }
     );
+    // console.log(response2);
     const data2 = response2.data.stocks;
-  //  console.log(data1);
-    // console.log(data2);
-    // const data2 = [];
-
+    const data4 = 
+      {
+        d_boardingPoints: response2.data.d_boading_points,
+        s_boardingPoints: response2.data.s_boading_points,
+      }
+   
+      const serializedData = JSON.stringify(data4);
+      
+      
+  
+    localStorage.setItem('busData',serializedData);
     // Combine the data from both API responses
     const combinedData = data2.concat(data1);
     // console.log(combinedData);
+    // console.log(data4);
     dispatch(busDetailsSuccess(combinedData));
   } catch (error) {
     dispatch(busDetailsFail());

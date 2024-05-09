@@ -26,6 +26,7 @@ const ViewSeat = ({
   date,
   setIsModalOpen,
 }) => {
+  console.log(seat_json);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectBoardingPoint, setSelectBoardingPoint] = useState(null);

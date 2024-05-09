@@ -182,7 +182,7 @@ const SelectBus = () => {
                 </div>
               </>
             ) : (
-              <div className="md:grid md:p-3 grid-cols-8 md:gap-3">
+              <div className="md:grid md:p-2 grid-cols-8 md:gap-3">
                 <div className="hidden md:block col-span-2">
                   <Left />
                 </div>

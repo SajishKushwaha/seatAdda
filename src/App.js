@@ -5,6 +5,7 @@ import Navigation from "./Components/Navigation";
 import Rental from "./Components/RentalPage/Rental";
 import SelectBus from "./Components/SearchBus/SelectBus";
 import Payment from "./Components/PaymentPage/Payment";
+import PaymentResponse from "./Components/PaymentPage/paymentResponse";
 import ViewSeatMobile from "./Components/SearchBus/Mobile/ViewSeatMobile";
 import Menu from "./Components/Menu/Menu";
 import Help from "./Components/Help/Help";
@@ -28,6 +29,9 @@ import { Toaster } from "react-hot-toast";
 import Rental_Buses from "./Components/RentalPage/Rental_Buses";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import NotFound from "./Components/404/NotFound";
+import WalletAdded from './Components/Wallet/walletAdded';
+import Walletrechargeresponse from "./Components/Wallet/walletrechargeresponse";
+
 function App() {
   const { pathname } = useLocation();
 
@@ -73,6 +77,10 @@ function App() {
         <Route path="/wallet" Component={Wallet}></Route>
         <Route path="/account" Component={Account}></Route>
         <Route path="/modal" Component={PageMo}></Route>
+        <Route path="/WalletAdded" Component={WalletAdded}></Route>
+        <Route path="/PaymentResponse" Component={PaymentResponse}></Route>
+        <Route path="/Walletrechargeresponse" Component={Walletrechargeresponse}></Route>
+        
         <Route path="*" Component={NotFound}/>
       </Routes>
     </div>

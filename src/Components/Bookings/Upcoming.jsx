@@ -5,7 +5,7 @@ import { BiArrowBack, BiBus } from "react-icons/bi";
 // import { BiUser } from "react-icons/bi";
 import "./book.css";
 const Upcoming = ({ bookinghistory }) => {
-  console.log(bookinghistory);
+  // console.log(bookinghistory);
   function convertTo12HourFormat(time) {
     // Parse the time string
     const [hours, minutes] = time.split(":").map((num) => parseInt(num));
@@ -28,18 +28,35 @@ const Upcoming = ({ bookinghistory }) => {
     const parts = formattedDate.split(" ");
     return `${parts[0]} ${parts[2]} ${parts[1]}`;
   };
+  const futureBookings = bookinghistory.sort((a, b) => {
+    const dateA = new Date(a.arrival_date);
+    const dateB = new Date(b.arrival_date);
+    return dateB - dateA;
+  });
+
+  console.log(futureBookings);
+  // console.log(bookinghistory);
   return (
     <div className="m-3 childscroll overflow-y-scroll  md:h-[800px] mb-[7rem] sm:mb-[1rem]">
-      {bookinghistory.map((data, index) => {
+      {futureBookings.map((data, index) => {
+        // console.log(data);
         return (
           <div
             key={index}
             className="shadow-md my-3 rounded-xl border-[1px] border-primarycolors-gray"
           >
             <div className="m-1">
-              <h2 className="text-left text-[12px] px-3 py-2 pb-1 sm:text-sm">
-                {data.travels_name}
-              </h2>
+              <div className="flex items-center  justify-between">
+                <div>
+                  <h2 className="text-left text-[12px] px-3 py-2 pb-1 sm:text-sm">
+                    {`${data.travels_name} (${data.reg_no})`}
+                  </h2>
+                </div>
+                <a href="/" download>
+                  <button className="px-5  view_ticket">view ticket</button>
+                </a>
+              </div>
+
               <div className="  gap-5 p-3 border-t-[1px] border-primarycolors-gray">
                 <div className="flex items-center  justify-between pb-3">
                   <div className="flex items-center">
@@ -48,9 +65,8 @@ const Upcoming = ({ bookinghistory }) => {
                     </div>
                     <div className="flex flex-col items-start px-3">
                       <div>
-                        {convertTo12HourFormat(data.boarding_time) +
-                          " | " +
-                          data.sourse}
+                        {convertTo12HourFormat(data.arrival_time)} |{" "}
+                        {data.sourse}
                       </div>
                       <div className="arival_date">
                         {formatDate(data.boarding_date)}
@@ -62,9 +78,8 @@ const Upcoming = ({ bookinghistory }) => {
                   </div>
                   <div className="flex flex-col items-start px-4">
                     <div>
-                      {convertTo12HourFormat(data.arrival_time) +
-                        " | " +
-                        data.destination}
+                      {convertTo12HourFormat(data.arrival_time)} |{" "}
+                      {data.destination}
                     </div>
 
                     <div className="arival_date">

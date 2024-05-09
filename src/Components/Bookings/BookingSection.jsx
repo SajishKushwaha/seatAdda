@@ -40,6 +40,7 @@ const BookingSection = () => {
     // Parse the JSON response
     const jsonData = await response.json();
     // Update the state with the fetched data
+    // console.log(jsonData.data);
     setBookingHistory(jsonData.data);
   };
 
@@ -48,6 +49,20 @@ const BookingSection = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const filterDate = (dateString) => {
+    const [year, month, day] = dateString.split("-").map(Number);
+    return new Date(year, month - 1, day); // Adjust month to 0-based index
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Set time to midnight
+
+  const upcomingBookings = bookinghistory.filter(
+    (booking) => filterDate(booking.arrival_date) >= today
+  );
+  const pastBookings = bookinghistory.filter(
+    (booking) => filterDate(booking.arrival_date) < today
+  );
   return (
     <div className="my-4   container mx-auto">
       <h1 className="hidden md:block font-bold text-2xl my-2">My Bookings</h1>
@@ -94,10 +109,12 @@ const BookingSection = () => {
         </button>
       </div>
       <div className="tab-content relative">
-        {activeTab === "upcoming" && (
-          <Upcoming name="Upcoming" bookinghistory={bookinghistory} />
+        {activeTab === "upcoming" && bookinghistory !== null && (
+          <Upcoming name="Upcoming" bookinghistory={upcomingBookings} />
         )}
-        {activeTab === "past" && <Past name="Past" />}
+        {activeTab === "past" && bookinghistory !== null && (
+          <Past name="Past" bookinghistory={pastBookings} />
+        )}
         {activeTab === "cancelled" && <Cancelled name="Cancelled" />}
         {activeTab === "unsuccessfull" && (
           <Unsuccessfull name="Unsuccessfull" />

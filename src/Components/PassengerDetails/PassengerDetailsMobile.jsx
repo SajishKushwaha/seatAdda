@@ -40,7 +40,7 @@ const PassengerDetailsMobile = ({ storePassenger }) => {
   const [passDetails, setPassDetails] = React.useState(passengerArray);
   const [passEmail, setPassEmail] = React.useState("");
   const [passPhNo, setPassPhNo] = React.useState("");
-
+  const [selectedGender, setSelectedGender] = React.useState(null);
   const handlePassName = (e, indexNo) => {
     const newArr = [...passDetails];
     newArr[indexNo]["name"] = e.target.value;
@@ -53,11 +53,17 @@ const PassengerDetailsMobile = ({ storePassenger }) => {
     setPassDetails(newArr);
   };
 
-  const handlePassGender = (e, indexNo) => {
+  // const handlePassGender = (e, indexNo) => {
+  //   const newArr = [...passDetails];
+  //   newArr[indexNo]["gender"] = e.target.value;
+  //   setPassDetails(newArr);
+  // };
+  const handlePassGender = (e, indexNo, gender) => {
     const newArr = [...passDetails];
-    newArr[indexNo]["gender"] = e.target.value;
+    newArr[indexNo]["gender"] = gender;
     setPassDetails(newArr);
   };
+
   const Passenger = () => {
     storePassenger(passDetails, passEmail, passPhNo);
   };
@@ -205,8 +211,8 @@ const PassengerDetailsMobile = ({ storePassenger }) => {
                       onChange={(e) => handlePassAge(e, index)}
                     />
                   </div>
-                  <div className="flex flex-col items-center justify-center -mt-1"></div>
-                  <div
+                  {/* <div className="flex flex-col items-center justify-center -mt-1"></div> */}
+                  {/* <div
                     className="sm:w-1/3 sm:m-2 my-2  flex items-center justify-start"
                     onChange={(e) => handlePassGender(e, index)}
                   >
@@ -227,6 +233,36 @@ const PassengerDetailsMobile = ({ storePassenger }) => {
                         value="Female"
                       />
                       <span className="ml-2">Female</span>
+                    </div>
+                  </div> */}
+                  <div className="flex flex-col items-center justify-center -mt-1">
+                    <div className="flex items-center justify-center gap-1 w-full">
+                      <div className="flex w-1/2">
+                        <img
+                          src={man}
+                          alt="Male"
+                          className={`w-full rounded-full cursor-pointer ${
+                            selectedGender === "male" ? "selected" : ""
+                          }`}
+                          onClick={(e) => {
+                            handlePassGender(e, index, "male");
+                            setSelectedGender("male");
+                          }} // Assuming indexNo is defined
+                        />
+                      </div>
+                      <div className="flex w-1/2">
+                        <img
+                          src={women}
+                          alt="Female"
+                          className={`w-full rounded-full cursor-pointer ${
+                            selectedGender === "female" ? "selected" : ""
+                          }`}
+                          onClick={(e) => {
+                            handlePassGender(e, index, "female");
+                            setSelectedGender("female");
+                          }} // Assuming indexNo is defined
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

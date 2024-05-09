@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
 import Navbar from "../Navigation";
 import PassengerDetails from "./PassengerDetails";
@@ -14,7 +15,6 @@ const Passenger = () => {
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
-
   const totalFare = useSelector((state) => state.busDetailsReducer.totalFare);
   const From = useSelector((state) => state.busDetailsReducer.From);
   const To = useSelector((state) => state.busDetailsReducer.To);
@@ -49,16 +49,35 @@ const Passenger = () => {
   const [passEmail, setPassEmail] = React.useState("");
   const [isdisable, setIsDisable] = React.useState(false);
   const [passPhNo, setPassPhNo] = React.useState("");
-  const [wallet, setWallet] = React.useState({});
-  const [userWallet, setUserWallet] = React.useState("");
+  const [wallet, setWallet] = React.useState(null);
+  const [address, setAddress] = React.useState(null);
+  const [city, setCity] = React.useState(null);
+  const [pincode, setPincode] = React.useState(null);
+  const [state, setState] = React.useState(null);
+  const [insurance, setInsurance] = React.useState(0);
+  // const [userWallet, setUserWallet] = React.useState("");
+  const [deductionMade, setDeductionMade] = React.useState(false);
+  const insuranceSelected = insurance !== 0 ? 1 : 0;
+  // Function to handle deduction from wallet balance
   // const walletBalance = () => {
-  //   setUserWallet(wallet.balance_amount);
-  //   if (userWallet <= totalFare) {
-  //     setTotalFare(totalFare - userWallet);
+  //   if (!deductionMade) {
+  //     if (wallet >= totalFare) {
+  //       setWallet(wallet - totalFare - 180);
+  //     } else if (wallet === 0) {
+  //       setWallet(totalFare - wallet);
+  //     }
+  //     // Set the deduction state to true
+  //     setDeductionMade(true);
   //   } else {
-  //     setTotalFare(0);
+  //     // Return the deducted amount to the wallet
+  //     setWallet(wallet + totalFare + 180);
+  //     // Set the deduction state to false
+  //     setDeductionMade(false);
   //   }
   // };
+  const walletBalance = () => {
+    setDeductionMade(!deductionMade);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -89,7 +108,7 @@ const Passenger = () => {
 
         const data = await response.json(); // Parse response body as JSON
         setWallet(data);
-        console.log(data);
+        // console.log(data);
         // Log the response data
       } catch (error) {
         console.error("Error fetching data:", error.message);
@@ -112,87 +131,183 @@ const Passenger = () => {
   }, [passDetails, passEmail, passPhNo]); // Dependency array includes variables passDetails, passEmail, and passPhNo
 
   const handlePay = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append(
-      "Authorization",
-      userIdString.access_token.split("Bearer")[1]
-    );
-    const passengers = selectedSeats.map((seat, index) => ({
-      seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
-      seat_number: selectedSeats[index], // Seat number ko assign karenge
-      passenger_name: passDetails[index].name, // Passenger ka naam assign karenge (assume ki sirf ek passenger hai)
-      age: passDetails[index].age, // Passenger ki umar assign karenge
-      gender: passDetails[index].gender, // Passenger ka gender assign karenge
-    }));
-    const formdata = new FormData();
-    formdata.append("user_id", userIdString.user.user_id);
-    formdata.append("bus_schedule_id", busData.bus_schedule_id);
-    formdata.append("travels_name", busData.travels_name);
-    formdata.append("service_name", busData.service_name);
-    formdata.append("reg_no", busData.reg_no);
-    formdata.append("fare", totalFare);
-    formdata.append("sourse", From);
-    formdata.append("destination", To);
-    formdata.append("boading_points", foundObject.boading_points);
-    formdata.append("bording_type", foundObject.bording_type);
-    formdata.append("boarding_date", foundObject.date);
-    formdata.append("boarding_time", foundObject.time);
-    formdata.append("arrival_date", arrival.date);
-    formdata.append("arrival_time", arrival.time);
-    // formdata.append("seat_types", selectedTypes[0]);
-    // formdata.append("seat_number", selectedSeats[0]);
-    // for (let i = 0; i < passDetails.length; i++) {
-    //     formdata.append("passenger_name",passDetails[i].name);
-    //   }
-    // for (let i = 0; i < passDetails.length; i++) {
-    // formdata.append("age", passDetails[i].age);
-    // }
-    // for (let i = 0; i < passDetails.length; i++) {
-    //     formdata.append("gender", passDetails[i].gender);
-    //   }
-    formdata.append("phone", passPhNo);
-    formdata.append("email", passEmail);
-    passengers.forEach((passenger, index) => {
-      for (const key in passenger) {
-        formdata.append(`${key}[${index}]`, passenger[key]); // Corrected formdata.append line
+    if (deductionMade) {
+      if (wallet.balance_amount >= totalFare) {
+        const updateWallet = totalFare;
+        // console.log(updateWallet);
+        const myHeaders = new Headers();
+        myHeaders.append(
+          "Authorization",
+          userIdString.access_token.split("Bearer")[1]
+        );
+
+        const formdata = new FormData();
+        formdata.append("user_id", userIdString.user.user_id);
+        formdata.append("transaction_id", uuidv4());
+        formdata.append("transaction_type", "debit");
+        formdata.append("amount", updateWallet);
+        formdata.append("message", "update balance");
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://seatadda.co.in/auth/api/update-user-wallet",
+          requestOptions
+        );
+        const data = await response.json();
+
+        if (data.status === true) {
+          const myHeaders = new Headers();
+          myHeaders.append(
+            "Authorization",
+            userIdString.access_token.split("Bearer")[1]
+          );
+          const passengers = selectedSeats.map((seat, index) => ({
+            seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
+            seat_number: selectedSeats[index], // Seat number ko assign karenge
+            passenger_name: passDetails[index].name, // Passenger ka naam assign karenge (assume ki sirf ek passenger hai)
+            age: passDetails[index].age, // Passenger ki umar assign karenge
+            gender: passDetails[index].gender, // Passenger ka gender assign karenge
+          }));
+          const formdata = new FormData();
+          formdata.append("user_id", userIdString.user.user_id);
+          formdata.append("bus_schedule_id", busData.bus_schedule_id);
+          formdata.append("travels_name", busData.travels_name);
+          formdata.append("service_name", busData.service_name);
+          formdata.append("reg_no", busData.reg_no);
+          formdata.append("fare", totalFare);
+          formdata.append("sourse", From);
+          formdata.append("destination", To);
+          formdata.append("boading_points", foundObject.boading_points);
+          formdata.append("bording_type", foundObject.bording_type);
+          formdata.append("boarding_date", foundObject.date);
+          formdata.append("boarding_time", foundObject.time);
+          formdata.append("arrival_date", arrival.date);
+          formdata.append("arrival_time", arrival.time);
+          // formdata.append("seat_types", selectedTypes[0]);
+          // formdata.append("seat_number", selectedSeats[0]);
+          // for (let i = 0; i < passDetails.length; i++) {
+          //     formdata.append("passenger_name",passDetails[i].name);
+          //   }
+          // for (let i = 0; i < passDetails.length; i++) {
+          // formdata.append("age", passDetails[i].age);
+          // }
+          // for (let i = 0; i < passDetails.length; i++) {
+          //     formdata.append("gender", passDetails[i].gender);
+          //   }
+
+          formdata.append("phone", passPhNo);
+          formdata.append("address", address);
+          formdata.append("city", city);
+          formdata.append("pincode", pincode);
+          formdata.append("state", state);
+          formdata.append("insuranceSelected", insuranceSelected);
+          formdata.append("email", passEmail);
+          passengers.forEach((passenger, index) => {
+            for (const key in passenger) {
+              formdata.append(`${key}[${index}]`, passenger[key]); // Corrected formdata.append line
+            }
+          });
+
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+            redirect: "follow",
+          };
+
+          const response = await fetch(
+            "https://seatadda.co.in/auth/api/bus-booking",
+            requestOptions
+          );
+          //   .then((response) => response.text())
+          //   .then((result) => if(result.status=='false'){
+
+          //   })
+          //   .catch((error) => console.error(error));
+          const data = await response.json();
+
+          if (data.status === true) {
+            alert(data.message);
+            navigate("/bookings");
+          } else {
+            alert(data.message);
+          }
+        } else {
+          alert(data.message);
+        }
       }
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-
-    const response = await fetch(
-      "https://seatadda.co.in/auth/api/bus-booking",
-      requestOptions
-    );
-    //   .then((response) => response.text())
-    //   .then((result) => if(result.status=='false'){
-
-    //   })
-    //   .catch((error) => console.error(error));
-    const data = await response.json();
-
-    if (data.status === true) {
-      alert(data.message);
-      navigate("/bookings");
     } else {
-      alert(data.message);
+      const myHeaders = new Headers();
+      myHeaders.append(
+        "Authorization",
+        userIdString.access_token.split("Bearer")[1]
+      );
+      const passengers = selectedSeats.map((seat, index) => ({
+        seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
+        seat_number: selectedSeats[index], // Seat number ko assign karenge
+        passenger_name: passDetails[index].name, // Passenger ka naam assign karenge (assume ki sirf ek passenger hai)
+        age: passDetails[index].age, // Passenger ki umar assign karenge
+        gender: passDetails[index].gender, // Passenger ka gender assign karenge
+      }));
+      const formdata = {
+        user_id: userIdString.user.user_id,
+        bus_schedule_id: busData.bus_schedule_id,
+        travels_name: busData.travels_name,
+        service_name: busData.service_name,
+        reg_no: busData.reg_no,
+        fare: totalFare,
+        sourse: From,
+        destination: To,
+        boading_points: foundObject.boading_points,
+        bording_type: foundObject.bording_type,
+        boarding_date: foundObject.date,
+        boarding_time: foundObject.time,
+        arrival_date: arrival.date,
+        arrival_time: arrival.time,
+        phone: passPhNo,
+        address: address,
+        city: city,
+        pincode: pincode,
+        state: state,
+        insuranceSelected: insuranceSelected,
+        email: passEmail,
+        passengers: passengers,
+      };
+      localStorage.setItem("totalFare", JSON.stringify(formdata));
+      navigate(`/payment?total=${totalFare}`);
     }
   };
 
   const handleBackward = () => {
     navigate("/");
   };
-  const storePassenger = (passDetails, passEmail, passPhNo) => {
+  const storePassenger = (
+    passDetails,
+    passEmail,
+    passPhNo,
+    address,
+    city,
+    pincode,
+    state
+  ) => {
     setPassDetails(passDetails);
     setPassEmail(passEmail);
     setPassPhNo(passPhNo);
+    setAddress(address);
+    setCity(city);
+    setPincode(pincode);
+    setState(state);
   };
-
+  const storeInsurance = (insurancevalue) => {
+    // console.log(insurancevalue);
+    setInsurance(insurancevalue);
+  };
   return (
     <div>
       <div className="hidden md:block">
@@ -200,7 +315,10 @@ const Passenger = () => {
         <div className="container mx-auto ">
           <div className="grid md:grid-cols-4 p-2 sm:p-5 gap-4">
             <div className="md:col-span-3">
-              <PassengerDetails storePassenger={storePassenger} />
+              <PassengerDetails
+                storePassenger={storePassenger}
+                storeInsurance={storeInsurance}
+              />
             </div>
             <div className="flex flex-col gap-[1rem]">
               <div className="border-[1px] border-dashed  px-4  text-left h-fit  shadow-2xl  flex flex-col justify-between ">
@@ -240,6 +358,14 @@ const Passenger = () => {
                         ))}
                       </div>
                     </div>
+                    {insurance !== 0 && (
+                      <div className="m-2 flex  justify-between">
+                        <p className="w-fit">Travel Insurance:</p>
+                        <div className="font-bold">
+                          <p>{insurance}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <hr className="my-2 border-dashed" />
@@ -254,19 +380,19 @@ const Passenger = () => {
                         {totalFare}
                       </span>{" "}
                     </p>{" "}
-                    <p className="m-2 flex justify-between">
+                    {/* <p className="m-2 flex justify-between">
                       Bus Partner GST:{" "}
                       <span className="font-bold uppercase">
                         <span className="">&#8377;</span>180
                       </span>{" "}
-                    </p>{" "}
-                    <p className="m-2 flex justify-between">
+                    </p>{" "} */}
+                    {/* <p className="m-2 flex justify-between">
                       Total Amount:{" "}
                       <span className="font-bold">
                         <span className="">&#8377;</span>
                         {totalFare + 180}
                       </span>{" "}
-                    </p>
+                    </p> */}
                     {/* <p className="m-2 flex justify-between">
                       Discount:{" "}
                       <span className="font-bold">
@@ -284,19 +410,21 @@ const Passenger = () => {
                     <p>
                       <span className="font-bold">
                         <span className="">&#8377;</span>
-                        {totalFare + 180 - 50}
+                        {totalFare}
                       </span>{" "}
                     </p>
                   </div>
-                  {/* <input
+                  <input
                     style={{ marginTop: "10px" }}
                     type="checkbox"
                     id="wallet"
                     onClick={walletBalance}
                   />
-                  <label htmlFor="wallet" style={{ marginLeft: "10px" }}>
-                    {wallet.balance_amount}
-                  </label> */}
+                  {wallet !== null && (
+                    <label htmlFor="wallet" style={{ marginLeft: "10px" }}>
+                      {wallet.balance_amount}
+                    </label>
+                  )}
                 </div>{" "}
               </div>{" "}
               <div className="mx-1">

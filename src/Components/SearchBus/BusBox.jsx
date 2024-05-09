@@ -25,6 +25,7 @@ const BusBox = ({
   vehicle_make,
   other_info,
   seat_type,
+  cancellation_policy_id,
   bus_type_ac,
   booked_seat,
   seat_json,
@@ -42,7 +43,8 @@ const BusBox = ({
   setIsModalOpen,
 }) => {
   const dateObject = new Date(date);
-  // console.log(seat_json);
+  // console.log(cancellation_policy_id);
+  const boardingAndDropingPoint = JSON.parse(localStorage.getItem("busData"));
   const navigate = useNavigate();
   // Get the individual components of the date
   const month = dateObject.toLocaleString("default", { month: "long" });
@@ -75,6 +77,7 @@ const BusBox = ({
   };
   const [showPopup, setShowPopup] = useState(false);
   const [bookingpolicy, setBookingPolicy] = useState("");
+  const [cancelPolicy, setCancelPolicy] = useState(null);
   // console.log(parse(jsonData.props));
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   // const [feedback, setFeedback] = useState("");
@@ -207,6 +210,20 @@ const BusBox = ({
   };
 
   useEffect(() => {
+    const cancel = async () => {
+      const formData = new FormData();
+      formData.append("cancellation_policy_id", cancellation_policy_id);
+      const response = await fetch(
+        "https://seatadda.co.in/api/cancellation-policy",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      setCancelPolicy(data.data);
+    };
+    cancel();
     if (showPopup) {
       document.body.style.overflow = "hidden";
     } else {
@@ -295,7 +312,7 @@ const BusBox = ({
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  console.log(cancelPolicy);
   return (
     <>
       {/*  <div className="hidden   md:block p-2">
@@ -408,7 +425,7 @@ const BusBox = ({
         )}
       </div> */}
 
-      <div className="hidden   md:block p-2">
+      <div className="hidden   lg:block ">
         <div className=" bg-primarycolors-white rounded-md  hover:shadow-md">
           <div className=" flex justify-between">
             <div className="w-full">
@@ -524,7 +541,7 @@ const BusBox = ({
                       )}{" "}
                     </button>
                   }
-                  position="bottom center"
+                  position="bottom left"
                   on="hover"
                   closeOnDocumentClick
                   mouseLeaveDelay={300}
@@ -543,32 +560,35 @@ const BusBox = ({
                         <div className=" border-b-[1px]  border-primarycolors-gray p-2 font-bold">
                           Boarding Points
                         </div>
-                        <div className="p-2 h-[100px] overflow-auto ">
-                          {via_route.map((route, index) => (
-                            <div key={index} className=" mb-2 ">
-                              <p>{route.boading_points}</p>
-                              <p className=" text-primarycolors-textcolor text-xs">
-                                {" "}
-                                {route.city}
-                              </p>
-                            </div>
-                          ))}
+                        <div className="p-2 overflow-auto ">
+                          {boardingAndDropingPoint.s_boardingPoints.map(
+                            (route, index) => (
+                              <div key={index} className=" mb-2 ">
+                                <p>{`${route.city} - ${route.boading_points} (${route.bording_type})`}</p>
+                                {/* <p className=" text-primarycolors-textcolor text-xs">
+                                  {" "}
+                                  {route.city}
+                                </p> */}
+                              </div>
+                            )
+                          )}
                         </div>
                       </div>
                       <div className="">
                         <div className=" border-b-[1px]  border-primarycolors-gray p-2 font-bold">
                           Dropping Points
                         </div>
-                        <div className="p-2 h-[100px] overflow-auto ">
-                          {via_route.map((route, index) => (
-                            <div key={index} className=" mb-2 ">
-                              <p>{route.boading_points}</p>
-                              <p className=" text-primarycolors-textcolor text-xs">
-                                {" "}
-                                {route.city}
-                              </p>
-                            </div>
-                          ))}
+                        <div className="p-2  overflow-auto ">
+                          {boardingAndDropingPoint.d_boardingPoints.map(
+                            (route, index) => (
+                              <div key={index} className=" mb-2 ">
+                                <p>{`${route.city} - ${route.boading_points} (${route.bording_type})`}</p>
+                                {/* <p className=" text-primarycolors-textcolor text-xs">
+                                  {route.city}
+                                </p> */}
+                              </div>
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
@@ -620,12 +640,42 @@ const BusBox = ({
                   arrow={false}
                 >
                   <div>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Reiciendis veniam ea quaerat atque modi, consectetur
-                    mollitia saepe explicabo eos tempore corrupti accusamus, et
-                    eligendi. Dicta, harum est! Possimus quasi doloremque
-                    officiis. Ea molestias dolore animi. Possimus, iure itaque
-                    ipsum expedita et porro voluptas error rem.
+                    <h1>Cancellation Policy</h1>
+                    <hr />
+                    {cancelPolicy !== null &&
+                      cancelPolicy.cancellation_policy_details.map(
+                        (each, index) => {
+                          const from_days_hours = (day, hour) => {
+                            console.log(day);
+                            if (day === "0" && hour === "0") {
+                              return "departur time";
+                            } else if (day !== "0") {
+                              return day;
+                            } else if (hour === "-1") {
+                              return "issue time";
+                            } else {
+                              return `${hour} hour`;
+                            }
+                          };
+                          return (
+                            <div
+                              key={index}
+                              className="flex items-center  justify-between"
+                            >
+                              <div>
+                                {`${from_days_hours(
+                                  each.time_from_days,
+                                  each.time_from_hours
+                                )} to ${from_days_hours(
+                                  each.time_to_days,
+                                  each.time_to_hours
+                                )}`}
+                              </div>
+                              <div>{`${each.cancellation_charge} %`}</div>
+                            </div>
+                          );
+                        }
+                      )}
                   </div>
                 </Popup>
                 <div className=" text-primarycolors-gray">|</div>
@@ -679,15 +729,15 @@ const BusBox = ({
                 </Popup>
               </div>
             </div>
-            <div className=" border-l-[0.5px] border-primarycolors-gray p-4 flex w-[200px] justify-end items-center ">
+            <div className=" border-l-[0.5px] border-primarycolors-gray  flex w-[200px] justify-end items-center ">
               <div className="">
                 <p className=" text-sm">Starting at</p>
                 <p className="text-2xl font-bold mt-1">
                   <span className="">&#8377;</span>
                   {fare}
-                </p>{" "}
+                </p>
                 <button
-                  className="py-1 my-2  px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-md  rounded-md"
+                  className="py-1 my-2  px-3 bg-primarycolors-red  mx-1 text-primarycolors-white text-md  rounded-md"
                   onClick={handleButtonClick}
                 >
                   Show Route
@@ -696,7 +746,7 @@ const BusBox = ({
                   <button
                     type="submit"
                     onClick={handleViewSeat}
-                    className="py-1  px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-lg  rounded-md "
+                    className="py-1 my-2 px-5 bg-primarycolors-red  mx-1 text-primarycolors-white text-md  rounded-md "
                   >
                     {!showViewSeat ? "View Seat" : "Hide seat"}
                   </button>
@@ -1097,7 +1147,7 @@ const BusBox = ({
 
       {/* Mobile Devices*/}
       <div>
-        <div className="block md:hidden  ">
+        <div className="block lg:hidden  ">
           <div className=" bg-primarycolors-white rounded-xl  hover:shadow-md p-3 my-4">
             <div className=" grid grid-cols-4 gap-4">
               <div className=" col-span-3 flex flex-col gap-1">
@@ -1176,16 +1226,16 @@ const BusBox = ({
             </div>
             <hr className=" h-[0.2px] my-1 text-primarycolors-gray" />
 
-            <div className=" grid grid-cols-5">
+            <div className=" grid grid-cols-3">
               <div className="col-span-3 flex items-center text-xs gap-1 pl-2">
                 {/* <p className=" text-primarycolors-textcolor"> 3+ Amenities</p> |
                 <button className=" text-primarycolors-red">
                   View More...
                 </button> */}
               </div>
-              <div className=" col-span-2 flex justify-end">
+              <div className=" col-span-3 flex justify-end">
                 <button
-                  className="py-1 mt-1  px-2 bg-primarycolors-red  mx-1 text-primarycolors-white text-sm  rounded-md"
+                  className="py-1  mt-1 px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-lg  rounded-md"
                   onClick={handleButtonClick}
                 >
                   Show Route
@@ -1194,7 +1244,7 @@ const BusBox = ({
                   <button
                     type="submit"
                     onClick={handleViewSeat}
-                    className="py-1  px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-lg  rounded-md "
+                    className="py-1  mt-1 px-2 bg-primarycolors-red  mx-3 text-primarycolors-white text-lg  rounded-md "
                   >
                     {!showViewSeat ? "View Seat" : "Hide seat"}
                   </button>

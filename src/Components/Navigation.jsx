@@ -321,6 +321,12 @@ const Navbar = () => {
                         <NavLink to="/account">Edit Profile</NavLink>
                       </li>
                       <li className="cursor-pointer w-full">
+                        <NavLink to="/bookings">Booking History</NavLink>
+                      </li>
+                      <li className="cursor-pointer w-full">
+                        <NavLink to="/wallet">Wallet</NavLink>
+                      </li>
+                      <li className="cursor-pointer w-full">
                         <NavLink onClick={handleLogout}>Logout</NavLink>
                       </li>
                     </ul>
@@ -357,7 +363,7 @@ const Navbar = () => {
                   Offers
                 </NavLink>
               </li>
-             {/*  <li className="p-2 hover:text-primarycolors-red cursor-pointer">
+              {/*  <li className="p-2 hover:text-primarycolors-red cursor-pointer">
                 <NavLink onClick={handleLinkClick} to="/free-rides">
                   Get Free Rides
                 </NavLink>

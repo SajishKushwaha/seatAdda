@@ -16,7 +16,7 @@ const Sleeper = ({
   setIsModalOpen,
 }) => {
   var color;
-  console.log(available);
+  // console.log(available);
   if (!available) {
     color = { backgroundColor: "red", color: "white" };
   } else if (selectedSeats.includes(seatNo)) {

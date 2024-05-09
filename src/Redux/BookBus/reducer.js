@@ -22,7 +22,8 @@ const initState = {
   email: "",
   phoneNumber: "",
   busData:[],
-  routeDetails:[]
+  routeDetails:[],
+  travelInsurance:0
 };
 export const busDetailsReducer = (state = initState, { type, payload }) => {
   switch (type) {
@@ -61,7 +62,9 @@ export const busDetailsReducer = (state = initState, { type, payload }) => {
         selectedTypes:payload.selectedTypes,
         passengerDetails:payload.passengerDetails,
         phoneNumber:payload.phoneNumber,
-        email:payload.email
+        email:payload.email,
+        travelInsurance:payload.travelInsurance
+
       };
     case GET_BUS_DETAILS_FAIL:
       return {

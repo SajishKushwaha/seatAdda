@@ -50,7 +50,6 @@ const OffersSection = () => {
             </div> */}
 
             <NavLink to="/offers" className="mx-3 text-sm md:text-lg">
-              {" "}
               <button className=" p-1 md:p-2 px-3 md:px-4 bg-primarycolors-red text-primarycolors-white rounded-lg">
                 View All
               </button>
@@ -83,9 +82,8 @@ const OffersSection = () => {
           >
             {allOffers.map((offer, index) => {
               return (
-                <SwiperSlide>
-                  {" "}
-                  <OfferCard key={index} offer={offer} />{" "}
+                <SwiperSlide key={index}>
+                  <OfferCard offer={offer} />
                 </SwiperSlide>
               );
             })}
