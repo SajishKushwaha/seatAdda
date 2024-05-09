@@ -24,10 +24,7 @@ const WalletRecharge = () => {
     const formdata = new FormData();
     formdata.append("user_id", userIdString.user.user_id);
     formdata.append("amount", updateWallet);
-    formdata.append(
-      "return_url",
-      "http://localhost:3000/Walletrechargeresponse"
-    );
+    formdata.append("return_url", "/Walletrechargeresponse");
 
     const requestOptions = {
       method: "POST",
