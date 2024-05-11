@@ -195,7 +195,7 @@ const Navbar = () => {
           <div>
             <NavLink to="/">
               <img
-                className="logo"
+                className=""
                 src={`https://seatadda.in/admin/Settings/${DATA.brand_logo}`}
                 alt=""
                 srcSet=""
@@ -235,7 +235,7 @@ const Navbar = () => {
           <div>
             <NavLink to="/">
               <img
-                className="logo"
+                className=""
                 src={`https://seatadda.in/admin/Settings/${DATA.brand_logo}`}
                 alt=""
                 srcSet=""

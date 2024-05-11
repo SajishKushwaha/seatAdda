@@ -10,36 +10,36 @@ import AppBanner from "./AppBanner";
 import Footer from "./Footer";
 import HeroSection from "./HeroSection";
 const Home = () => {
-    return (
-        <div className="">
-            <Navbar />
-            <ChatUs />
+  return (
+    <div className="">
+      <Navbar />
+      <ChatUs />
 
-            {/* header */}
-            <HeroSection />
+      {/* header */}
+      <HeroSection />
 
-            {/* Offers */}
-            <OffersSection />
+      {/* Offers */}
+      <OffersSection />
 
-            {/* All Bus Services */}
-            {/* <BusServicesSection /> */}
+      {/* All Bus Services */}
+      {/* <BusServicesSection /> */}
 
-            {/* Extra */}
-            <ExtraService />
+      {/* Extra */}
+      <ExtraService />
 
-            {/* Details */}
-            <Details />
+      {/* Details */}
+      <Details />
 
-            {/* FAQ */}
-            <FAQ />
+      {/* FAQ */}
+      <FAQ />
 
-            {/* APP Banner */}
-            <AppBanner />
+      {/* APP Banner */}
+      <AppBanner />
 
-            {/* Footer */}
-            <Footer />
-        </div>
-    );
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
 };
 
 export default Home;

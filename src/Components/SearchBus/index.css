@@ -19,3 +19,7 @@
 .boradingPoint {
   text-align: start;
 }
+.boradingPoint {
+  border-style: none;
+  border-width: 0px;
+}

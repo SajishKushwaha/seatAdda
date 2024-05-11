@@ -1,11 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { BiArrowBack, BiBus } from "react-icons/bi";
 // import { FaLocationCrosshairs } from "react-icons/fa6";
 // import { MdStar } from "react-icons/md";
 // import { BiUser } from "react-icons/bi";
+
 import "./book.css";
 const Upcoming = ({ bookinghistory }) => {
   // console.log(bookinghistory);
+  const navigate = useNavigate();
   function convertTo12HourFormat(time) {
     // Parse the time string
     const [hours, minutes] = time.split(":").map((num) => parseInt(num));
@@ -33,9 +36,11 @@ const Upcoming = ({ bookinghistory }) => {
     const dateB = new Date(b.arrival_date);
     return dateB - dateA;
   });
+  const ViewTicket = (ticket) => {
+    navigate(`/SeatShow?ticketid=${ticket}`);
+  };
 
-  console.log(futureBookings);
-  // console.log(bookinghistory);
+  console.log(bookinghistory);
   return (
     <div className="m-3 childscroll overflow-y-scroll  md:h-[800px] mb-[7rem] sm:mb-[1rem]">
       {futureBookings.map((data, index) => {
@@ -52,9 +57,13 @@ const Upcoming = ({ bookinghistory }) => {
                     {`${data.travels_name} (${data.reg_no})`}
                   </h2>
                 </div>
-                <a href="/" download>
-                  <button className="px-5  view_ticket">view ticket</button>
-                </a>
+
+                <button
+                  className="px-5  view_ticket"
+                  onClick={() => ViewTicket(data.ticket_id)}
+                >
+                  view ticket
+                </button>
               </div>
 
               <div className="  gap-5 p-3 border-t-[1px] border-primarycolors-gray">

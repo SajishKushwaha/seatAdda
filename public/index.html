@@ -28,6 +28,11 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Seat Adda</title>
+    <script
+      src="https://kit.fontawesome.com/ed952f92e6.js"
+      crossorigin="anonymous"
+    ></script>
+    <script id="react-dotenv" src="./env.js"></script>
   </head>
 
   <body>
@@ -43,54 +48,56 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <script
+      src="//code.tidio.co/vkagjan4qqol8m1pbsczclfoqx86hoyr.js"
+      async=""
+    ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Fetch favicon URL from the API
+        fetch("https://seatadda.co.in/general-settings")
+          .then((response) => response.json())
+          .then((data) => {
+            // console.log(data.date.favicon)
+            // Create a new link element for the favicon
+            var link = document.createElement("link");
+            link.type = "image/x-icon";
+            link.rel = "icon";
+            link.href = `https://seatadda.in/admin/Settings/${data.date.favicon}`;
+
+            var meta = document.createElement("meta");
+            meta.name = "description";
+
+            meta.content = data.date.meta_desc;
+
+            // Find the current favicon and remove it
+            var currentFavicon = document.querySelector('link[rel="icon"]');
+            if (currentFavicon) {
+              document.head.removeChild(currentFavicon);
+            }
+
+            // Append the new favicon link to the document head
+            document.head.appendChild(link);
+
+            var currentMeta = document.querySelector(
+              'meta[name="description"]'
+            );
+            if (currentMeta) {
+              document.head.removeChild(currentMeta);
+            }
+
+            // Append the new favicon link to the document head
+            document.head.appendChild(meta);
+          })
+          .catch((error) => console.error("Error fetching favicon:", error));
+      });
+    </script>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/html-react-parser@latest/dist/html-react-parser.min.js"></script>
+    <script>
+      window.HTMLReactParser(/* string */);
+    </script>
   </body>
-
-  <script
-    src="//code.tidio.co/vkagjan4qqol8m1pbsczclfoqx86hoyr.js"
-    async
-  ></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Fetch favicon URL from the API
-      fetch("https://seatadda.co.in/general-settings")
-        .then((response) => response.json())
-        .then((data) => {
-          // console.log(data.date.favicon)
-          // Create a new link element for the favicon
-          var link = document.createElement("link");
-          link.type = "image/x-icon";
-          link.rel = "icon";
-          link.href = `https://seatadda.in/admin/Settings/${data.date.favicon}`;
-
-          var meta = document.createElement("meta");
-          meta.name = "description";
-
-          meta.content = data.date.meta_desc;
-
-          // Find the current favicon and remove it
-          var currentFavicon = document.querySelector('link[rel="icon"]');
-          if (currentFavicon) {
-            document.head.removeChild(currentFavicon);
-          }
-
-          // Append the new favicon link to the document head
-          document.head.appendChild(link);
-
-          var currentMeta = document.querySelector('meta[name="description"]');
-          if (currentMeta) {
-            document.head.removeChild(currentMeta);
-          }
-
-          // Append the new favicon link to the document head
-          document.head.appendChild(meta);
-        })
-        .catch((error) => console.error("Error fetching favicon:", error));
-    });
-  </script>
-
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/html-react-parser@latest/dist/html-react-parser.min.js"></script>
-  <script>
-    window.HTMLReactParser(/* string */);
-  </script>
 </html>

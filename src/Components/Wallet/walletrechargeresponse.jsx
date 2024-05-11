@@ -79,6 +79,8 @@ const Walletrechargeresponse = () => {
       if (data.status) {
         alert("wallet recharge successfull");
         navigate("/wallet");
+      } else {
+        alert(data.message);
       }
     };
 

@@ -312,7 +312,7 @@ const BusBox = ({
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(cancelPolicy);
+  // console.log(cancelPolicy);
   return (
     <>
       {/*  <div className="hidden   md:block p-2">
@@ -646,7 +646,7 @@ const BusBox = ({
                       cancelPolicy.cancellation_policy_details.map(
                         (each, index) => {
                           const from_days_hours = (day, hour) => {
-                            console.log(day);
+                            // console.log(day);
                             if (day === "0" && hour === "0") {
                               return "departur time";
                             } else if (day !== "0") {
@@ -720,6 +720,7 @@ const BusBox = ({
                     padding: "10px",
                     border: "none",
                     marginTop: "35px",
+                    width: "400px",
                   }}
                   arrow={false}
                 >

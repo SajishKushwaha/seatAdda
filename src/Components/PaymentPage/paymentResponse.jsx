@@ -16,7 +16,6 @@ const PaymentResponse = () => {
   const userId = localStorage.getItem("userData");
   const userIdString = JSON.parse(userId);
 
-  console.log(totalFare);
   useEffect(() => {
     const paymentResponse = async () => {
       const myHeaders = new Headers();
@@ -48,33 +47,29 @@ const PaymentResponse = () => {
       const data = await response.json();
 
       if (data.status) {
-        // console.log(updateWallet);
         const myHeaders = new Headers();
         myHeaders.append(
           "Authorization",
           userIdString.access_token.split("Bearer")[1]
         );
-
         const formdata = new FormData();
         formdata.append("user_id", userIdString.user.user_id);
         formdata.append("transaction_id", uuidv4());
         formdata.append("transaction_type", "debit");
         formdata.append("amount", totalFare.fare);
         formdata.append("message", "update balance");
-
         const requestOptions = {
           method: "POST",
           headers: myHeaders,
           body: formdata,
           redirect: "follow",
         };
-
         const response = await fetch(
           "https://seatadda.co.in/auth/api/update-user-wallet",
           requestOptions
         );
-        const data = await response.json();
-        if (data.status === true) {
+
+        if (response.ok === true) {
           const myHeaders = new Headers();
           myHeaders.append(
             "Authorization",
@@ -109,33 +104,30 @@ const PaymentResponse = () => {
           formdata.append("state", totalFare.state);
           formdata.append("insuranceSelected", totalFare.insuranceSelected);
           formdata.append("email", totalFare.email);
+          formdata.append("insurance_id", totalFare.insurance_id);
           totalFare.passengers.forEach((passenger, index) => {
             for (const key in passenger) {
               formdata.append(`${key}[${index}]`, passenger[key]); // Corrected formdata.append line
             }
           });
-
           const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formdata,
             redirect: "follow",
           };
-
           const response = await fetch(
             "https://seatadda.co.in/auth/api/bus-booking",
             requestOptions
           );
-
-          const data = await response.json();
-
-          if (data.status === true) {
-            alert(data.message);
+          const databook = await response.json();
+          if (databook.status === true) {
+            alert(`success ${databook.message}`);
             navigate("/bookings");
-          } else {
-            alert(data.message);
           }
         }
+      } else {
+        alert(data.message);
       }
     };
 

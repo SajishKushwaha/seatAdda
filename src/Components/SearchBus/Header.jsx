@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -10,7 +10,8 @@ import {
 import { NavLink } from "react-router-dom";
 import Calendar from "react-calendar";
 import { MdLocationCity } from "react-icons/md";
-
+import Select from "react-select";
+import "./index.css";
 // const routes = [
 //   "Motihari",
 //   "Muzaffarpur",
@@ -25,6 +26,7 @@ import { MdLocationCity } from "react-icons/md";
 //   "Jaipur, Rajasthan",
 // ];
 const Header = ({ setIsCalender }) => {
+  const inputRef = useRef(null);
   const navigate = useNavigate();
   let { search } = useLocation();
   const query = new URLSearchParams(search);
@@ -87,7 +89,30 @@ const Header = ({ setIsCalender }) => {
   const hanldeIsCalender = () => {
     setShowCalendar(true);
     setIsCalender(true);
+    setShowFromRoutes(false);
+    setShowToRoutes(false);
   };
+  useEffect(() => {
+    console.log("Adding event listener");
+    function handleClickOutside(event) {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target) &&
+        !event.target.classList.contains("custom-scrollbar")
+      ) {
+        setShowFromRoutes(false);
+        setShowToRoutes(false);
+        setShowCalendar(false);
+        setIsCalender(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      console.log("Removing event listener");
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [inputRef]);
 
   useEffect(() => {
     async function fetchRoutes() {
@@ -107,16 +132,20 @@ const Header = ({ setIsCalender }) => {
         console.error("Error fetching routes:", error);
       }
     }
+
     fetchRoutes();
   }, []);
-
+  console.log(fromLocation);
   return (
     <section className=" bg-hero  bg-cover bg-center bg-no-repeat ">
       <div className="backdrop-blur-[0.5px] flex items-center justify-center">
         <div className="flex items-center justify-center text-center ">
           <div className="my-1 sm:p-1">
             <div className="md:flex p-5">
-              <div className="md:flex mb-2 relative md:bg-primarycolors-white rounded-xl md:rounded-none md:rounded-l-xl">
+              <div
+                ref={inputRef}
+                className="md:flex mb-2 relative md:bg-primarycolors-white rounded-xl md:rounded-none md:rounded-l-xl"
+              >
                 <div className="flex relative bg-primarycolors-white rounded-xl md:rounded-none mx-2 focus:border-2 items-center md:w-full p-2 my-4 md:my-0">
                   <BiSolidNavigation
                     className="text-primarycolors-red"
@@ -143,6 +172,7 @@ const Header = ({ setIsCalender }) => {
                       setShowFromRoutes(true);
                       setShowToRoutes(false);
                       setIsCalender(true);
+                      setShowCalendar(false);
                     }}
                   />
                   {showFromRoutes && (
@@ -179,6 +209,18 @@ const Header = ({ setIsCalender }) => {
                       </div>
                     </div>
                   )}
+                  {/* <div className="App">
+                    <Select
+                      className="boradingPoint1"
+                      defaultValue={fromLocation}
+                      onChange={(selectedOption) => {
+                        setFromLocation(selectedOption.label);
+                        // setIsOpenDrop(true); // Close the dropdown menu
+                      }}
+                      placeholder="Search Boarding Point"
+                      options={filterstate}
+                    />
+                  </div> */}
                 </div>
                 <div className="absolute justify-end w-full md:w-auto top-10 md:top-0  z-[1] md:relative flex  px-5   md:justify-center items-center md:mx-2 lg:mx-4">
                   <button onClick={handleTransfer}>
@@ -208,6 +250,7 @@ const Header = ({ setIsCalender }) => {
                       setShowToRoutes(true);
                       setShowFromRoutes(false);
                       setIsCalender(true);
+                      setShowCalendar(false);
                     }}
                     // onBlur={() => setShowFromRoutes(false)}
                   />{" "}
@@ -273,6 +316,7 @@ const Header = ({ setIsCalender }) => {
                   </div>
                 </div> */}
                 <div
+                  ref={inputRef}
                   /*  onClick={() => setShowCalendar(!showCalendar)} */
                   className="flex flex-shrink relative bg-primarycolors-white rounded-xl md:rounded-none mx-2 items-center md:w-full p-2 my-4 md:my-0 md:border-l-[1px]"
                 >

@@ -1,4 +1,6 @@
 import "./App.css";
+/* The following line can be included in a src/App.scss */
+
 import Home from "./Components/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navigation from "./Components/Navigation";
@@ -31,6 +33,10 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import NotFound from "./Components/404/NotFound";
 import WalletAdded from './Components/Wallet/walletAdded';
 import Walletrechargeresponse from "./Components/Wallet/walletrechargeresponse";
+import SeatShow from "./Components/SeatShow";
+
+import ReferAndEarn from "./Components/ReferAndEarn";
+
 
 function App() {
   const { pathname } = useLocation();
@@ -71,7 +77,7 @@ function App() {
             </ProtectedRoute>
           }
         /> */}
-        
+        <Route path="/SeatShow" Component={SeatShow}></Route>
         <Route path="/free-rides" Component={FreeRides}></Route>
         <Route path="/bookings" Component={Bookings}></Route>
         <Route path="/wallet" Component={Wallet}></Route>
@@ -80,7 +86,7 @@ function App() {
         <Route path="/WalletAdded" Component={WalletAdded}></Route>
         <Route path="/PaymentResponse" Component={PaymentResponse}></Route>
         <Route path="/Walletrechargeresponse" Component={Walletrechargeresponse}></Route>
-        
+        <Route path="/ReferAndEarn" Component={ReferAndEarn}></Route>
         <Route path="*" Component={NotFound}/>
       </Routes>
     </div>

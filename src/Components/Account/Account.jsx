@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import AccountSection from "./AccountSection";
 import { BiArrowBack } from "react-icons/bi";
 import Navbar from "../Navigation";
@@ -35,39 +36,48 @@ const Account = () => {
   );
 
   // console.log(currentCustomer)
- /*  let storedUserData = localStorage.getItem("userData");
+  /*  let storedUserData = localStorage.getItem("userData");
   console.log(JSON.parse(storedUserData).user.user_id);
   storedUserData = JSON.parse(storedUserData); */
-  const [userData, setUserData] = useState({
-    username: "",
-    usermobile: "",
-    useremail: "",
-    userBirthDate: currentDate,
-    gender: "male", // Default to male
-  });
+  const [userData, setUserData] = useState(null);
   const handleEdit = () => {
+    setEdit(!edit);
+    // setSave(!save);
+  };
+  // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // const phoneNumberPattern = /^\d{10}$/;
+  const handleSave = () => {
     setEdit(!edit);
     setSave(!save);
   };
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const phoneNumberPattern = /^\d{10}$/;
-  const handleSave = (updatedUserData) => {
-    const email = updatedUserData.useremail;
-    const phone = updatedUserData.usermobile;
-    const isValidemail = emailPattern.test(email);
-    const isValidphone = phoneNumberPattern.test(phone);
-    if (isValidemail && isValidphone) {
-      setUserData(updatedUserData);
-      dispatch(edituser(updatedUserData));
-      // localStorage.setItem("updatedUserData", JSON.stringify(updatedUserData)); // Save to localStorage
-      alert("Data Saved Successfully");
-      setEdit(!edit);
-      setSave(!save);
-    } else {
-      alert("Enter Data in Proper Format");
-    }
-  };
+  const userId = localStorage.getItem("userData");
+  const userIdString = JSON.parse(userId);
+  const user_details = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      userIdString.access_token.split("Bearer")[1]
+    );
+    const formdata = new FormData();
+    formdata.append("user_id", userIdString.user.user_id);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
 
+    const response = await fetch(
+      "https://seatadda.co.in/auth/api/user-details",
+      requestOptions
+    );
+    const data = await response.json();
+    setUserData(data.data);
+    console.log(data.data);
+  };
+  useEffect(() => {
+    user_details();
+  }, []);
   return (
     <div className="">
       <div className="hidden md:block ">
@@ -109,22 +119,24 @@ const Account = () => {
               Edit
             </button>
           )}
-          {save && (
+          {/* {save && (
             <button
               onClick={() => handleSave(userData)}
               className="bg-primarycolors-red text-primarycolors-white px-4 py-2 rounded-md text-center  text-xl mt-1  font-light  "
             >
               Save
             </button>
-          )}
+          )} */}
         </div>{" "}
         <div className="">
-          <AccountSection
-            isEditable={edit}
-            userData={userData}
-            setUserData={setUserData}
-            onSave={handleSave}
-          />
+          {userData !== null && (
+            <AccountSection
+              isEditable={edit}
+              userData={userData}
+              // setUserData={setUserData}
+              // handleSave={handleSave}
+            />
+          )}
         </div>
       </div>
 

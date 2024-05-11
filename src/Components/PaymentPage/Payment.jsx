@@ -6,6 +6,7 @@ import PassengerDetails from "../PassengerDetails/PassengerDetails";
 import PaymentForm from "./PaymentForm";
 import FooterDesktop from "../FooterDesktop";
 import { useLocation } from "react-router-dom";
+import env from "react-dotenv";
 const Payment = () => {
   const isLoading = useSelector((state) => state.busDetailsReducer.isLoading);
   const selectedSeats = useSelector(
@@ -32,11 +33,11 @@ const Payment = () => {
           "Authorization",
           userIdString.access_token.split("Bearer")[1].trim() // Remove leading/trailing whitespaces
         );
-
+        console.log(env.BaseUrl);
         const formdata = new FormData();
         formdata.append("user_id", userIdString.user.user_id);
         formdata.append("amount", total);
-        formdata.append("return_url", "/PaymentResponse");
+        formdata.append("return_url", `${env.base_url}/PaymentResponse`);
 
         const requestOptions = {
           method: "POST",

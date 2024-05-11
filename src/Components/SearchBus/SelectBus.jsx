@@ -4,6 +4,7 @@ import Header from "./Header";
 import toast, { Toaster } from "react-hot-toast";
 import Right from "./Right";
 import Left from "./Left";
+
 import {
   MdAcUnit,
   MdAirlineSeatLegroomNormal,
@@ -154,7 +155,7 @@ const SelectBus = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-  // console.log(isCalender);
+
   return (
     <>
       <Navbar />

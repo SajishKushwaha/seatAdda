@@ -54,6 +54,7 @@ const Passenger = () => {
   const [city, setCity] = React.useState(null);
   const [pincode, setPincode] = React.useState(null);
   const [state, setState] = React.useState(null);
+  const [insuranceId, setInsuranceId] = React.useState(null);
   const [insurance, setInsurance] = React.useState(0);
   // const [userWallet, setUserWallet] = React.useState("");
   const [deductionMade, setDeductionMade] = React.useState(false);
@@ -140,27 +141,23 @@ const Passenger = () => {
           "Authorization",
           userIdString.access_token.split("Bearer")[1]
         );
-
         const formdata = new FormData();
         formdata.append("user_id", userIdString.user.user_id);
         formdata.append("transaction_id", uuidv4());
         formdata.append("transaction_type", "debit");
         formdata.append("amount", updateWallet);
         formdata.append("message", "update balance");
-
         const requestOptions = {
           method: "POST",
           headers: myHeaders,
           body: formdata,
           redirect: "follow",
         };
-
         const response = await fetch(
           "https://seatadda.co.in/auth/api/update-user-wallet",
           requestOptions
         );
         const data = await response.json();
-
         if (data.status === true) {
           const myHeaders = new Headers();
           myHeaders.append(
@@ -200,38 +197,34 @@ const Passenger = () => {
           // for (let i = 0; i < passDetails.length; i++) {
           //     formdata.append("gender", passDetails[i].gender);
           //   }
-
           formdata.append("phone", passPhNo);
           formdata.append("address", address);
           formdata.append("city", city);
           formdata.append("pincode", pincode);
           formdata.append("state", state);
           formdata.append("insuranceSelected", insuranceSelected);
+          formdata.append("insurance_id", insuranceId);
           formdata.append("email", passEmail);
           passengers.forEach((passenger, index) => {
             for (const key in passenger) {
               formdata.append(`${key}[${index}]`, passenger[key]); // Corrected formdata.append line
             }
           });
-
           const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formdata,
             redirect: "follow",
           };
-
           const response = await fetch(
             "https://seatadda.co.in/auth/api/bus-booking",
             requestOptions
           );
           //   .then((response) => response.text())
           //   .then((result) => if(result.status=='false'){
-
           //   })
           //   .catch((error) => console.error(error));
           const data = await response.json();
-
           if (data.status === true) {
             alert(data.message);
             navigate("/bookings");
@@ -243,11 +236,6 @@ const Passenger = () => {
         }
       }
     } else {
-      const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        userIdString.access_token.split("Bearer")[1]
-      );
       const passengers = selectedSeats.map((seat, index) => ({
         seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
         seat_number: selectedSeats[index], // Seat number ko assign karenge
@@ -278,6 +266,7 @@ const Passenger = () => {
         insuranceSelected: insuranceSelected,
         email: passEmail,
         passengers: passengers,
+        insurance_id: insuranceId,
       };
       localStorage.setItem("totalFare", JSON.stringify(formdata));
       navigate(`/payment?total=${totalFare}`);
@@ -294,7 +283,8 @@ const Passenger = () => {
     address,
     city,
     pincode,
-    state
+    state,
+    insuranceId
   ) => {
     setPassDetails(passDetails);
     setPassEmail(passEmail);
@@ -303,6 +293,7 @@ const Passenger = () => {
     setCity(city);
     setPincode(pincode);
     setState(state);
+    setInsuranceId(insuranceId);
   };
   const storeInsurance = (insurancevalue) => {
     // console.log(insurancevalue);

@@ -53,7 +53,7 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
     newArr[indexNo]["gender"] = e.target.value;
     setPassDetails(newArr);
   };
-
+  const insuranceId = insurancevalue !== null && insurancevalue[0].id;
   const Passenger = () => {
     storePassenger(
       passDetails,
@@ -62,7 +62,8 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
       address,
       city,
       pincode,
-      state
+      state,
+      insuranceId
     );
   };
   const travelInsurance = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-
+import env from "react-dotenv";
 import { useNavigate } from "react-router-dom";
 const WalletRecharge = () => {
   const [moneyAddedd, setMoneyadded] = React.useState(null);
@@ -24,7 +24,7 @@ const WalletRecharge = () => {
     const formdata = new FormData();
     formdata.append("user_id", userIdString.user.user_id);
     formdata.append("amount", updateWallet);
-    formdata.append("return_url", "/Walletrechargeresponse");
+    formdata.append("return_url", `${env.base_url}/Walletrechargeresponse`);
 
     const requestOptions = {
       method: "POST",
