@@ -3,6 +3,10 @@ import { FaPhoneVolume } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import { useLocation } from "react-router-dom";
 import jsPDF from "jspdf";
+import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
+import Navbar from "./Navigation";
+import { BiArrowBack } from "react-icons/bi";
 import html2canvas from "html2canvas";
 import "./index.css";
 const SeatShow = () => {
@@ -30,6 +34,10 @@ const SeatShow = () => {
     );
     const parts = formattedDate.split(" ");
     return `${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`;
+  };
+  const navigate = useNavigate();
+  const handleBackward = () => {
+    navigate("/");
   };
   // const reportTemplateRef = useRef(null);
 
@@ -63,7 +71,9 @@ const SeatShow = () => {
       link.click();
     });
   };
-
+  const handlePrint = () => {
+    window.print();
+  };
   let { search } = useLocation();
   const query = new URLSearchParams(search);
   const ticket_id = query.get("ticketid");
@@ -107,21 +117,38 @@ const SeatShow = () => {
   }, []);
   return (
     <>
+      <div>
+        {" "}
+        <div className="hidden md:block ">
+          <Navbar />
+        </div>
+        <div className="md:hidden navbar block mb-20">
+          <div className="fixed  border-b-[1px] border-primarycolors-gray  overflow-y-hidden top-0   z-10 w-full  flex items-center gap-4  text-primarycolors-white py-3 px-2 bg-primarycolors-textcolor">
+            <div className="text-3xl font-normal" onClick={handleBackward}>
+              <BiArrowBack className="font-light" />
+            </div>
+            <div className=" px-0 text-left text-xl mt-1 font-light ">
+              Bookings
+            </div>
+          </div>
+        </div>
+      </div>
       {seatDetails !== null && (
-        <div>
+        <div className="mb-20">
           <div
             style={{
               textAlign: "end",
               margin: "20px",
               marginRight: "20px",
             }}
+            className="navbar"
           >
             <button
               style={{
                 marginRight: "20px",
                 borderStyle: "solid",
                 borderWidth: "1px",
-                backgroundColor: "blue",
+                backgroundColor: "red",
                 color: "white",
                 width: "120px",
                 height: "40px",
@@ -136,12 +163,13 @@ const SeatShow = () => {
                 marginLeft: "20px",
                 borderStyle: "solid",
                 borderWidth: "1px",
-                backgroundColor: "blue",
+                backgroundColor: "red",
                 color: "white",
                 width: "120px",
                 height: "40px",
                 borderRadius: "10px",
               }}
+              onClick={handlePrint}
             >
               Print
             </button>
@@ -343,7 +371,7 @@ const SeatShow = () => {
                   marginLeft: "20px",
                   display: "flex",
                   flexDirection: "row",
-                  marginBottom: "10px",
+                  marginBottom: "20px",
                 }}
               >
                 <li style={{ width: "50vw" }} className="termAndCondition">
@@ -502,6 +530,8 @@ const SeatShow = () => {
                   </ol>
                 </li>
               </ol>
+              {/* <div style={{ pageBreakAfter: "always" }}></div> */}
+
               <table>
                 <tr>
                   <th>Cancellation time</th>
@@ -556,6 +586,9 @@ const SeatShow = () => {
               </div>
             </div>
           </div>
+          {/* <div className="">
+            <Footer />
+          </div> */}
         </div>
       )}
     </>

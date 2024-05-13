@@ -51,7 +51,7 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
   const [passEmail, setPassEmail] = React.useState("");
   const [passPhNo, setPassPhNo] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedGender, setSelectedGender] = React.useState(null);
+  const [selectedGender, setSelectedGender] = React.useState([]);
   const handlePassName = (e, indexNo) => {
     const newArr = [...passDetails];
     newArr[indexNo]["name"] = e.target.value;
@@ -69,10 +69,13 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
   //   newArr[indexNo]["gender"] = e.target.value;
   //   setPassDetails(newArr);
   // };
-  const handlePassGender = (e, indexNo, gender) => {
+  const handlePassGender = (indexNo, gender) => {
     const newArr = [...passDetails];
     newArr[indexNo]["gender"] = gender;
     setPassDetails(newArr);
+    const newSelectedGender = [...selectedGender];
+    newSelectedGender[indexNo] = gender;
+    setSelectedGender(newSelectedGender);
   };
   // const Passenger = () => {
   //   console.log("helloclick");
@@ -141,6 +144,7 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
     };
     insurance();
   }, []);
+
   return (
     <div className="m-3 my-5 mb-[7rem]">
       <div className="shadow-md border-[0.2px] rounded-md p-4  border-primarycolors-gray">
@@ -235,7 +239,7 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
         <div className="shadow-md border-[1px] rounded-md py-1 p-2 border-primarycolors-gray">
           {selectedSeats.map((seatNo, index) => {
             return (
-              <div>
+              <div key={index}>
                 <div className="flex text-sm justify-start items-center py-3">
                   <span className=" font-semibold">Passenger {index + 1}</span>
                   <div
@@ -304,12 +308,17 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
                           src={man}
                           alt="Male"
                           // className={`w-full rounded-full cursor-pointer ${
-                          //   selectedGender === "male" ? "selected" : ""
+                          //   selectedGender[index] === "male" ? "selected" : ""
                           // }`}
-                          className={`w-full rounded-full cursor-pointer `}
-                          onClick={(e) => {
-                            handlePassGender(e, index, "male");
-                            setSelectedGender("male");
+                          style={{
+                            backgroundColor:
+                              selectedGender[index] === "male"
+                                ? "red"
+                                : "initial",
+                          }}
+                          // className={`w-full rounded-full cursor-pointer `}
+                          onClick={() => {
+                            handlePassGender(index, "male");
                           }} // Assuming indexNo is defined
                         />
                       </div>
@@ -318,12 +327,16 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
                           src={women}
                           alt="Female"
                           // className={`w-full rounded-full cursor-pointer ${
-                          //   selectedGender === "female" ? "selected" : ""
+                          //   selectedGender[index] === "female" ? "selected" : ""
                           // }`}
-                          className={`w-full rounded-full cursor-pointer `}
-                          onClick={(e) => {
-                            handlePassGender(e, index, "female");
-                            setSelectedGender("female");
+                          style={{
+                            backgroundColor:
+                              selectedGender[index] === "female"
+                                ? "red"
+                                : "initial",
+                          }}
+                          onClick={() => {
+                            handlePassGender(index, "female");
                           }} // Assuming indexNo is defined
                         />
                       </div>

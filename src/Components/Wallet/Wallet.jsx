@@ -1,23 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../Navigation";
 import FooterDesktop from "../FooterDesktop";
 import WalletSection from "./WalletSection";
-
+import { useSelector } from "react-redux";
 import { BiArrowBack } from "react-icons/bi";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { CiCalendar, CiChat1, CiHome, CiWallet } from "react-icons/ci";
 import { CgMenuGridO } from "react-icons/cg";
 import Footer from "../Footer";
-
+import LoginModal from "../LoginModal";
 const Wallet = () => {
   const location = useLocation();
   const { pathname } = location;
   //Javascript split method to get the name of the path in array
   const path = pathname.split("/");
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
+  const [isModalOpen, setIsModalOpen] = useState(!isLoggedIn);
   const handleBackward = () => {
     navigate("/");
   };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="">
       <div className="hidden md:block ">
@@ -34,9 +40,22 @@ const Wallet = () => {
         </div>
       </div>
       <div className="relative top-[3rem] md:top-0">
-        <div className="">
-          <WalletSection />
-        </div>
+        {isLoggedIn ? (
+          <div className="">
+            <WalletSection />
+          </div>
+        ) : !isLoggedIn && isModalOpen ? (
+          <div>
+            <LoginModal
+              setIsModalOpen={setIsModalOpen}
+              onClose={handleCloseModal}
+            />
+          </div>
+        ) : (
+          <div className="my-5 text-primarycolors-white p-2 px-4 w-fit mx-auto rounded-md bg-primarycolors-red">
+            <button onClick={() => setIsModalOpen(true)}>Login </button>
+          </div>
+        )}
 
         <div className="">
           <Footer />

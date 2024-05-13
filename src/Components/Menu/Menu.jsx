@@ -10,6 +10,7 @@ import {
   MdPolicy,
   MdTerminal,
 } from "react-icons/md";
+import { GoCrossReference } from "react-icons/go";
 import { BiSolidCoupon } from "react-icons/bi";
 import FooterDesktop from "../FooterDesktop";
 import Footer from "../Footer";
@@ -84,6 +85,25 @@ const Menu = () => {
           </div>
 
           <div className=" bg-primarycolors-white rounded-lg shadow-md flex flex-col m-3 p-3 gap-5 border-[0.5px]  border-primarycolors-textcolor/30">
+            <NavLink
+              to="/ReferAndEarn"
+              className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75"
+            >
+              <div className="text-2xl">
+                <GoCrossReference />
+              </div>
+              <div className="w-3/4 text-sm text-primarycolors-black   text-left">
+                Refer And Earn
+              </div>
+              <div className="text-xl">
+                {" "}
+                <NavLink>
+                  {" "}
+                  <MdArrowForwardIos />
+                </NavLink>
+              </div>
+            </NavLink>
+
             <NavLink
               to="/offers"
               className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75"

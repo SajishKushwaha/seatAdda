@@ -151,3 +151,13 @@ tr:nth-child(even) {
     font-size: 12px;
   }
 }
+@media print {
+  .tabledown {
+    margin-top: 40px;
+  }
+}
+@media print and (max-width: 1255px) {
+  .navbar {
+    display: none;
+  }
+}
