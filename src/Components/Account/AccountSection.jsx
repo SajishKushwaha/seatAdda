@@ -91,7 +91,6 @@ const AccountSection = ({ isEditable, userData }) => {
     formdata.append("pincode", pincode);
     formdata.append("city", city);
     formdata.append("gender", gender);
-
     const requestOptions = {
       method: "POST",
       headers: myHeaders,

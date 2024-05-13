@@ -67,9 +67,9 @@ const Bookings = () => {
             </div>
           )}
 
-          <div className="">
+          {/* <div className="">
             <Footer />
-          </div>
+          </div> */}
         </div>
       </>
     </div>

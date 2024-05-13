@@ -89,7 +89,7 @@ const WalletSection = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 shadow-md mx-1  rounded-lg bg-primarycolors-white border-primarycolors-textcolor my-0">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4  shadow-md mx-1  rounded-lg bg-primarycolors-white border-primarycolors-textcolor my-0">
         <button
           className={` rounded-lg rounded-b-none walletbtn  p-1  ${
             activeTab === "history"

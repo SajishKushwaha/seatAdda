@@ -40,6 +40,7 @@ const Account = () => {
   console.log(JSON.parse(storedUserData).user.user_id);
   storedUserData = JSON.parse(storedUserData); */
   const [userData, setUserData] = useState(null);
+
   const handleEdit = () => {
     setEdit(!edit);
     // setSave(!save);

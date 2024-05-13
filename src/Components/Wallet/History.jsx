@@ -25,7 +25,7 @@ const History = ({ wallet }) => {
   }
 
   return (
-    <div className="m-3 overflow-y-scroll childscroll h-[400px] sm:h-[600px] pb-[2rem] ">
+    <div className="m-3 overflow-y-scroll childscroll  sm:h-[600px] pb-[2rem] ">
       {wallet.map((each, index) => {
         const amount_Color =
           each.transaction_type !== "debit"

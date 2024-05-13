@@ -54,18 +54,30 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
     setPassDetails(newArr);
   };
   const insuranceId = insurancevalue !== null && insurancevalue[0].id;
-  const Passenger = () => {
-    storePassenger(
-      passDetails,
-      passEmail,
-      passPhNo,
-      address,
-      city,
-      pincode,
-      state,
-      insuranceId
-    );
-  };
+  // const Passenger = () => {
+  //   storePassenger(
+  //     passDetails,
+  //     passEmail,
+  //     passPhNo,
+  //     address,
+  //     city,
+  //     pincode,
+  //     state,
+  //     insuranceId
+  //   );
+  // };
+  if (
+    passDetails.length === selectedSeats.length &&
+    passDetails.every(
+      (passenger) =>
+        passenger.name !== "" && passenger.age !== "" && passenger.gender !== ""
+    ) &&
+    passEmail !== "" &&
+    passPhNo !== ""
+  ) {
+    storePassenger(passDetails, passEmail, passPhNo);
+  }
+
   const travelInsurance = () => {
     if (insurancevalue !== null) {
       const newInsuranceValue = insurance
@@ -353,7 +365,8 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
           id="insurancebox"
           name="insurancebox"
           value="true"
-          onClick={Passenger}
+          // onClick={Passenger}
+          checked
         />
         <label className="" for="insurancebox">
           Yes and I accept the terms and conditions

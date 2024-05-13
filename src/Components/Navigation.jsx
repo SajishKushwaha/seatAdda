@@ -219,11 +219,23 @@ const Navbar = () => {
             ) : (
               <></>
             )}
-            <button onClick={handleMobileMenu}>
+            {!isLoggedIn && !currentCustomer ? (
+              <>
+                <button onClick={handleMobileMenu}>
+                  <span className="block text-primarycolors-red">
+                    {!mobileMenuOpen ? <BiMenu size={35} /> : <BiX size={35} />}
+                  </span>
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
+            {/* <button onClick={handleMobileMenu}>
               <span className="block text-primarycolors-red">
                 {!mobileMenuOpen ? <BiMenu size={35} /> : <BiX size={35} />}
+                
               </span>
-            </button>
+            </button> */}
           </div>
         </header>
       </div>
@@ -324,6 +336,9 @@ const Navbar = () => {
                         <NavLink to="/bookings">Booking History</NavLink>
                       </li>
                       <li className="cursor-pointer w-full">
+                        <NavLink to="/ReferAndEarn">Refer And Earn</NavLink>
+                      </li>
+                      <li className="cursor-pointer w-full">
                         <NavLink to="/wallet">Wallet</NavLink>
                       </li>
                       <li className="cursor-pointer w-full">
@@ -358,11 +373,16 @@ const Navbar = () => {
         <div className="md:hidden  z-10 text-left shadow-md border-t-[1px]  bg-primarycolors-white w-full fixed  left-0 py-4 px-2">
           <nav className="nav text-primarycolors-textcolor text-l">
             <ul className="flex flex-col">
-              <li className="p-2 hover:text-primarycolors-red cursor-pointer">
+              {/* <li className="p-2 hover:text-primarycolors-red cursor-pointer">
                 <NavLink onClick={handleLinkClick} to="/offers">
                   Offers
                 </NavLink>
               </li>
+
+              <li className="p-2 hover:text-primarycolors-red cursor-pointer">
+                <NavLink to="/ReferAndEarn">Refer And Earn</NavLink>
+              </li> */}
+
               {/*  <li className="p-2 hover:text-primarycolors-red cursor-pointer">
                 <NavLink onClick={handleLinkClick} to="/free-rides">
                   Get Free Rides

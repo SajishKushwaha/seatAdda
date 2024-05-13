@@ -119,12 +119,7 @@ const Passenger = () => {
     fetchData();
 
     // Check conditions to determine if button should be disabled
-    if (
-      passDetails.length === 0 ||
-      passEmail === "" ||
-      passPhNo === "" ||
-      isdisable === false
-    ) {
+    if (passDetails.length === 0 && passEmail === "" && passPhNo === "") {
       setIsDisable(true); // Disable the button
     } else {
       setIsDisable(false); // Enable the button
@@ -286,6 +281,7 @@ const Passenger = () => {
     state,
     insuranceId
   ) => {
+    console.log(passDetails);
     setPassDetails(passDetails);
     setPassEmail(passEmail);
     setPassPhNo(passPhNo);
@@ -449,7 +445,10 @@ const Passenger = () => {
         </div>
         <div className="relative top-[3rem]">
           <div className="">
-            <PassengerDetailsMobile storePassenger={storePassenger} />
+            <PassengerDetailsMobile
+              storePassenger={storePassenger}
+              storeInsurance={storeInsurance}
+            />
           </div>
 
           <div className="fixed  bg-primarycolors-white shadow-inner w-[98%] ml-1 -bottom-1 flex justify-center py-2">

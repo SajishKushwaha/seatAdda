@@ -74,8 +74,8 @@ tr:nth-child(even) {
   color: rgb(29, 150, 190);
   background-color: white;
 }
-.share {
-  color: black;
+.instagram {
+  color: red;
   background-color: white;
 }
 .successContainer {
@@ -120,6 +120,7 @@ tr:nth-child(even) {
   .referalContainer {
     display: flex;
     flex-direction: row;
+    margin-bottom: 20vh;
   }
 }
 .mobile {

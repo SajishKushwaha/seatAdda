@@ -71,7 +71,7 @@ const Payment = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="container mx-auto ">
         <div className="md:grid md:grid-cols-4 p-2 sm:p-5 gap-4">
           <div className="col-span-3">
@@ -82,6 +82,7 @@ const Payment = () => {
                 title="Payment Page"
                 width="100%"
                 height="500px"
+                allow="payment *;"
               ></iframe>
             ) : (
               ""

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, logout } from "../Redux/auth/action";
+import { useLocation } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import {
   BiUserCircle,
@@ -23,6 +24,10 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   const [verify, setVerify] = useState(false);
   const dispatch = useDispatch();
   const phoneNumberPattern = /^\d{10}$/;
+
+  let { search } = useLocation();
+  const query = new URLSearchParams(search);
+  const referalcode = query.get("referall_code");
 
   const handleOpenModal = () => {
     setMobileMenuOpen(false);
@@ -51,6 +56,7 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     if (isValidphone) {
       const formData = new FormData();
       formData.append("phone", phoneNumber);
+      formData.append("refferal_code", referalcode);
 
       try {
         const response = await fetch("https://seatadda.co.in/auth/api/login", {

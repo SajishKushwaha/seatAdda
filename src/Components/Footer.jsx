@@ -367,7 +367,7 @@ const Footer = () => {
                 : "text-primarycolors-textcolor"
             }`}
           >
-            <NavLink to="" className="cursor-not-allowed">
+            <NavLink to="/bookings" className="cursor-not-allowed">
               <CiCalendar className="bottom-icons-size" />
               <p className="bottom-text">BOOKINGS</p>
             </NavLink>
@@ -395,7 +395,7 @@ const Footer = () => {
                 : "text-primarycolors-textcolor"
             }`}
           >
-            <NavLink to="">
+            <NavLink to="/wallet">
               <CiWallet className="bottom-icons-size" />
               <p className="bottom-text">WALLET</p>
             </NavLink>
