@@ -50,7 +50,19 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   const handleInputOtp = (event) => {
     setOtp(event.target.value);
   };
+  // useEffect(() => {
+  //   const tokenExpirationTimer = setTimeout(() => {
+  //     // Token expiry time ke baad, user ko logout karen
+  //     dispatch(logout());
+  //     localStorage.removeItem('authToken');
+  //     localStorage.removeItem('userData');
+  //   }, expiryTime);
 
+  //   // Clear the timer when the component unmounts or the token is refreshed
+  //   return () => {
+  //     clearTimeout(tokenExpirationTimer);
+  //   };
+  // }, [dispatch, expiryTime]);
   const handleLogin = async () => {
     const isValidphone = phoneNumberPattern.test(phoneNumber);
     if (isValidphone) {

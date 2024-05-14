@@ -63,7 +63,10 @@ const ViewSeat = ({
       value: item.boading_points,
       label:
         item.boading_points.charAt(0).toUpperCase() +
-        item.boading_points.slice(1),
+        item.boading_points.slice(1) +
+        " " +
+        item.city.charAt(0).toUpperCase() +
+        item.city.slice(1),
     }));
     setBoardingOptions(boardingPoints);
   }, [routeDetails, setBoardingOptions]); // Include setOptions as a dependency
@@ -74,9 +77,11 @@ const ViewSeat = ({
         item.boading_points.charAt(0).toUpperCase() +
         item.boading_points.slice(1) +
         " " +
-        formatDate(item.date) +
-        " " +
-        convertTo12HourFormat(item.time),
+        item.city.charAt(0).toUpperCase() +
+        item.city.slice(1),
+      // formatDate(item.date) +
+      // " " +
+      // convertTo12HourFormat(item.time),
     }));
     setdropingOptions(droppingPoints);
   }, [routeDetails, setdropingOptions]);

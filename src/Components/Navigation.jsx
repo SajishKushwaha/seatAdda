@@ -52,11 +52,22 @@ const Navbar = () => {
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     const storedUserData = localStorage.getItem("userData");
-
+    const expire = JSON.parse(storedUserData);
     if (storedToken && storedUserData) {
       // Dispatch action to set user data in Redux store
       dispatch(loginSuccess(JSON.parse(storedUserData)));
     }
+    const tokenExpirationTimer = setTimeout(() => {
+      // Token expiry time ke baad, user ko logout karen
+      dispatch(logout());
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userData");
+    }, storedUserData && expire.expires_in);
+
+    // // Clear the timer when the component unmounts or the token is refreshed
+    // return () => {
+    //   clearTimeout(tokenExpirationTimer);
+    // };
   }, []);
 
   // console.log("Here: ", isLoggedIn, currentCustomer);
