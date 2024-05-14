@@ -130,7 +130,7 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
   };
   useEffect(() => {
     if (routeDetails.length === 0) {
-      navigate("/");
+      navigate("/select-bus");
     }
   }, [routeDetails]);
   useEffect(() => {
@@ -386,8 +386,11 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
                 </label>
               </div>
             )}
-            {/* <button onClick={toggleDrawer}>
-              <span>Know More</span>
+            <button
+              style={{ textAlign: "start", fontWeight: "bold", color: "red" }}
+              onClick={toggleDrawer}
+            >
+              Know More
             </button>
             {insurancevalue !== null && (
               <Drawer
@@ -395,7 +398,7 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
                 onClose={toggleDrawer}
                 direction="right"
                 className="bla bla bla"
-                size={100}
+                size={300}
                 style={{ borderRadius: "20px" }}
               >
                 <div className="px-10 py-5">
@@ -416,7 +419,7 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
                     : null}
                 </div>
               </Drawer>
-            )} */}
+            )}
           </div>
         </div>
       </div>

@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaPhoneVolume } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import { useLocation } from "react-router-dom";
-import jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navigation";
 import { BiArrowBack } from "react-icons/bi";
 import html2canvas from "html2canvas";
+import html2pdf from "html2pdf.js/dist/html2pdf.min";
 import "./index.css";
 const SeatShow = () => {
   const [seatDetails, setSeatDetails] = useState(null);
@@ -39,38 +40,34 @@ const SeatShow = () => {
   const handleBackward = () => {
     navigate("/");
   };
-  // const reportTemplateRef = useRef(null);
+  const reportTemplateRef = useRef(null);
 
-  // const handleGeneratePdf = async () => {
-  //   const doc = new jsPDF({
-  //     orientation: "landscape",
-  //     format: "a2",
-  //     unit: "px",
-  //   });
-  //   // const doc = new jsPDF({
-  //   //   orientation: 'landscape',
-  //   //   unit: 'in',
-  //   //   format: [4, 2],
-  //   // });
-  //   // Adding the fonts.
-  //   doc.setFont("Inter-Regular", "normal");
+  const handleGeneratePdf = async () => {
+    const printElement = reportTemplateRef.current;
+    console.log(printElement);
 
-  //   doc.html(reportTemplateRef.current, {
-  //     async callback(doc) {
-  //       await doc.save("document");
-  //     },
+    html2pdf().from(printElement).save();
+  };
+  // const captureAndDownload = () => {
+  //   const element = document.getElementById("capture");
+  //   html2canvas(element).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/png");
+
+  //     // PDF banane ke liye ek instance banaye
+  //     var pdf = new jsPDF("p", "mm", "a4");
+
+  //     // Canvas ka width aur height lein
+  //     var width = pdf.internal.pageSize.getWidth();
+  //     var height = pdf.internal.pageSize.getHeight();
+
+  //     // Image ko PDF me add karein
+  //     pdf.addImage(imgData, "PNG", 10, 10, width, height);
+
+  //     // PDF ko download karein
+  //     pdf.save("capture.pdf");
   //   });
   // };
-  const captureAndDownload = () => {
-    const element = document.getElementById("capture"); // ID of element you want to capture
-    html2canvas(element).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = "capture.png";
-      link.href = imgData;
-      link.click();
-    });
-  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -154,7 +151,7 @@ const SeatShow = () => {
                 height: "40px",
                 borderRadius: "10px",
               }}
-              onClick={captureAndDownload}
+              onClick={handleGeneratePdf}
             >
               Download
             </button>
@@ -174,7 +171,7 @@ const SeatShow = () => {
               Print
             </button>
           </div>
-          <div id="capture">
+          <div ref={reportTemplateRef}>
             <div
               style={{
                 margin: "20px",
@@ -357,12 +354,11 @@ const SeatShow = () => {
                 margin: "20px",
               }}
             >
-              <h1 className="text-start" style={{ fontSize: "10px" }}>
+              <h1 className="text-start underline" style={{ fontSize: "10px" }}>
                 Terms and conditions
               </h1>
-              <hr style={{ width: "25vw" }} />
+              {/* <hr style={{ width: "25vw" }} /> */}
               <ol
-                type="A"
                 className="text-start termAndCondition"
                 style={{
                   fontSize: "10px",
@@ -533,26 +529,30 @@ const SeatShow = () => {
               {/* <div style={{ pageBreakAfter: "always" }}></div> */}
 
               <table>
-                <tr>
-                  <th>Cancellation time</th>
-                  <th>Cancellation charges</th>
-                </tr>
-                <tr>
-                  <td>After 12:30 PM on 5th Jun</td>
-                  <td>Rs. 600</td>
-                </tr>
-                <tr>
-                  <td>Between 08:30 PM on 4th Jun-12:30 PM on 5th Jun</td>
-                  <td>Rs. 300</td>
-                </tr>
-                <tr>
-                  <td>Between 08:30 PM on 3rd Jun-08:30 PM on 4th Jun</td>
-                  <td>Rs. 150</td>
-                </tr>
-                <tr>
-                  <td>Till 08:30 PM on 3rd Jun</td>
-                  <td>Rs. 60</td>
-                </tr>
+                <thead>
+                  <tr>
+                    <th>Cancellation time</th>
+                    <th>Cancellation charges</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>After 12:30 PM on 5th Jun</td>
+                    <td>Rs. 600</td>
+                  </tr>
+                  <tr>
+                    <td>Between 08:30 PM on 4th Jun-12:30 PM on 5th Jun</td>
+                    <td>Rs. 300</td>
+                  </tr>
+                  <tr>
+                    <td>Between 08:30 PM on 3rd Jun-08:30 PM on 4th Jun</td>
+                    <td>Rs. 150</td>
+                  </tr>
+                  <tr>
+                    <td>Till 08:30 PM on 3rd Jun</td>
+                    <td>Rs. 60</td>
+                  </tr>
+                </tbody>
               </table>
               <div
                 style={{
