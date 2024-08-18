@@ -161,3 +161,50 @@ tr:nth-child(even) {
     display: none;
   }
 }
+.container_ {
+  margin: 20px;
+}
+.seataddda_Containercard {
+  background-color: red;
+  height: 100px;
+  color: azure;
+}
+.seataddda_Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.seatAdda_ticket_heading_container {
+  font-weight: bold;
+  font-style: "roboto";
+}
+@media (max-width: 568px) {
+  .seatAdda_ticket_heading_container {
+    font-size: 15px;
+    font-weight: bold;
+    font-style: "roboto";
+  }
+  .seatAdda_ticket_para_container {
+    font-size: 13px;
+  }
+}
+.ticketDetails_Card_container {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+  border-style: solid;
+  border-width: 1px;
+  margin-top: 8px;
+}
+.dateContainer {
+  display: flex;
+  flex-direction: row;
+  /* align-items: start; */
+  margin-left: 20px;
+}
+@media (max-width: 568px) {
+  .font_small {
+    font-size: 8px;
+  }
+}

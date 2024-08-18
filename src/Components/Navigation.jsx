@@ -62,7 +62,7 @@ const Navbar = () => {
       dispatch(logout());
       localStorage.removeItem("authToken");
       localStorage.removeItem("userData");
-    }, storedUserData && expire.expires_in);
+    }, storedUserData && expire.expires_in * 1000);
 
     // // Clear the timer when the component unmounts or the token is refreshed
     // return () => {
