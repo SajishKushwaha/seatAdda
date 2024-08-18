@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaTicketAlt, FaUserCircle } from "react-icons/fa";
-import LoginModal from "../LoginModal";
 import {
   MdArrowForwardIos,
   MdContactPage,
@@ -15,13 +15,9 @@ import { BiSolidCoupon } from "react-icons/bi";
 import FooterDesktop from "../FooterDesktop";
 import Footer from "../Footer";
 import { useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
 
 const Menu = () => {
   const navigate = useNavigate();
-
-  const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
-  const [isModalOpen, setIsModalOpen] = useState(!isLoggedIn);
   const customerName = useSelector(
     (state) => state.authReducer.currentCustomer
   );
@@ -29,9 +25,7 @@ const Menu = () => {
     if (customerName !== null) navigate("/account");
     else alert("Login Required");
   };
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+
   return (
     <>
       <div className=" bg-primarycolors-bg_sky/50">
@@ -91,29 +85,25 @@ const Menu = () => {
           </div>
 
           <div className=" bg-primarycolors-white rounded-lg shadow-md flex flex-col m-3 p-3 gap-5 border-[0.5px]  border-primarycolors-textcolor/30">
-            {isLoggedIn && (
-              <div className="">
-                <NavLink
-                  to="/ReferAndEarn"
-                  className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75"
-                >
-                  <div className="text-2xl">
-                    <GoCrossReference />
-                  </div>
-                  <div className="w-3/4 text-sm text-primarycolors-black   text-left">
-                    Refer And Earn
-                  </div>
-
-                  <div className="text-xl">
-                    {" "}
-                    <NavLink>
-                      {" "}
-                      <MdArrowForwardIos />
-                    </NavLink>
-                  </div>
+            <NavLink
+              to="/ReferAndEarn"
+              className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75"
+            >
+              <div className="text-2xl">
+                <GoCrossReference />
+              </div>
+              <div className="w-3/4 text-sm text-primarycolors-black   text-left">
+                Refer And Earn
+              </div>
+              <div className="text-xl">
+                {" "}
+                <NavLink>
+                  {" "}
+                  <MdArrowForwardIos />
                 </NavLink>
               </div>
-            )}
+            </NavLink>
+
             <NavLink
               to="/offers"
               className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75"

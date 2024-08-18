@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Seat from "./Seat";
 import Select from "react-select";
+import { Toaster, toast } from "react-hot-toast";
+import { loginSuccess, logout } from "../../Redux/auth/action";
 import {
   MdArrowDropDown,
   MdCheckBoxOutlineBlank,
@@ -20,7 +22,6 @@ const ViewSeat = ({
   booked_seat,
   busData,
   seatPrice,
-
   departure,
   arrival,
   date,
@@ -37,7 +38,7 @@ const ViewSeat = ({
   const [boardingoptions, setBoardingOptions] = useState([]);
   const [dropingoptions, setdropingOptions] = useState([]);
 
-  // console.log(boardingoptions);
+  console.log(departure);
   const alreadyBookedSeats = booked_seat;
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -58,31 +59,36 @@ const ViewSeat = ({
     // Return formatted time
     return `${adjustedHours}:${minutes < 10 ? "0" : ""}${minutes} ${suffix}`;
   }
+
   useEffect(() => {
-    const boardingPoints = routeDetails.map((item) => ({
-      value: item.boading_points,
-      label:
-        item.boading_points.charAt(0).toUpperCase() +
-        item.boading_points.slice(1) +
-        " " +
-        item.city.charAt(0).toUpperCase() +
-        item.city.slice(1),
-    }));
+    const boardingPoints = routeDetails
+      .filter((item) => item.city.toLowerCase() === departure.toLowerCase())
+      .map((item) => ({
+        value: item.boading_points,
+        label:
+          item.boading_points.charAt(0).toUpperCase() +
+          item.boading_points.slice(1) +
+          " " +
+          item.city.charAt(0).toUpperCase() +
+          item.city.slice(1),
+      }));
     setBoardingOptions(boardingPoints);
   }, [routeDetails, setBoardingOptions]); // Include setOptions as a dependency
   useEffect(() => {
-    const droppingPoints = routeDetails.map((item) => ({
-      value: item.boading_points,
-      label:
-        item.boading_points.charAt(0).toUpperCase() +
-        item.boading_points.slice(1) +
-        " " +
-        item.city.charAt(0).toUpperCase() +
-        item.city.slice(1),
-      // formatDate(item.date) +
-      // " " +
-      // convertTo12HourFormat(item.time),
-    }));
+    const droppingPoints = routeDetails
+      .filter((item) => item.city.toLowerCase() === arrival.toLowerCase())
+      .map((item) => ({
+        value: item.boading_points,
+        label:
+          item.boading_points.charAt(0).toUpperCase() +
+          item.boading_points.slice(1) +
+          " " +
+          item.city.charAt(0).toUpperCase() +
+          item.city.slice(1),
+        // formatDate(item.date) +
+        // " " +
+        // convertTo12HourFormat(item.time),
+      }));
     setdropingOptions(droppingPoints);
   }, [routeDetails, setdropingOptions]);
 
@@ -111,7 +117,7 @@ const ViewSeat = ({
       navigate("/passenger-details");
     }
   };
-
+  console.log(routeDetails);
   const [showUpperBerth, setShowUpperBerth] = useState(false);
   const [showLowerBerth, setShowLowerBerth] = useState(true);
   const [seatData, setSeatData] = useState(seat_json);

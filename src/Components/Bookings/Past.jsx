@@ -3,10 +3,12 @@ import { BiArrowBack, BiBus } from "react-icons/bi";
 // import { FaLocationCrosshairs } from "react-icons/fa6";
 // import { MdStar } from "react-icons/md";
 // import { BiUser } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import "./book.css";
 // import NoBookings from './NoBookings';
 
 const Past = ({ bookinghistory }) => {
+  const navigate = useNavigate();
   // const BOOKING_DATA = [
 
   // ];
@@ -44,11 +46,13 @@ const Past = ({ bookinghistory }) => {
     const dateB = new Date(b.arrival_date);
     return dateB - dateA;
   });
-
+  const ViewTicket = (ticket) => {
+    navigate(`/SeatShow?ticketid=${ticket}`);
+  };
   return (
     <div className="m-3 childscroll overflow-y-scroll  md:h-[800px] mb-[7rem] sm:mb-[1rem]">
       {futureBookings.map((data, index) => {
-        // console.log(data);
+        console.log(data);
         return (
           <div
             key={index}
@@ -61,7 +65,12 @@ const Past = ({ bookinghistory }) => {
                     {`${data.travels_name} (${data.reg_no})`}
                   </h2>
                 </div>
-                <button className="px-5  view_ticket">view ticket</button>
+                <button
+                  className="px-5  view_ticket"
+                  onClick={() => ViewTicket(data.ticket_id)}
+                >
+                  view ticket
+                </button>
               </div>
 
               <div className="  gap-5 p-3 border-t-[1px] border-primarycolors-gray">

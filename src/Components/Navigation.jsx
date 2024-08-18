@@ -4,7 +4,8 @@ import logo from "../assets/logo2.png";
 import AppImg from "../assets/Bus Stop-pana.svg";
 import MobImg from "../assets/msg-mobile.avif";
 
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
 import "../App.css";
 import {
   BiUserCircle,
@@ -17,7 +18,7 @@ import {
   BiLogOut,
 } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess, logout } from "../Redux/auth/action";
+import { loginSuccess, logout, loginFailure } from "../Redux/auth/action";
 import { Toaster, toast } from "react-hot-toast";
 const Navbar = () => {
   const [modal, setModal] = useState(false);
@@ -48,29 +49,6 @@ const Navbar = () => {
   const currentCustomer = useSelector(
     (state) => state.authReducer.currentCustomer
   );
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
-    const storedUserData = localStorage.getItem("userData");
-    const expire = JSON.parse(storedUserData);
-    if (storedToken && storedUserData) {
-      // Dispatch action to set user data in Redux store
-      dispatch(loginSuccess(JSON.parse(storedUserData)));
-    }
-    const tokenExpirationTimer = setTimeout(() => {
-      // Token expiry time ke baad, user ko logout karen
-      dispatch(logout());
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("userData");
-    }, storedUserData && expire.expires_in * 1000);
-
-    // // Clear the timer when the component unmounts or the token is refreshed
-    // return () => {
-    //   clearTimeout(tokenExpirationTimer);
-    // };
-  }, []);
-
-  // console.log("Here: ", isLoggedIn, currentCustomer);
 
   const handleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -137,7 +115,9 @@ const Navbar = () => {
       alert("Enter Valid Phone Number");
     }
   };
-
+  const jwt_token = Cookies.get("jwt_token");
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  // console.log(userData.expires_in);
   const handleVerify = async () => {
     // console.log(otp);
     const isValidphone = phoneNumberPattern.test(phoneNumber);
@@ -154,8 +134,15 @@ const Navbar = () => {
 
         if (response.ok) {
           const data = await response.json();
+          const jwtToken = data.access_token.replace("Bearer ", "");
+          Cookies.set("jwt_token", jwtToken, {
+            expires: data.expires_in / 86400,
+            // path: "/",
+          });
           localStorage.setItem("authToken", data.access_token);
-          localStorage.setItem("userData", JSON.stringify(data)); // Store the token
+          localStorage.setItem("userData", JSON.stringify(data));
+
+          // Store the token
           dispatch(loginSuccess(data));
           // console.log(data);
           handleCloseModal();
@@ -180,6 +167,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    Cookies.remove("jwt_token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
 
@@ -217,7 +205,7 @@ const Navbar = () => {
           {/* Hamburger icon */}
 
           <div className="flex justify-between gap-3 items-center md:hidden">
-            {isLoggedIn && currentCustomer ? (
+            {jwt_token && userData ? (
               <>
                 {" "}
                 <NavLink to="/account">
@@ -230,7 +218,7 @@ const Navbar = () => {
             ) : (
               <></>
             )}
-            {!isLoggedIn && !currentCustomer ? (
+            {!jwt_token && !userData ? (
               <>
                 <button onClick={handleMobileMenu}>
                   <span className="block text-primarycolors-red">
@@ -320,39 +308,73 @@ const Navbar = () => {
                 </div>
               </li> */}
 
-              {isLoggedIn && currentCustomer ? (
-                <li className="p-4 text-primarycolors-red cursor-pointer dropdown">
-                  <NavLink className="dropbtn">
-                    <div className="sub">
-                      <div className="listimg">
+              {jwt_token && userData ? (
+                // <li className="p-4 text-primarycolors-red cursor-pointer dropdown">
+                //   <NavLink className="dropbtn">
+                //     <div className="sub">
+                //       <div className="listimg">
+                //         <BiUserCircle className="text-center" size={24} />
+                //         <span className="lable">{userData.user.user_id}</span>
+                //       </div>
+                //       <BiCaretDown
+                //         className="text-primarycolors-red"
+                //         size={24}
+                //       />
+                //     </div>
+                //   </NavLink>
+
+                //   <div
+                //     className="dropdown-content "
+                //     style={{ marginLeft: "0", marginTop: "10px" }}
+                //   >
+                //     <ul className="flex flex-col items-center justify-center  text-left">
+                //       <li className="cursor-pointer w-full">
+                //         <NavLink to="/account">Edit Profile</NavLink>
+                //       </li>
+                //       <li className="cursor-pointer w-full">
+                //         <NavLink to="/bookings">Booking History</NavLink>
+                //       </li>
+                //       <li className="cursor-pointer w-full">
+                //         <NavLink to="/ReferAndEarn">Refer And Earn</NavLink>
+                //       </li>
+                //       <li className="cursor-pointer w-full">
+                //         <NavLink to="/wallet">Wallet</NavLink>
+                //       </li>
+                //       <li className="cursor-pointer w-full">
+                //         <NavLink onClick={handleLogout}>Logout</NavLink>
+                //       </li>
+                //     </ul>
+                //   </div>
+                // </li>
+                <li className="p-4 text-primarycolors-red cursor-pointer dropdown relative">
+                  <div className="dropbtn">
+                    <div className="sub flex items-center">
+                      <div className="listimg flex items-center">
                         <BiUserCircle className="text-center" size={24} />
-                        <span className="lable">{currentCustomer.user_id}</span>
+                        <span className="lable">{userData.user.user_id}</span>
                       </div>
                       <BiCaretDown
-                        className="text-primarycolors-red"
+                        className="text-primarycolors-red ml-2"
                         size={24}
                       />
                     </div>
-                  </NavLink>
+                  </div>
 
-                  <div
-                    className="dropdown-content "
-                    style={{ marginLeft: "0", marginTop: "10px" }}
-                  >
-                    <ul className="flex flex-col items-center justify-center  text-left">
-                      <li className="cursor-pointer w-full">
+                  <div className="dropdown-content absolute left-0 mt-2 bg-white shadow-md rounded-md w-48 hidden group-hover:block">
+                    <ul className="flex flex-col items-center justify-center text-left">
+                      <li className="cursor-pointer w-full px-4 py-2 hover:bg-gray-100">
                         <NavLink to="/account">Edit Profile</NavLink>
                       </li>
-                      <li className="cursor-pointer w-full">
+                      <li className="cursor-pointer w-full px-4 py-2 hover:bg-gray-100">
                         <NavLink to="/bookings">Booking History</NavLink>
                       </li>
-                      <li className="cursor-pointer w-full">
+                      <li className="cursor-pointer w-full px-4 py-2 hover:bg-gray-100">
                         <NavLink to="/ReferAndEarn">Refer And Earn</NavLink>
                       </li>
-                      <li className="cursor-pointer w-full">
+                      <li className="cursor-pointer w-full px-4 py-2 hover:bg-gray-100">
                         <NavLink to="/wallet">Wallet</NavLink>
                       </li>
-                      <li className="cursor-pointer w-full">
+                      <li className="cursor-pointer w-full px-4 py-2 hover:bg-gray-100">
                         <NavLink onClick={handleLogout}>Logout</NavLink>
                       </li>
                     </ul>

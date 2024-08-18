@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
+import Cookies from "js-cookie";
 import { MdContentCopy } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navigation";
@@ -21,6 +22,7 @@ export default function ReferAndEarn() {
   const handleBackward = () => {
     navigate("/");
   };
+  const jwtToken = Cookies.get("jwt_token");
   useEffect(() => {
     const referalCode = async () => {
       const myHeaders = new Headers();
@@ -43,7 +45,11 @@ export default function ReferAndEarn() {
       const data = await response.json();
       setRefferal(data.data);
     };
-    referalCode();
+    if (jwtToken === undefined) {
+      navigate("/");
+    } else {
+      referalCode();
+    }
   }, []);
   console.log(referal);
   return (

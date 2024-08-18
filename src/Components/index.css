@@ -161,50 +161,32 @@ tr:nth-child(even) {
     display: none;
   }
 }
-.container_ {
-  margin: 20px;
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
 }
-.seataddda_Containercard {
-  background-color: red;
-  height: 100px;
-  color: azure;
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: top; /* Ensures text aligns at the top */
 }
-.seataddda_Container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  padding-top: 6px;
-  padding-bottom: 6px;
-}
-.seatAdda_ticket_heading_container {
+
+.custom-table th {
+  background-color: #f2f2f2;
   font-weight: bold;
-  font-style: "roboto";
 }
-@media (max-width: 568px) {
-  .seatAdda_ticket_heading_container {
-    font-size: 15px;
-    font-weight: bold;
-    font-style: "roboto";
-  }
-  .seatAdda_ticket_para_container {
-    font-size: 13px;
-  }
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
-.ticketDetails_Card_container {
-  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
-  border-style: solid;
-  border-width: 1px;
-  margin-top: 8px;
+
+.custom-table td {
+  white-space: nowrap; /* Prevents text from wrapping */
 }
-.dateContainer {
-  display: flex;
-  flex-direction: row;
-  /* align-items: start; */
-  margin-left: 20px;
-}
-@media (max-width: 568px) {
-  .font_small {
-    font-size: 8px;
-  }
+.text-start {
+  font-size: 12px;
 }

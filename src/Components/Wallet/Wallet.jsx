@@ -8,6 +8,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { CiCalendar, CiChat1, CiHome, CiWallet } from "react-icons/ci";
 import { CgMenuGridO } from "react-icons/cg";
 import Footer from "../Footer";
+import Cookies from "js-cookie";
 import LoginModal from "../LoginModal";
 const Wallet = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const Wallet = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  const jwtToken = Cookies.get("jwt_token");
 
   return (
     <div className="">
@@ -40,11 +42,11 @@ const Wallet = () => {
         </div>
       </div>
       <div className="relative top-[3rem] md:top-0">
-        {isLoggedIn ? (
+        {jwtToken ? (
           <div className="">
             <WalletSection />
           </div>
-        ) : !isLoggedIn && isModalOpen ? (
+        ) : !jwtToken && isModalOpen ? (
           <div>
             <LoginModal
               setIsModalOpen={setIsModalOpen}

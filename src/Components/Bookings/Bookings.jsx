@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import LoginModal from "../LoginModal";
 import { Toaster } from "react-hot-toast";
-
+import Cookies from "js-cookie";
 const Bookings = () => {
   const location = useLocation();
   const { pathname } = location;
@@ -20,11 +20,10 @@ const Bookings = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
   const [isModalOpen, setIsModalOpen] = useState(!isLoggedIn); // Open modal initially if not logged in
-
+  const jwtToken = Cookies.get("jwt_token");
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
   const handleBackward = () => {
     navigate("/");
   };
@@ -50,11 +49,11 @@ const Bookings = () => {
         </div>
         <div className="relative  top-[3rem] md:top-0">
           {/* <Toaster/> */}
-          {isLoggedIn ? (
+          {jwtToken ? (
             <div className="">
               <BookingSection />
             </div>
-          ) : !isLoggedIn && isModalOpen ? (
+          ) : !jwtToken && isModalOpen ? (
             <div>
               <LoginModal
                 setIsModalOpen={setIsModalOpen}

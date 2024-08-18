@@ -350,7 +350,7 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
             <input
               className="py-1 px-3 text-sm w-full input"
               placeholder="PIN Code"
-              type="text"
+              type="number"
               name="name"
               onChange={pincodeInput}
             />

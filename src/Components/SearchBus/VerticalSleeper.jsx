@@ -3,6 +3,7 @@ import { MdOutlineAirlineSeatIndividualSuite } from "react-icons/md";
 import sleeper from "../../assets/sleeper.png";
 import swal from "sweetalert";
 import "./index.css";
+import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import LoginModal from "../LoginModal";
 const VerticalSleeper = ({
@@ -32,9 +33,9 @@ const VerticalSleeper = ({
   const customerName = useSelector(
     (state) => state.authReducer.currentCustomer
   );
-
+  const jwtToken = Cookies.get("jwt_token");
   const handleSeatBooking = () => {
-    if (customerName === null) {
+    if (jwtToken === undefined) {
       setSelectedSeats([]);
       setIsModalOpen(true);
     } else if (!alreadyBookedSeats.includes(seatNo)) {

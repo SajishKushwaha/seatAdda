@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, logout } from "../Redux/auth/action";
 import { useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import {
   BiUserCircle,
@@ -24,7 +26,7 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   const [verify, setVerify] = useState(false);
   const dispatch = useDispatch();
   const phoneNumberPattern = /^\d{10}$/;
-
+  const navigate = useNavigate();
   let { search } = useLocation();
   const query = new URLSearchParams(search);
   const referalcode = query.get("referall_code");
@@ -34,7 +36,19 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     setModal(true);
     document.body.classList.add("modal-open");
   };
+  // useEffect(() => {
+  //   const jwtToken = Cookies.get("jwt_token");
+  //   if (jwtToken === undefined) {
+  //     dispatch(logout());
+  //     localStorage.removeItem("authToken");
+  //     localStorage.removeItem("userData");
 
+  //     // console.log("Logged Out");
+  //     toast.success("Logged Out");
+
+  //     navigate("/");
+  //   }
+  // }, []);
   // Function to handle closing the modal
   const handleCloseModal = () => {
     setPhoneNumber("");
@@ -50,19 +64,6 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   const handleInputOtp = (event) => {
     setOtp(event.target.value);
   };
-  // useEffect(() => {
-  //   const tokenExpirationTimer = setTimeout(() => {
-  //     // Token expiry time ke baad, user ko logout karen
-  //     dispatch(logout());
-  //     localStorage.removeItem('authToken');
-  //     localStorage.removeItem('userData');
-  //   }, expiryTime);
-
-  //   // Clear the timer when the component unmounts or the token is refreshed
-  //   return () => {
-  //     clearTimeout(tokenExpirationTimer);
-  //   };
-  // }, [dispatch, expiryTime]);
   const handleLogin = async () => {
     const isValidphone = phoneNumberPattern.test(phoneNumber);
     if (isValidphone) {
@@ -113,8 +114,13 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
 
         if (response.ok) {
           const data = await response.json();
+          Cookies.set("jwt_token", data.access_token, {
+            expires: 30,
+            path: "/",
+          });
           localStorage.setItem("authToken", data.access_token);
           localStorage.setItem("userData", JSON.stringify(data)); // Store the token
+
           dispatch(loginSuccess(data));
           // console.log(data);
           handleCloseModal();

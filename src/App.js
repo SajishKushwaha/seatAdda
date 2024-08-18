@@ -69,7 +69,7 @@ function App() {
 
         <Route path="/contact" Component={Contact}></Route>
         <Route path="/privacy" Component={Privacy}></Route>
-       {/*  <Route
+        {/* <Route
           path="/bookings"
           element={
             <ProtectedRoute>

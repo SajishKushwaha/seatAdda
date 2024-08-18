@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineAirlineSeatIndividualSuite } from "react-icons/md";
 import sleeper from "../../assets/sleeper.png";
 import swal from "sweetalert";
-
+import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import { loginSuccess, logout } from "../../Redux/auth/action";
+import { useDispatch } from "react-redux";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import LoginModal from "../LoginModal";
+import { Toaster, toast } from "react-hot-toast";
 const Sleeper = ({
   available,
   seatType,
@@ -31,9 +35,11 @@ const Sleeper = ({
   const customerName = useSelector(
     (state) => state.authReducer.currentCustomer
   );
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const jwtToken = Cookies.get("jwt_token");
   const handleSeatBooking = () => {
-    if (customerName === null) {
+    if (jwtToken === undefined) {
       setSelectedSeats([]);
       setIsModalOpen(true);
     } else if (!alreadyBookedSeats.includes(seatNo)) {

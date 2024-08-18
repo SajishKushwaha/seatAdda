@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Navigation";
 import Header from "./Header";
 import toast, { Toaster } from "react-hot-toast";
 import Right from "./Right";
 import Left from "./Left";
-
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess, logout, loginFailure } from "../../Redux/auth/action";
+import Cookies from "js-cookie";
 import {
   MdAcUnit,
   MdAirlineSeatLegroomNormal,
@@ -13,7 +16,7 @@ import {
 } from "react-icons/md";
 import { BiFilterAlt, BiReset, BiSolidBadgeCheck } from "react-icons/bi";
 import { FaSun, FaCloudSun, FaCloud, FaMoon } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+
 import { updateFilterDetails } from "../../Redux/FilterAndSort/action";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
@@ -83,6 +86,8 @@ const SelectBus = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   let dispatch = useDispatch();
+
+  const navigate = useNavigate();
   const filterBusType = useSelector(
     (state) => state.updateFilterDetailsReducer.busType
   );
@@ -155,7 +160,30 @@ const SelectBus = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+  useEffect(() => {
+    const checkAuthToken = () => {
+      const jwtToken = Cookies.get("jwt_token");
+      if (!jwtToken) {
+        // Logout if the token is missing
+        dispatch(logout());
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userData");
+        // toast.success("Logged Out");
+        // dispatch(loginFailure());
+      }
+    };
 
+    // Check on mount
+    checkAuthToken();
+
+    // Check every time the component re-renders
+    const interval = setInterval(() => {
+      checkAuthToken();
+    }, 1000); // Check every second
+
+    // Cleanup the interval on unmount
+    return () => clearInterval(interval);
+  }, [dispatch, navigate]);
   return (
     <>
       <Navbar />

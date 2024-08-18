@@ -81,7 +81,6 @@ body.modal-open {
 }
 
 .modal-container {
-
   position: fixed;
   top: 0px;
   left: 0;
@@ -98,7 +97,6 @@ body.modal-open {
 }
 
 .modal-content {
-
   background-color: rgba(67, 67, 67, 0.6);
   /* Adjust the transparency as needed */
   max-width: 100%;
@@ -106,9 +104,7 @@ body.modal-open {
   overflow-y: auto;
 }
 
-
 .drop-container {
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,7 +119,6 @@ body.modal-open {
 
 /* Styles for the modal content */
 .drop-content {
-
   width: 95% !important;
   margin: 0 auto;
   /* Adjust this as needed */
@@ -132,10 +127,6 @@ body.modal-open {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   /* padding: 20px; */
 }
-
-
-
-
 
 .slider {
   z-index: -10 !important;
@@ -151,7 +142,8 @@ body.modal-open {
   border-top: 1px solid rgba(128, 128, 128, 0.715);
 }
 
-.bus-service-card {}
+.bus-service-card {
+}
 
 .bus-service-card:hover {
   /* box-shadow: 10px 10px 15px 13px transparent, 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 10px 15px -3px transparent; */
@@ -174,7 +166,7 @@ body.modal-open {
 
 .links li::before {
   content: "\2022";
-  color: #FD5056;
+  color: #fd5056;
   font-weight: bold;
   display: inline-block;
   width: 1rem;
@@ -184,7 +176,7 @@ body.modal-open {
 
 .faq li::before {
   content: "\2022";
-  color: #FD5056;
+  color: #fd5056;
   font-weight: bold;
   display: inline-block;
   width: 1rem;
@@ -314,7 +306,7 @@ body.modal-open {
   color: #d1dade;
 }
 
-.payments-method.panel-group .panel+.panel {
+.payments-method.panel-group .panel + .panel {
   margin-top: -1px;
 }
 
@@ -448,11 +440,8 @@ body.modal-open {
 
 /* Optional: show position indicator in red */
 .childscroll::-webkit-scrollbar-thumb {
-  background: #FD5056
-  ;
+  background: #fd5056;
 }
-
-
 
 .material-checkbox {
   display: flex;
@@ -480,12 +469,12 @@ body.modal-open {
   transition: all 0.3s;
 }
 
-.material-checkbox input[type="checkbox"]:checked~.checkmark {
-  background-color: #FD5056;
-  border-color: #FD5056;
+.material-checkbox input[type="checkbox"]:checked ~ .checkmark {
+  background-color: #fd5056;
+  border-color: #fd5056;
 }
 
-.material-checkbox input[type="checkbox"]:checked~.checkmark:after {
+.material-checkbox input[type="checkbox"]:checked ~ .checkmark:after {
   content: "";
   position: absolute;
   top: 0px;
@@ -497,19 +486,22 @@ body.modal-open {
   transform: rotate(45deg);
 }
 
-.material-checkbox input[type="checkbox"]:focus~.checkmark {
+.material-checkbox input[type="checkbox"]:focus ~ .checkmark {
   /* box-shadow: 0 0 0 2px #dfec5065; */
 }
 
-.material-checkbox:hover input[type="checkbox"]~.checkmark {
-  border-color: #FD5056;
+.material-checkbox:hover input[type="checkbox"] ~ .checkmark {
+  border-color: #fd5056;
 }
 
-.material-checkbox input[type="checkbox"]:disabled~.checkmark {
+.material-checkbox input[type="checkbox"]:disabled ~ .checkmark {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.material-checkbox input[type="checkbox"]:disabled~.checkmark:hover {
+.material-checkbox input[type="checkbox"]:disabled ~ .checkmark:hover {
   border-color: #931212;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
 }

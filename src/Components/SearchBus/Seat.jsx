@@ -3,6 +3,7 @@ import { MdEventSeat, MdOutlineAirlineSeatReclineNormal } from "react-icons/md";
 import { useSelector } from "react-redux";
 import swal from "sweetalert";
 import "./index.css";
+import Cookies from "js-cookie";
 const Seat = ({
   seatType,
   seatNo,
@@ -37,9 +38,10 @@ const Seat = ({
   const customerName = useSelector(
     (state) => state.authReducer.currentCustomer
   );
+  const jwtToken = Cookies.get("jwt_token");
   const handleSeatBooking = () => {
     // console.log(customerName);
-    if (customerName === null) {
+    if (jwtToken === undefined) {
       setSelectedSeats([]);
       setIsModalOpen(true);
     } else {
