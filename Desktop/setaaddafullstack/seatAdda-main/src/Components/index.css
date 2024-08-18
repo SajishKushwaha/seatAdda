@@ -1,0 +1,192 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 1px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+.customer_seat {
+  color: blue;
+}
+@media (max-width: 568px) {
+  .customer_seat {
+    color: blue;
+    font-size: 10px;
+  }
+  .customer_seat_value {
+    font-size: 10px;
+  }
+  .termAndCondition {
+    font-size: 6px;
+  }
+}
+.copyText {
+  border-style: dashed;
+  border-width: 1px;
+  padding-left: 17px;
+  width: 170px;
+  height: 35px;
+  border-color: red;
+  font-weight: bold;
+  font-size: 20px;
+}
+.copyButton {
+  border-style: solid;
+  border-width: 1px;
+  background-color: red;
+  color: aliceblue;
+  width: 50px;
+  height: 35px;
+}
+.copyContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+.logo {
+  height: 277px;
+  width: 768px;
+}
+.shareContainer {
+  padding: 15px;
+  font-size: 30px;
+}
+.watsapp {
+  color: green;
+  background-color: white;
+}
+.facebook {
+  color: blue;
+  background-color: white;
+}
+.twitter {
+  color: rgb(29, 150, 190);
+  background-color: white;
+}
+.instagram {
+  color: red;
+  background-color: white;
+}
+.successContainer {
+  background-color: #dddddd;
+  margin: 10px;
+  height: 40px;
+  padding: 8px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.howWorksContainer {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin: 10px;
+}
+.share1 {
+  border-color: grey;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 7px;
+  color: red;
+  padding: 13px;
+}
+.works {
+  font-weight: bold;
+  font-size: 20px;
+}
+.successContainer1 {
+  background-color: #dddddd;
+  margin: 10px;
+  height: 40px;
+  padding: 8px;
+  font-weight: bold;
+  color: red;
+}
+
+@media (min-width: 768px) {
+  .referalContainer {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20vh;
+  }
+}
+.mobile {
+  border-color: grey;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 7px;
+  color: red;
+}
+.ruppee {
+  border-color: grey;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 7px;
+  color: red;
+  height: 55px;
+}
+.travel {
+  border-color: grey;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 7px;
+  color: red;
+  padding: 10px;
+}
+@media (max-width: 560px) {
+  .text {
+    font-size: 12px;
+  }
+}
+@media print {
+  .tabledown {
+    margin-top: 40px;
+  }
+}
+@media print and (max-width: 1255px) {
+  .navbar {
+    display: none;
+  }
+}
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: top; /* Ensures text aligns at the top */
+}
+
+.custom-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.custom-table td {
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+.text-start {
+  font-size: 12px;
+}

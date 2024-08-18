@@ -1,0 +1,25 @@
+.tble {
+  margin-top: -1.25rem;
+  margin-bottom: -1.25rem;
+}
+.horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.seat {
+  background: 0 0;
+  border-color: black !important;
+  cursor: pointer;
+  font-size: 0.625rem;
+  margin: 0.1875rem;
+  padding: 0;
+  position: relative;
+}
+.boradingPoint {
+  text-align: start;
+}
+.boradingPoint {
+  border-style: none;
+  border-width: 0px;
+}
