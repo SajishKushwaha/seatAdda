@@ -120,6 +120,17 @@ const SeatShow = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    const orderedLists = document.querySelectorAll("ol");
+    orderedLists.forEach((ol) => {
+      let items = ol.querySelectorAll("li");
+      items.forEach((item, index) => {
+        item.style.counterIncrement = "custom-counter";
+        item.style.content = `"${index + 1}. "`;
+      });
+    });
+  }, []);
+
   return (
     <>
       <div>

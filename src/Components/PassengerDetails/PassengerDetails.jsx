@@ -145,11 +145,13 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
           <div className=" m-3 ml-0 sm:ml-3  md:w-1/3">
             <input
               className="py-1 px-3 text-sm w-full input"
-              type="tel"
+              type="number"
               name="Mobile"
               value={passPhNo}
               onChange={(e) => setPassPhNo(e.target.value)}
               id=""
+              // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+              required
               placeholder="Enter Your Mobile Number"
             />
           </div>
@@ -209,7 +211,7 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
                       <input
                         className="w-full text-sm py-1 px-3 input"
                         placeholder="Age"
-                        type="text"
+                        type="number"
                         name="age"
                         value={passDetails[index]["age"]}
                         onChange={(e) => handlePassAge(e, index)}
@@ -366,7 +368,7 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
           name="insurancebox"
           value="true"
           // onClick={Passenger}
-          checked
+          // checked
         />
         <label className="" for="insurancebox">
           Yes and I accept the terms and conditions
