@@ -3,6 +3,9 @@ import { BiMapPin, BiMobile, BiUser } from "react-icons/bi";
 import "./account.css";
 import man from "../../assets/man.png";
 import women from "../../assets/women.png";
+import women1 from "../../assets/women1.png";
+import women1_ from "../../assets/women1_.png";
+import man1png from "../../assets/man1png.png";
 import {
   MdArrowForwardIos,
   MdCardTravel,
@@ -154,12 +157,16 @@ const AccountSection = ({ isEditable, userData }) => {
             <div className="group flex gap-3 items-center">
               <input
                 name="useremail"
-                placeholder=""
+                // placeholder=""
                 type="text"
-                required=""
+                // required=""
                 value={email}
                 onChange={userInputemail}
                 readOnly={isEditable}
+                style={{
+                  width: "100vw ",
+                }}
+                emailcss
               />
               <label htmlFor="useremail">Email</label>
             </div>
@@ -188,40 +195,70 @@ const AccountSection = ({ isEditable, userData }) => {
 
             <div className="flex items-center justify-center gap-1 w-full">
               <div className="">
-                <img
-                  src={man}
-                  alt="Male"
-                  className={`w-full rounded-full cursor-pointer ${
-                    selectedGender === "male" ? "" : "selected"
-                  }`}
-                  onClick={
-                    isEditable
-                      ? null
-                      : (e) => {
-                          handlePassGender("male");
-                          setSelectedGender("male");
-                        }
-                  }
-                  style={{ height: "30px", width: "30px" }}
-                />
+                {selectedGender == "male" ? (
+                  <img
+                    src={man1png}
+                    alt="Male"
+                    className={`w-full rounded-full cursor-pointer `}
+                    onClick={
+                      isEditable
+                        ? null
+                        : (e) => {
+                            handlePassGender("male");
+                            setSelectedGender("male");
+                          }
+                    }
+                    // style={{ height: "30px", width: "30px" }}
+                  />
+                ) : (
+                  <img
+                    src={man}
+                    alt="Male"
+                    className={`w-full rounded-full cursor-pointer `}
+                    onClick={
+                      isEditable
+                        ? null
+                        : (e) => {
+                            handlePassGender("male");
+                            setSelectedGender("male");
+                          }
+                    }
+                    style={{ height: "30px", width: "30px" }}
+                  />
+                )}
               </div>
               <div className="ml-3 ">
-                <img
-                  src={women}
-                  alt="Female"
-                  className={`w-full rounded-full cursor-pointer ${
-                    selectedGender === "female" ? "" : "selected"
-                  }`}
-                  onClick={
-                    isEditable
-                      ? null
-                      : (e) => {
-                          handlePassGender("female");
-                          setSelectedGender("female");
-                        }
-                  }
-                  style={{ height: "30px", width: "30px" }}
-                />
+                {selectedGender == "female" ? (
+                  <img
+                    src={women1}
+                    alt="Female"
+                    className={`w-full rounded-full cursor-pointer `}
+                    onClick={
+                      isEditable
+                        ? null
+                        : (e) => {
+                            handlePassGender("female");
+                            setSelectedGender("female");
+                          }
+                    }
+                    // style={{ height: "30px", width: "30px" }}
+                  />
+                ) : (
+                  <img
+                    src={women}
+                    alt="Female"
+                    className={`w-full rounded-full cursor-pointer`}
+                    onClick={
+                      isEditable
+                        ? null
+                        : (e) => {
+                            handlePassGender("female");
+                            setSelectedGender("female");
+                          }
+                    }
+                    style={{ height: "30px", width: "30px" }}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -239,6 +276,7 @@ const AccountSection = ({ isEditable, userData }) => {
                 value={address}
                 onChange={userInputAddress}
                 readOnly={isEditable}
+                style={{ width: "100vh" }}
               />
               <label htmlFor="username">Address</label>
             </div>
@@ -308,8 +346,8 @@ const AccountSection = ({ isEditable, userData }) => {
         </form>
       </div>{" "}
       <div className="border-[1px] rounded-lg m-2 my-2 border-primarycolors-gray">
-        <div className="flex justify-between items-center px-2 py-4 gap-0">
-          <div className="flex  gap-3">
+        <div className="flex justify-between items-center px-2 py-4 gap-0 cursor-pointer">
+          <div className="flex  gap-3" onClick={() => navigate("/bookings")}>
             <div className="flex">
               <MdCardTravel className="text-2xl text-primarycolors-red" />
             </div>
@@ -326,7 +364,7 @@ const AccountSection = ({ isEditable, userData }) => {
           </div>
         </div>
         <hr className="border-primarycolors-gray " />
-        <div className="flex justify-between items-center px-2 py-4 gap-0">
+        {/* <div className="flex justify-between items-center px-2 py-4 gap-0">
           <div className="flex  gap-3">
             <div className="flex">
               <MdCreditCard className="text-2xl text-primarycolors-red" />
@@ -343,8 +381,8 @@ const AccountSection = ({ isEditable, userData }) => {
             </NavLink>
           </div>
         </div>
-        <hr className="border-primarycolors-gray " />
-        <div className="flex justify-between items-center px-2 py-4 gap-0">
+        <hr className="border-primarycolors-gray " /> */}
+        {/* <div className="flex justify-between items-center px-2 py-4 gap-0">
           <div className="flex  gap-3">
             <div className="flex">
               <BiMapPin className="text-2xl text-primarycolors-red" />
@@ -378,14 +416,14 @@ const AccountSection = ({ isEditable, userData }) => {
               <MdArrowForwardIos />
             </NavLink>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="border-[1px] rounded-lg m-2 my-2 border-primarycolors-gray">
         <div
           onClick={handleLogout}
           className="flex justify-between items-center px-2 py-4 gap-0"
         >
-          <div className="flex  gap-3">
+          <div className="flex  gap-3 cursor-pointer">
             <div className="flex">
               <MdLogout className="text-2xl text-primarycolors-red" />
             </div>

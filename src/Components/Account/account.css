@@ -55,3 +55,6 @@
   display: block;
   margin: 0 auto;
 }
+.emailcss {
+  width: 100vw !important;
+}

@@ -64,7 +64,7 @@ const Right = ({ setIsModalOpen, isCal }) => {
   );
   // console.log(matchedBuses);
   var filteredMatchedBuses = [...matchedBuses];
-  // console.log(filteredMatchedBuses);
+  console.log(filteredMatchedBuses);
   const selectedBoardingPoints = useSelector(
     (state) => state.updateFilterDetailsReducer.selectedBoardingPoints
   );

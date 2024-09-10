@@ -43,7 +43,7 @@ const BusBox = ({
   setIsModalOpen,
 }) => {
   const dateObject = new Date(date);
-  // console.log(cancellation_policy_id);
+  // console.log(`ccc${cancellation_policy_id}`);
   const boardingAndDropingPoint = JSON.parse(localStorage.getItem("busData"));
   const navigate = useNavigate();
   // Get the individual components of the date
@@ -78,7 +78,7 @@ const BusBox = ({
   const [showPopup, setShowPopup] = useState(false);
   const [bookingpolicy, setBookingPolicy] = useState("");
   const [cancelPolicy, setCancelPolicy] = useState(null);
-  // console.log(parse(jsonData.props));
+  // console.log(`this${cancelPolicy}`);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   // const [feedback, setFeedback] = useState("");
   const [showBoardingDropdown, setShowBoardingDropdown] = useState(false);

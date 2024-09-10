@@ -37,10 +37,17 @@ const History = ({ wallet }) => {
             key={index}
             className="shadow-md my-3  rounded-md border-[1px] border-primarycolors-gray"
           >
-            <div className="p-2 px-2 border-b-[1px] border-primarycolors-gray">
-              <p className="text-[12px] sm:text-base font-semibold text-left">
-                {formatDate(each.date) + " " + convertTo12HourFormat(each.time)}
-              </p>
+            <div className="p-2 px-2 border-b-[1px] border-primarycolors-gray flex flex-row justify-between items-center">
+              <div>
+                <p className="text-[12px] sm:text-base font-semibold text-left">
+                  {formatDate(each.date) +
+                    " " +
+                    convertTo12HourFormat(each.time)}
+                </p>
+              </div>
+              <div>
+                <p>{wallet[0].transaction_id}</p>
+              </div>
             </div>
             <div className="p-3 sm:p-5  grid grid-cols-4">
               <div className="col-span-3 flex flex-col text-left">

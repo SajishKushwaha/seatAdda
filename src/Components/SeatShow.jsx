@@ -14,7 +14,8 @@ import Cookies from "js-cookie";
 const SeatShow = () => {
   const [seatDetails, setSeatDetails] = useState(null);
   // console.log(seatDetails);
-
+  const userreg =
+    seatDetails != null ? seatDetails[0].passenger_name.slice(0, 3) : "";
   function convertTo12HourFormat(time) {
     const [hours, minutes] = time.split(":").map((num) => parseInt(num));
     // Determine AM or PM
@@ -48,7 +49,13 @@ const SeatShow = () => {
     const printElement = reportTemplateRef.current;
     console.log(printElement);
 
-    html2pdf().from(printElement).save();
+    // html2pdf().from(printElement).save();
+    html2pdf()
+      .from(printElement)
+      .set({
+        filename: `${userreg} ${seatDetails[0].reg_no}.pdf`, // Set your desired filename here
+      })
+      .save();
   };
   // const captureAndDownload = () => {
   //   const element = document.getElementById("capture");
@@ -606,9 +613,9 @@ const SeatShow = () => {
               </div>
             </div>
           </div>
-          {/* <div className="">
+          <div className="">
             <Footer />
-          </div> */}
+          </div>
         </div>
       )}
     </>
