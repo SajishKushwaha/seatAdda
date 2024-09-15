@@ -15,6 +15,7 @@ import Offers from "./Components/OffersPage/Offers";
 import FAQ from "./Components/FAQ/FAQ";
 import Contact from "./Components/Contact/Contact";
 import Terms from "./Components/Terms/Terms";
+import TravelPolicy from "./Components/TravelPolicy/index";
 import About from "./Components/About/About";
 import Privacy from "./Components/Privacy/Privacy";
 import FreeRides from "./Components/Free Rides/FreeRides";
@@ -66,7 +67,7 @@ function App() {
         <Route path="/faq" Component={FAQ}></Route>
         <Route path="/about" Component={About}></Route>
         <Route path="/terms" Component={Terms}></Route>
-
+        <Route path="/travelpolicy" Component={TravelPolicy}></Route>
         <Route path="/contact" Component={Contact}></Route>
         <Route path="/privacy" Component={Privacy}></Route>
         {/* <Route

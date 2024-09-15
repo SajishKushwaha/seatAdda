@@ -77,8 +77,7 @@ const BusBox = ({
   };
   const [showPopup, setShowPopup] = useState(false);
   const [bookingpolicy, setBookingPolicy] = useState("");
-  const [cancelPolicy, setCancelPolicy] = useState(null);
-  // console.log(`this${cancelPolicy}`);
+  const [cancelPolicy, setCancelPolicy] = useState(undefined);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   // const [feedback, setFeedback] = useState("");
   const [showBoardingDropdown, setShowBoardingDropdown] = useState(false);
@@ -86,7 +85,7 @@ const BusBox = ({
     useState(false);
   const [showTravelPolicyDropdown, setShowTravelPolicyDropdown] =
     useState(false);
-
+  console.log(cancelPolicy);
   const [formState, setFormState] = useState({
     formType: "feedback",
     errorType: null,
@@ -208,7 +207,6 @@ const BusBox = ({
       toast.error(error.response.data.message);
     }
   };
-
   useEffect(() => {
     const cancel = async () => {
       const formData = new FormData();
@@ -221,6 +219,7 @@ const BusBox = ({
         }
       );
       const data = await response.json();
+      console.log(`${data.data}`);
       setCancelPolicy(data.data);
     };
     cancel();
@@ -229,7 +228,7 @@ const BusBox = ({
     } else {
       document.body.style.overflow = "unset";
     }
-  }, [showPopup]);
+  }, [showPopup, cancellation_policy_id]);
 
   // Function to remove seconds from a time string
   function removeSeconds(timeString) {
@@ -425,7 +424,7 @@ const BusBox = ({
         )}
       </div> */}
 
-      <div className="hidden   lg:block ">
+      <div className="hidden   lg:block mb-3">
         <div className=" bg-primarycolors-white rounded-md  hover:shadow-md">
           <div className=" flex justify-between">
             <div className="w-full">
@@ -594,7 +593,7 @@ const BusBox = ({
                     </div>
                   </div>
                 </Popup>
-                <div className=" text-primarycolors-gray">|</div>
+
                 {/* <button
                   className={` p-1 ${
                     showCancellationDropdown
@@ -609,76 +608,81 @@ const BusBox = ({
                     <IoIosArrowDown />
                   )}
                 </button> */}
-                <Popup
-                  trigger={
-                    <button
-                      className={` p-1 ${
-                        showCancellationDropdown
-                          ? "text-primarycolors-red"
-                          : "hover:text-primarycolors-red"
-                      }`}
+                {cancelPolicy !== undefined && (
+                  <div className="flex items-center">
+                    <div className=" text-primarycolors-gray">|</div>
+                    <Popup
+                      trigger={
+                        <button
+                          className={` p-1 ${
+                            showCancellationDropdown
+                              ? "text-primarycolors-red"
+                              : "hover:text-primarycolors-red"
+                          }`}
+                        >
+                          Cancelation Policy{" "}
+                          {showCancellationDropdown ? (
+                            <IoIosArrowUp />
+                          ) : (
+                            <IoIosArrowDown />
+                          )}
+                        </button>
+                      }
+                      position="bottom center"
+                      on="hover"
+                      closeOnDocumentClick
+                      mouseLeaveDelay={300}
+                      mouseEnterDelay={0}
+                      contentStyle={{
+                        padding: "10px",
+                        border: "none",
+                        marginTop: "35px",
+                        width: "400px",
+                      }}
+                      arrow={false}
                     >
-                      Cancelation Policy{" "}
-                      {showCancellationDropdown ? (
-                        <IoIosArrowUp />
-                      ) : (
-                        <IoIosArrowDown />
-                      )}
-                    </button>
-                  }
-                  position="bottom center"
-                  on="hover"
-                  closeOnDocumentClick
-                  mouseLeaveDelay={300}
-                  mouseEnterDelay={0}
-                  contentStyle={{
-                    padding: "10px",
-                    border: "none",
-                    marginTop: "35px",
-                    width: "400px",
-                  }}
-                  arrow={false}
-                >
-                  <div>
-                    <h1>Cancellation Policy</h1>
-                    <hr />
-                    {cancelPolicy !== null &&
-                      cancelPolicy.cancellation_policy_details.map(
-                        (each, index) => {
-                          const from_days_hours = (day, hour) => {
-                            // console.log(day);
-                            if (day === "0" && hour === "0") {
-                              return "departur time";
-                            } else if (day !== "0") {
-                              return day;
-                            } else if (hour === "-1") {
-                              return "issue time";
-                            } else {
-                              return `${hour} hour`;
+                      <div>
+                        <h1>Cancellation Policy</h1>
+                        <hr />
+                        {cancelPolicy !== undefined &&
+                          cancelPolicy.cancellation_policy_details.map(
+                            (each, index) => {
+                              const from_days_hours = (day, hour) => {
+                                // console.log(day);
+                                if (day === "0" && hour === "0") {
+                                  return "departur time";
+                                } else if (day !== "0") {
+                                  return day;
+                                } else if (hour === "-1") {
+                                  return "issue time";
+                                } else {
+                                  return `${hour} hour`;
+                                }
+                              };
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex items-center  justify-between"
+                                >
+                                  <div>
+                                    {`${from_days_hours(
+                                      each.time_from_days,
+                                      each.time_from_hours
+                                    )} to ${from_days_hours(
+                                      each.time_to_days,
+                                      each.time_to_hours
+                                    )}`}
+                                  </div>
+                                  <div>{`${each.cancellation_charge} %`}</div>
+                                </div>
+                              );
                             }
-                          };
-                          return (
-                            <div
-                              key={index}
-                              className="flex items-center  justify-between"
-                            >
-                              <div>
-                                {`${from_days_hours(
-                                  each.time_from_days,
-                                  each.time_from_hours
-                                )} to ${from_days_hours(
-                                  each.time_to_days,
-                                  each.time_to_hours
-                                )}`}
-                              </div>
-                              <div>{`${each.cancellation_charge} %`}</div>
-                            </div>
-                          );
-                        }
-                      )}
+                          )}
+                      </div>
+                    </Popup>
                   </div>
-                </Popup>
-                <div className=" text-primarycolors-gray">|</div>
+                )}
+
                 {/* <button
                   onClick={handleTravelPolicyDropdownClick}
                   className={` p-1 ${
@@ -694,40 +698,45 @@ const BusBox = ({
                     <IoIosArrowDown />
                   )}
                 </button> */}
-                <Popup
-                  trigger={
-                    <button
-                      className={`p-1 ${
-                        showTravelPolicyDropdown
-                          ? "text-primarycolors-red"
-                          : "hover:text-primarycolors-red"
-                      }`}
+                {cancelPolicy !== undefined && (
+                  <div className="flex items-center">
+                    <div className=" text-primarycolors-gray">|</div>
+                    <Popup
+                      trigger={
+                        <button
+                          className={`p-1 ${
+                            showTravelPolicyDropdown
+                              ? "text-primarycolors-red"
+                              : "hover:text-primarycolors-red"
+                          }`}
+                        >
+                          Booking Policy
+                          {showTravelPolicyDropdown ? (
+                            <IoIosArrowUp />
+                          ) : (
+                            <IoIosArrowDown />
+                          )}
+                        </button>
+                      }
+                      position="bottom center"
+                      on="hover"
+                      closeOnDocumentClick
+                      mouseLeaveDelay={300}
+                      mouseEnterDelay={0}
+                      contentStyle={{
+                        padding: "10px",
+                        border: "none",
+                        marginTop: "35px",
+                        width: "400px",
+                      }}
+                      arrow={false}
                     >
-                      Booking Policy
-                      {showTravelPolicyDropdown ? (
-                        <IoIosArrowUp />
-                      ) : (
-                        <IoIosArrowDown />
-                      )}
-                    </button>
-                  }
-                  position="bottom center"
-                  on="hover"
-                  closeOnDocumentClick
-                  mouseLeaveDelay={300}
-                  mouseEnterDelay={0}
-                  contentStyle={{
-                    padding: "10px",
-                    border: "none",
-                    marginTop: "35px",
-                    width: "400px",
-                  }}
-                  arrow={false}
-                >
-                  {typeof bookingpolicy === "string"
-                    ? parse(bookingpolicy)
-                    : null}
-                </Popup>
+                      {typeof bookingpolicy === "string"
+                        ? parse(bookingpolicy)
+                        : null}
+                    </Popup>
+                  </div>
+                )}
               </div>
             </div>
             <div className=" border-l-[0.5px] border-primarycolors-gray  flex w-[200px] justify-end items-center ">

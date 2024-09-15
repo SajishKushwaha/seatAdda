@@ -6,6 +6,10 @@ import women from "../../assets/women.png";
 import women1 from "../../assets/women1.png";
 import women1_ from "../../assets/women1_.png";
 import man1png from "../../assets/man1png.png";
+import male from "../../assets/male.svg";
+import maleselected from "../../assets/maleselected.svg";
+import female from "../../assets/female.svg";
+import femaleselected from "../../assets/femaleselected.svg";
 import {
   MdArrowForwardIos,
   MdCardTravel,
@@ -112,7 +116,7 @@ const AccountSection = ({ isEditable, userData }) => {
   };
   return (
     <div className="pb-[2rem]">
-      <div className="border-[1px] rounded-lg m-2 border-primarycolors-gray">
+      <div className="border-[1px] rounded-lg m-2 border-primarycolors-gray mt-16 md:mt-0">
         <form className="accountform px-3 py-1" onSubmit={saveUserDetails}>
           <div className="flex gap-0">
             <div className="flex">
@@ -197,7 +201,7 @@ const AccountSection = ({ isEditable, userData }) => {
               <div className="">
                 {selectedGender == "male" ? (
                   <img
-                    src={man1png}
+                    src={maleselected}
                     alt="Male"
                     className={`w-full rounded-full cursor-pointer `}
                     onClick={
@@ -208,11 +212,11 @@ const AccountSection = ({ isEditable, userData }) => {
                             setSelectedGender("male");
                           }
                     }
-                    // style={{ height: "30px", width: "30px" }}
+                    style={{ height: "40px", width: "40px" }}
                   />
                 ) : (
                   <img
-                    src={man}
+                    src={male}
                     alt="Male"
                     className={`w-full rounded-full cursor-pointer `}
                     onClick={
@@ -223,14 +227,14 @@ const AccountSection = ({ isEditable, userData }) => {
                             setSelectedGender("male");
                           }
                     }
-                    style={{ height: "30px", width: "30px" }}
+                    style={{ height: "40px", width: "40px" }}
                   />
                 )}
               </div>
               <div className="ml-3 ">
                 {selectedGender == "female" ? (
                   <img
-                    src={women1}
+                    src={femaleselected}
                     alt="Female"
                     className={`w-full rounded-full cursor-pointer `}
                     onClick={
@@ -241,11 +245,11 @@ const AccountSection = ({ isEditable, userData }) => {
                             setSelectedGender("female");
                           }
                     }
-                    // style={{ height: "30px", width: "30px" }}
+                    style={{ height: "40px", width: "40px" }}
                   />
                 ) : (
                   <img
-                    src={women}
+                    src={female}
                     alt="Female"
                     className={`w-full rounded-full cursor-pointer`}
                     onClick={
@@ -256,7 +260,7 @@ const AccountSection = ({ isEditable, userData }) => {
                             setSelectedGender("female");
                           }
                     }
-                    style={{ height: "30px", width: "30px" }}
+                    style={{ height: "40px", width: "40px" }}
                   />
                 )}
               </div>
@@ -267,7 +271,7 @@ const AccountSection = ({ isEditable, userData }) => {
             <div className="flex">
               <BiUser className="text-2xl text-primarycolors-red" />
             </div>
-            <div className="group flex gap-3 items-center">
+            <div className="group flex gap-3 items-center w-full">
               <input
                 name="username"
                 placeholder=""
@@ -276,7 +280,7 @@ const AccountSection = ({ isEditable, userData }) => {
                 value={address}
                 onChange={userInputAddress}
                 readOnly={isEditable}
-                style={{ width: "100vh" }}
+                className="w-full"
               />
               <label htmlFor="username">Address</label>
             </div>

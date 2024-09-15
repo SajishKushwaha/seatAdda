@@ -251,6 +251,15 @@ const Footer = () => {
                     Terms
                   </NavLink>
                 </div>
+                |
+                <div className="px-2 py-2">
+                  <NavLink
+                    to="/travelpolicy"
+                    className="text-base leading-6 text-gray-500 hover:text-gray-900"
+                  >
+                    Travel Policy
+                  </NavLink>
+                </div>
               </div>
               <div className="flex flex-wrap justify-center items-center mt-3 md:mt-0 space-x-2  md:space-x-4">
                 <div className=" rounded-full ">

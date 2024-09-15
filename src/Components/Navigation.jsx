@@ -4,6 +4,10 @@ import logo from "../assets/logo2.png";
 import AppImg from "../assets/Bus Stop-pana.svg";
 import MobImg from "../assets/msg-mobile.avif";
 
+import { jwtDecode } from "jwt-decode";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+// To decode the JWT token to extract user info
+
 import Cookies from "js-cookie";
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
 import "../App.css";
@@ -26,11 +30,12 @@ const Navbar = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [verify, setVerify] = useState(false);
+  const [googlelogin, setGoogleLogin] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
-
+  const [user, setUser] = useState(null);
   const path = pathname.split("/");
   const url = "https://seatadda.co.in/general-settings";
   const [DATA, set_DATA] = useState([]);
@@ -59,7 +64,49 @@ const Navbar = () => {
     // Close the mobile menu when clicking on a link
     setMobileMenuOpen(false);
   };
+  useEffect(() => {
+    // Handle token from URL on initial load
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded); // Set user data
+        // You might want to store token and user info in state, localStorage, or cookies here.
+      } catch (error) {
+        console.error("Token decoding failed", error);
+      }
+    }
+  }, [user]);
 
+  const handleSuccess = (credentialResponse) => {
+    const decoded = jwtDecode(credentialResponse.credential);
+    console.log("Decoded User Info:", decoded);
+    setUser(decoded); // You can now access user's email and profile info
+  };
+  const handleError = () => {
+    console.log("Login Failed");
+  };
+  // const user_details = async () => {
+  //   const formdata = new FormData();
+  //   formdata.append("access_token", user);
+
+  //   const requestOptions = {
+  //     method: "POST",
+
+  //     body: formdata,
+  //   };
+
+  //   const response = await fetch(
+  //     "https://seatadda.co.in/auth/api/google-login-verify",
+  //     requestOptions
+  //   );
+  //   const data = await response.json();
+  //   console.log(data);
+  // };
+  // useEffect(() => {
+  //   user_details();
+  // }, [user]);
   const handleOpenModal = () => {
     setMobileMenuOpen(false);
 
@@ -557,7 +604,7 @@ const Navbar = () => {
                               </div>
                             </div>{" "}
                           </div>
-                        ) : (
+                        ) : googlelogin ? (
                           <div className="sm:flex w-full ">
                             {" "}
                             <div className=" sm:w-3/4   sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5">
@@ -601,18 +648,39 @@ const Navbar = () => {
                                     or login with
                                   </p>
                                   <div className="flex flex-row">
-                                    <button className="p-2 mb-0 rounded-md px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-blue">
+                                    <button
+                                      className="p-2 mb-0 rounded-md px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-blue"
+                                      onClick={() =>
+                                        setGoogleLogin(!googlelogin)
+                                      }
+                                    >
                                       <BiLogoGoogle className="text-xl mr-1" />
                                       <span></span> Google
                                     </button>
-                                    <button className="p-2 rounded-md mb-0 px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-btncolor">
+                                    {/* <button className="p-2 rounded-md mb-0 px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-btncolor">
                                       <BiLogoFacebook className="text-xl mr-1" />
                                       <span></span> Facebook
-                                    </button>
+                                    </button> */}
                                   </div>
                                 </div>
                               </div>
-                            </div>{" "}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="sm:flex w-full ">
+                            <GoogleOAuthProvider clientId="911392675790-1p38hhd9v50h5amttblfrqn2nt65ljdp.apps.googleusercontent.com">
+                              {!user ? (
+                                <GoogleLogin
+                                  onSuccess={handleSuccess}
+                                  onError={handleError}
+                                />
+                              ) : (
+                                <div>
+                                  <h2>Welcome, {user.name}</h2>
+                                  <p>Email: {user.email}</p>
+                                </div>
+                              )}
+                            </GoogleOAuthProvider>
                           </div>
                         )}
                       </div>
