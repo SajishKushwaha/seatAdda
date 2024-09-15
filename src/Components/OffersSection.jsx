@@ -32,75 +32,6 @@ const OffersSection = () => {
 
   return (
     <div>
-      <>
-        <div className=" md:hidden pt-4 px-4 z-0">
-          <Swiper
-            className=""
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={10}
-            slidesPerView={1.5}
-            autoplay={true}
-            /*  onSlideChange={() => console.log('slide change')}
-           onSwiper={(swiper) => console.log(swiper)} */
-          >
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-          </Swiper>
-        </div>
-
-        <div className="hidden md:block   pt-4 px-2">
-          <Swiper
-            className=" "
-            // style={{ zIndex: isCal ? -1 : 1 }}
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={10}
-            slidesPerView={3}
-            autoplay={true}
-          >
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-            <SwiperSlide>
-              {" "}
-              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-            </SwiperSlide>
-          </Swiper>
-        </div>
-      </>
-
       <div className="container mx-auto p-5">
         <div className="offer-section p-3 my-3 w-7/8 mx-auto shadow-md ">
           <div className="md:flex p-2 justify-between mx-auto md:mx-0">
@@ -163,6 +94,74 @@ const OffersSection = () => {
           </div>
         </div>
       </div>
+      <>
+        <div className=" md:hidden pt-4 px-4 z-0">
+          <Swiper
+            className=""
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={10}
+            slidesPerView={1.5}
+            autoplay={true}
+            /*  onSlideChange={() => console.log('slide change')}
+           onSwiper={(swiper) => console.log(swiper)} */
+          >
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+          </Swiper>
+        </div>
+
+        <div className="hidden md:block  ml-20 mr-20 pt-4 px-2">
+          <Swiper
+            className=" "
+            // style={{ zIndex: isCal ? -1 : 1 }}
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={10}
+            slidesPerView={3}
+            autoplay={true}
+          >
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              {" "}
+              <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </>
     </div>
   );
 };
