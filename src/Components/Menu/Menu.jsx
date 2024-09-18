@@ -58,13 +58,12 @@ const Menu = () => {
               </div>
               <div className="text-xl">
                 {" "}
-                <NavLink>
-                  {" "}
+                <NavLink to="/bookings">
                   <MdArrowForwardIos />
                 </NavLink>
               </div>
             </div>
-            <NavLink
+            {/* <NavLink
               // to="/free-rides"
               className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75"
             >
@@ -81,7 +80,7 @@ const Menu = () => {
                   <MdArrowForwardIos />
                 </NavLink>
               </div>
-            </NavLink>
+            </NavLink> */}
           </div>
 
           <div className=" bg-primarycolors-white rounded-lg shadow-md flex flex-col m-3 p-3 gap-5 border-[0.5px]  border-primarycolors-textcolor/30">
@@ -97,7 +96,7 @@ const Menu = () => {
               </div>
               <div className="text-xl">
                 {" "}
-                <NavLink>
+                <NavLink to="/ReferAndEarn">
                   {" "}
                   <MdArrowForwardIos />
                 </NavLink>
@@ -135,7 +134,7 @@ const Menu = () => {
               </div>
               <div className="text-xl">
                 {" "}
-                <NavLink>
+                <NavLink to="/faq">
                   {" "}
                   <MdArrowForwardIos />
                 </NavLink>
@@ -154,7 +153,7 @@ const Menu = () => {
               </div>
               <div className="text-xl">
                 {" "}
-                <NavLink>
+                <NavLink to="/terms">
                   {" "}
                   <MdArrowForwardIos />
                 </NavLink>
@@ -173,7 +172,7 @@ const Menu = () => {
               </div>
               <div className="text-xl">
                 {" "}
-                <NavLink>
+                <NavLink to="privacy">
                   {" "}
                   <MdArrowForwardIos />
                 </NavLink>
@@ -192,7 +191,7 @@ const Menu = () => {
               </div>
               <div className="text-xl">
                 {" "}
-                <NavLink>
+                <NavLink to="/about">
                   {" "}
                   <MdArrowForwardIos />
                 </NavLink>
@@ -211,7 +210,7 @@ const Menu = () => {
               </div>
               <div className="text-xl">
                 {" "}
-                <NavLink>
+                <NavLink to="/contact">
                   {" "}
                   <MdArrowForwardIos />
                 </NavLink>

@@ -4,7 +4,7 @@ import { BiArrowBack, BiBus } from "react-icons/bi";
 // import { FaLocationCrosshairs } from "react-icons/fa6";
 // import { MdStar } from "react-icons/md";
 // import { BiUser } from "react-icons/bi";
-
+import NoBookings from "./NoBookings";
 import "./book.css";
 const Upcoming = ({ bookinghistory }) => {
   // console.log(bookinghistory);
@@ -40,10 +40,15 @@ const Upcoming = ({ bookinghistory }) => {
     navigate(`/SeatShow?ticketid=${ticket}`);
   };
 
-  console.log(bookinghistory);
+  // console.log(bookinghistory);
+  const BOOKING_DATA = [];
+  const name = "upcoming";
   return (
     <div className="m-3 childscroll overflow-y-scroll  md:h-[800px] mb-[7rem] sm:mb-[1rem]">
-      {futureBookings.map((data, index) => {
+      <div className="my-3">
+        {BOOKING_DATA.length === 0 && <NoBookings name={name} />}
+      </div>
+      {/* {futureBookings.map((data, index) => {
         // console.log(data);
         return (
           <div
@@ -109,7 +114,7 @@ const Upcoming = ({ bookinghistory }) => {
             </div>
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 };
