@@ -9,7 +9,7 @@ import FooterDesktop from "../FooterDesktop";
 import { BiArrowBack } from "react-icons/bi";
 import WalletSection from "../Wallet/WalletSection";
 import PassengerDetailsMobile from "./PassengerDetailsMobile";
-
+import "./index.css";
 const Passenger = () => {
   const isLoading = useSelector((state) => state.busDetailsReducer.isLoading);
   const selectedSeats = useSelector(
@@ -45,6 +45,9 @@ const Passenger = () => {
     }
   }, [routeDetails]);
   const [passDetails, setPassDetails] = React.useState([]);
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [coupon, setCoupon] = React.useState("");
+  const [couponData, setCouponData] = React.useState(null);
   const [totalfare, setTotalFare] = React.useState(totalFare);
   const [passEmail, setPassEmail] = React.useState("");
   const [isdisable, setIsDisable] = React.useState(false);
@@ -76,6 +79,16 @@ const Passenger = () => {
   //     setDeductionMade(false);
   //   }
   // };
+  let fare = totalFare;
+  if (couponData != null) {
+    if (couponData.date.discount_type === "percentage") {
+      fare = fare - (fare * couponData.date.discount) / 100;
+    } else if (couponData.date.discount_type === "number") {
+      fare = fare - couponData.date.discount;
+      // console.log(`fff${fare - couponData.discount}`);
+    }
+  }
+
   const walletBalance = () => {
     setDeductionMade(!deductionMade);
   };
@@ -295,6 +308,33 @@ const Passenger = () => {
     // console.log(insurancevalue);
     setInsurance(insurancevalue);
   };
+  const ApplyCoupon = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      userIdString.access_token.split("Bearer")[1]
+    );
+    const formdata = new FormData();
+    formdata.append("coupon_code", coupon);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+    const response = await fetch(
+      "https://seatadda.co.in/auth/api/coupon-code-verification",
+      requestOptions
+    );
+    const data = await response.json();
+    if (data.status === true) {
+      setIsSuccess(true);
+    } else {
+      setIsSuccess(false);
+    }
+    setCouponData(data);
+    console.log(couponData);
+  };
   return (
     <div>
       <div className="hidden md:block">
@@ -364,7 +404,7 @@ const Passenger = () => {
                       Basic Fare (for {selectedSeats.length} Seat) :{" "}
                       <span className="font-bold uppercase">
                         <span className="">&#8377;</span>
-                        {totalFare}
+                        {fare}
                       </span>{" "}
                     </p>{" "}
                     {/* <p className="m-2 flex justify-between">
@@ -387,6 +427,54 @@ const Passenger = () => {
                         50
                       </span>{" "}
                     </p> */}
+                  </div>
+                  <hr className="my-2 border-dashed" />
+                  <div className="mb-6">
+                    <label className="block text-base font-medium text-gray-700 mb-2 sm:text-lg">
+                      Have coupon?
+                    </label>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center">
+                      <input
+                        type="text"
+                        className="flex-grow w-full p-2 sm:p-3 border border-gray-300 rounded-t-md sm:rounded-l-md sm:rounded-t-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg"
+                        placeholder="Coupon code"
+                        value={coupon}
+                        onChange={(e) => setCoupon(e.target.value)}
+                      />
+                      <span className="sm:mt-0  w-full sm:w-auto">
+                        <button
+                          className="w-full sm:w-auto p-3 sm:p-4 bg-blue-600 text-white font-semibold rounded-b-md sm:rounded-r-md sm:rounded-b-none hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onClick={ApplyCoupon}
+                          style={{
+                            backgroundColor: "#3720d8",
+                            color: "white",
+                          }}
+                        >
+                          Apply
+                        </button>
+                      </span>
+                    </div>
+                    {/* {isSuccess && (
+                      <span className="absolute right-2 top-2 text-green-500 animate-bounce">
+                        ✔️ hhhhhhhhh
+                      </span>
+                    )} */}
+                    {isSuccess && (
+                      <p
+                        className="mt-2 text-sm animate-fadeIn"
+                        style={{ color: "green" }}
+                      >
+                        ✔️ Coupon applied successfully!
+                      </p>
+                    )}
+                    {!isSuccess && (
+                      <p
+                        className="mt-2 text-sm animate-fadeIn"
+                        style={{ color: "red" }}
+                      >
+                        Coupon code is not valid
+                      </p>
+                    )}
                   </div>
 
                   <hr className="my-2 border-dashed" />

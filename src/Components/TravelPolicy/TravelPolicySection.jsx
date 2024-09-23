@@ -77,7 +77,10 @@ const TravelPolicySection = () => {
     );
   }
   return (
-    <div className=" container mx-auto my-5 pb-[3rem] sm:pb-0  ">
+    <div
+      className="container mx-auto px-4 sm:px-6 my-3 pb-[3rem] sm:pb-0"
+      style={{ textAlign: "start " }}
+    >
       {typeof TERMS_DATA === "string" ? parse(TERMS_DATA) : null}
     </div>
   );

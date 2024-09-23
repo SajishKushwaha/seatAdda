@@ -79,14 +79,39 @@ const Navbar = () => {
     }
   }, [user]);
 
-  const handleSuccess = (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
-    console.log("Decoded User Info:", decoded);
-    setUser(decoded); // You can now access user's email and profile info
+  // const handleSuccess = (credentialResponse) => {
+  //   const decoded = jwtDecode(credentialResponse.credential);
+  //   console.log("Decoded User Info:", decoded);
+  //   setUser(credentialResponse.credential); // You can now access user's email and profile info
+  // };
+  const handleSuccess = async (response) => {
+    const token = response.credential;
+    const formdata = new FormData();
+    formdata.append("access_token", token);
+    try {
+      // Send the token to your backend
+      const res = await fetch(
+        "https://seatadda.co.in/auth/api/google-login-verify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: formdata,
+        }
+      );
+
+      const data = await res.json();
+      setUser(data.user); // Save user data from backend response
+      console.log("User authenticated", data);
+    } catch (error) {
+      console.error("Authentication failed", error);
+    }
   };
   const handleError = () => {
     console.log("Login Failed");
   };
+
   // const user_details = async () => {
   //   const formdata = new FormData();
   //   formdata.append("access_token", user);
@@ -668,7 +693,7 @@ const Navbar = () => {
                           </div>
                         ) : (
                           <div className="sm:flex w-full ">
-                            <GoogleOAuthProvider clientId="911392675790-1p38hhd9v50h5amttblfrqn2nt65ljdp.apps.googleusercontent.com">
+                            <GoogleOAuthProvider clientId="911392675790-nie1gvdlbupl8tehm092k00b2u614j0u.apps.googleusercontent.com">
                               {!user ? (
                                 <GoogleLogin
                                   onSuccess={handleSuccess}

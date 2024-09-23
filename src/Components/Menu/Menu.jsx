@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaTicketAlt, FaUserCircle } from "react-icons/fa";
+
+import Cookies from "js-cookie";
+
 import {
   MdArrowForwardIos,
   MdContactPage,
@@ -9,7 +12,9 @@ import {
   MdLocalOffer,
   MdPolicy,
   MdTerminal,
+  MdCardTravel,
 } from "react-icons/md";
+import { BiUserCircle, BiCaretDown } from "react-icons/bi";
 import { GoCrossReference } from "react-icons/go";
 import { BiSolidCoupon } from "react-icons/bi";
 import FooterDesktop from "../FooterDesktop";
@@ -18,35 +23,53 @@ import { useSelector } from "react-redux";
 
 const Menu = () => {
   const navigate = useNavigate();
-  const customerName = useSelector(
-    (state) => state.authReducer.currentCustomer
-  );
-  const handleAccount = () => {
-    if (customerName !== null) navigate("/account");
-    else alert("Login Required");
-  };
+
+  const jwt_token = Cookies.get("jwt_token");
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
   return (
     <>
       <div className=" bg-primarycolors-bg_sky/50">
-        <NavLink
-          onClick={handleAccount}
-          className="fixed overflow-y-hidden z-10 w-full flex items-center justify-around text-primarycolors-white px-2 py-5 bg-primarycolors-textcolor sm:bg-primarycolors-textcolor"
-        >
-          <div className="text-5xl">
-            <FaUserCircle />
-          </div>
-          <div className="w-[70%] px-1 text-base  truncate">
-            Login to avail Offers and more exiciting
-          </div>
-          <div className="text-xl">
-            {" "}
-            <NavLink onClick={handleAccount}>
+        {jwt_token && userData ? (
+          <NavLink
+            to="/account"
+            className="fixed overflow-y-hidden z-10 w-full flex items-center justify-between text-primarycolors-white px-2 py-5 bg-primarycolors-textcolor sm:bg-primarycolors-textcolor"
+          >
+            <div className="flex items-center justify-start">
+              <BiUserCircle
+                className="text-center text-primarycolors-red"
+                size={50}
+              />
+              <div style={{ marginLeft: "10px", fontSize: "20px" }}>
+                <h1>{userData.user.name}</h1>
+              </div>
+            </div>
+
+            <NavLink to="/account">
               {" "}
               <MdArrowForwardIos />
             </NavLink>
-          </div>
-        </NavLink>
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/bookings"
+            className="fixed overflow-y-hidden z-10 w-full flex items-center justify-around text-primarycolors-white px-2 py-5 bg-primarycolors-textcolor sm:bg-primarycolors-textcolor"
+          >
+            <div className="text-5xl">
+              <FaUserCircle />
+            </div>
+            <div className="w-[70%] px-1 text-base  truncate">
+              Login to avail Offers and more exiciting
+            </div>
+            <div className="text-xl">
+              {" "}
+              <NavLink to="/bookings">
+                {" "}
+                <MdArrowForwardIos />
+              </NavLink>
+            </div>
+          </NavLink>
+        )}
         <div className="overflow-y-auto  relative top-[6rem] mb-[10rem]">
           <div className=" bg-primarycolors-white rounded-lg shadow-md flex flex-col m-3 p-3 py-6 gap-5 border-[0.5px]  border-primarycolors-textcolor/30">
             <div className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75">
@@ -54,7 +77,7 @@ const Menu = () => {
                 <FaTicketAlt />
               </div>
               <div className="w-3/4 text-sm text-primarycolors-black   text-left">
-                Cancel Booking
+                Booking History
               </div>
               <div className="text-xl">
                 {" "}
@@ -135,6 +158,24 @@ const Menu = () => {
               <div className="text-xl">
                 {" "}
                 <NavLink to="/faq">
+                  {" "}
+                  <MdArrowForwardIos />
+                </NavLink>
+              </div>
+            </NavLink>
+            <NavLink
+              to="/travelpolicy"
+              className="flex items-baseline justify-between px-3 text-primarycolors-textcolor/75"
+            >
+              <div className="text-2xl">
+                <MdCardTravel />
+              </div>
+              <div className="w-3/4 text-sm text-primarycolors-black    text-left">
+                Travel Policy
+              </div>
+              <div className="text-xl">
+                {" "}
+                <NavLink to="/travelpolicy">
                   {" "}
                   <MdArrowForwardIos />
                 </NavLink>
