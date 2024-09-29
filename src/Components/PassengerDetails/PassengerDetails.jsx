@@ -8,7 +8,11 @@ import Drawer from "react-modern-drawer";
 import parse from "html-react-parser";
 //import styles 👇
 import "react-modern-drawer/dist/index.css";
-const PassengerDetails = ({ storePassenger, storeInsurance }) => {
+const PassengerDetails = ({
+  storePassenger,
+  storeInsurance,
+  termAndCondition,
+}) => {
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
@@ -28,6 +32,7 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
   const [passPhNo, setPassPhNo] = React.useState("");
   const [insurancevalue, setInsurancevalue] = React.useState(null);
   const [insurance, setInsurance] = React.useState(false);
+  const [check, setcheck] = React.useState(true);
   const [address, setAddress] = React.useState("");
   const [city, setCity] = React.useState(From);
   const [pincode, setPinCode] = React.useState("");
@@ -87,10 +92,16 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
       // Update the insurance state and value
       setInsurance(!insurance);
       // setInsurancevalue(newInsuranceValue);
-
+      console.log(`hhhh${newInsuranceValue}`);
       // Pass the updated value to storeInsurance using a callback
       storeInsurance(newInsuranceValue);
     }
+  };
+  const Passenger = () => {
+    setcheck(!check);
+    const checking = check;
+    console.log(checking);
+    termAndCondition(checking);
   };
   const addressInput = (e) => {
     setAddress(e.target.value);
@@ -367,7 +378,7 @@ const PassengerDetails = ({ storePassenger, storeInsurance }) => {
           id="insurancebox"
           name="insurancebox"
           value="true"
-          // onClick={Passenger}
+          onClick={Passenger}
           // checked
         />
         <label className="" for="insurancebox">

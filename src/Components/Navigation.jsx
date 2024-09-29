@@ -86,6 +86,7 @@ const Navbar = () => {
   // };
   const handleSuccess = async (response) => {
     const token = response.credential;
+    console.log(token);
     const formdata = new FormData();
     formdata.append("access_token", token);
     try {
@@ -94,14 +95,15 @@ const Navbar = () => {
         "https://seatadda.co.in/auth/api/google-login-verify",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          // headers: {
+          //   "Content-Type": "application/json",
+          // },
           body: formdata,
         }
       );
 
-      const data = await res.json();
+      // const data = await res.json();
+      const data = await res;
       setUser(data.user); // Save user data from backend response
       console.log("User authenticated", data);
     } catch (error) {

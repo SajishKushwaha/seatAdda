@@ -10,7 +10,7 @@ const BookingSection = () => {
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
-  // console.log(bookinghistory);
+  console.log(bookinghistory);
   const userId = localStorage.getItem("userData");
   const userIdString = JSON.parse(userId);
   const fetchData = async () => {

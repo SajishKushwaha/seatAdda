@@ -51,6 +51,7 @@ const Passenger = () => {
   const [totalfare, setTotalFare] = React.useState(totalFare);
   const [passEmail, setPassEmail] = React.useState("");
   const [isdisable, setIsDisable] = React.useState(false);
+  const [checkedi, setChecked] = React.useState(false);
   const [passPhNo, setPassPhNo] = React.useState("");
   const [wallet, setWallet] = React.useState(null);
   const [address, setAddress] = React.useState(null);
@@ -80,6 +81,7 @@ const Passenger = () => {
   //   }
   // };
   let fare = totalFare;
+  let discount;
   if (couponData != null) {
     if (couponData.date.discount_type === "percentage") {
       fare = fare - (fare * couponData.date.discount) / 100;
@@ -87,6 +89,7 @@ const Passenger = () => {
       fare = fare - couponData.date.discount;
       // console.log(`fff${fare - couponData.discount}`);
     }
+    discount = (totalFare * couponData.date.discount) / 100;
   }
 
   const walletBalance = () => {
@@ -132,17 +135,27 @@ const Passenger = () => {
     fetchData();
 
     // Check conditions to determine if button should be disabled
-    if (passDetails.length === 0 && passEmail === "" && passPhNo === "") {
-      setIsDisable(true); // Disable the button
+    // console.log(`insu ${insurance}`);
+    if (passEmail !== "" && passPhNo != "" && insurance !== 0 && checkedi) {
+      setIsDisable(false); // Disable the button
     } else {
-      setIsDisable(false); // Enable the button
+      setIsDisable(true); // Enable the button
     }
-  }, [passDetails, passEmail, passPhNo]); // Dependency array includes variables passDetails, passEmail, and passPhNo
+  }, [passEmail, passPhNo, insurance, checkedi]); // Dependency array includes variables passDetails, passEmail, and passPhNo
+  // const uui = uuidv4().substring(0, 8);
+  function generateRandomId() {
+    const randomDigits = Math.floor(
+      100000000000 + Math.random() * 900000000000
+    ); // Generates a random 12-digit number
+    const randomId = `TRA_${randomDigits}`;
+    return randomId;
+  }
 
+  const id = generateRandomId();
   const handlePay = async () => {
     if (deductionMade) {
       if (wallet.balance_amount >= totalFare) {
-        const updateWallet = totalFare;
+        const updateWallet = fare;
         // console.log(updateWallet);
         const myHeaders = new Headers();
         myHeaders.append(
@@ -151,10 +164,11 @@ const Passenger = () => {
         );
         const formdata = new FormData();
         formdata.append("user_id", userIdString.user.user_id);
-        formdata.append("transaction_id", uuidv4());
+        formdata.append("transaction_id", id);
         formdata.append("transaction_type", "debit");
         formdata.append("amount", updateWallet);
-        formdata.append("message", "update balance");
+        formdata.append("message", `Ticket Booked ${From},${To}`);
+
         const requestOptions = {
           method: "POST",
           headers: myHeaders,
@@ -305,10 +319,17 @@ const Passenger = () => {
     setInsuranceId(insuranceId);
   };
   const storeInsurance = (insurancevalue) => {
-    // console.log(insurancevalue);
+    console.log(insurancevalue);
     setInsurance(insurancevalue);
   };
+  const termAndCondition = (termAndCondition) => {
+    setChecked(termAndCondition);
+  };
   const ApplyCoupon = async () => {
+    if (!coupon) {
+      alert("coupon cant be empty");
+      return;
+    }
     const myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
@@ -345,6 +366,7 @@ const Passenger = () => {
               <PassengerDetails
                 storePassenger={storePassenger}
                 storeInsurance={storeInsurance}
+                termAndCondition={termAndCondition}
               />
             </div>
             <div className="flex flex-col gap-[1rem]">
@@ -404,50 +426,56 @@ const Passenger = () => {
                       Basic Fare (for {selectedSeats.length} Seat) :{" "}
                       <span className="font-bold uppercase">
                         <span className="">&#8377;</span>
-                        {fare}
+                        {totalFare}
                       </span>{" "}
                     </p>{" "}
-                    {/* <p className="m-2 flex justify-between">
-                      Bus Partner GST:{" "}
-                      <span className="font-bold uppercase">
-                        <span className="">&#8377;</span>180
-                      </span>{" "}
-                    </p>{" "} */}
-                    {/* <p className="m-2 flex justify-between">
-                      Total Amount:{" "}
-                      <span className="font-bold">
-                        <span className="">&#8377;</span>
-                        {totalFare + 180}
-                      </span>{" "}
-                    </p> */}
-                    {/* <p className="m-2 flex justify-between">
-                      Discount:{" "}
-                      <span className="font-bold">
-                        <span className="">&#8377;</span>
-                        50
-                      </span>{" "}
-                    </p> */}
+                    {couponData.status ? (
+                      <p className="m-2 flex justify-between">
+                        Discount Fare:
+                        <span className="font-bold uppercase">
+                          <span>&#8377;</span>
+                          {discount !== undefined ? discount : 0}{" "}
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="m-2 flex justify-between">
+                        Discount Fare:
+                        <span className="font-bold uppercase">
+                          <span>&#8377;</span>0
+                        </span>
+                      </p>
+                    )}
                   </div>
                   <hr className="my-2 border-dashed" />
                   <div className="mb-6">
-                    <label className="block text-base font-medium text-gray-700 mb-2 sm:text-lg">
+                    <label className="font-bold mb-5  uppercase text-center text-primarycolors-red ">
                       Have coupon?
                     </label>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center mt-2">
                       <input
                         type="text"
-                        className="flex-grow w-full p-2 sm:p-3 border border-gray-300 rounded-t-md sm:rounded-l-md sm:rounded-t-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg"
+                        style={{
+                          borderWidth: "1px", // Add border width
+                          borderStyle: "solid", // Ensure border style is set to "solid"
+                          borderColor: "red !important",
+                          borderTopLeftRadius: "5px",
+                          borderBottomLeftRadius: "5px",
+                        }}
+                        className="flex-grow w-full p-2 sm:p-3 "
                         placeholder="Coupon code"
                         value={coupon}
                         onChange={(e) => setCoupon(e.target.value)}
                       />
                       <span className="sm:mt-0  w-full sm:w-auto">
                         <button
-                          className="w-full sm:w-auto p-3 sm:p-4 bg-blue-600 text-white font-semibold rounded-b-md sm:rounded-r-md sm:rounded-b-none hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full sm:w-auto p-0 sm:p-4 bg-red-600 text-white"
                           onClick={ApplyCoupon}
                           style={{
-                            backgroundColor: "#3720d8",
+                            backgroundColor: "red",
                             color: "white",
+                            height: "51px",
+                            borderTopRightRadius: "5px",
+                            borderBottomRightRadius: "5px",
                           }}
                         >
                           Apply
@@ -478,28 +506,32 @@ const Passenger = () => {
                   </div>
 
                   <hr className="my-2 border-dashed" />
-                  <div className="p-3 mt-5 py-2 bg-primarycolors-textcolor/40 flex justify-between">
+                  <div className="p-3 mt-5 py-2 bg-primarycolors-textcolor/40 flex justify-between p-2 sm:p-3">
                     <h1 className="font-bold text-center text-primarycolors-black ">
                       Net Payable:
                     </h1>
-                    <p>
-                      <span className="font-bold">
-                        <span className="">&#8377;</span>
-                        {totalFare}
-                      </span>{" "}
-                    </p>
+
+                    <span className="font-bold uppercase">
+                      <span>&#8377;</span>
+                      {fare !== undefined ? fare : 0}{" "}
+                    </span>
                   </div>
-                  <input
-                    style={{ marginTop: "10px" }}
-                    type="checkbox"
-                    id="wallet"
-                    onClick={walletBalance}
-                  />
-                  {wallet !== null && (
-                    <label htmlFor="wallet" style={{ marginLeft: "10px" }}>
-                      {wallet.balance_amount}
-                    </label>
-                  )}
+                  <hr className="my-2 border-dashed" />
+                  <div>
+                    <h1 className="font-bold mb-2  uppercase  text-primarycolors-red">
+                      Wallet
+                    </h1>
+                    <input
+                      type="checkbox"
+                      id="wallet"
+                      onClick={walletBalance}
+                    />
+                    {wallet !== null && (
+                      <label htmlFor="wallet" style={{ marginLeft: "10px" }}>
+                        {wallet.balance_amount}
+                      </label>
+                    )}
+                  </div>
                 </div>{" "}
               </div>{" "}
               <div className="mx-1">
@@ -536,6 +568,7 @@ const Passenger = () => {
             <PassengerDetailsMobile
               storePassenger={storePassenger}
               storeInsurance={storeInsurance}
+              termAndCondition={termAndCondition}
             />
           </div>
 

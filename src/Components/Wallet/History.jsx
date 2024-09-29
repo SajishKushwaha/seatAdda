@@ -31,6 +31,9 @@ const History = ({ wallet }) => {
           each.transaction_type !== "debit"
             ? "text-primarycolors-green"
             : "text-primarycolors-red";
+        const id = each.transaction_id.substring(0, 8);
+        const message = each.message.substring(0, 14);
+        const message1 = each.message.substring(14).replace(",", "-");
 
         return (
           <div
@@ -46,13 +49,22 @@ const History = ({ wallet }) => {
                 </p>
               </div>
               <div>
-                <p>{wallet[0].transaction_id}</p>
+                <p>{each.transaction_id}</p>
               </div>
             </div>
             <div className="p-3 sm:p-5  grid grid-cols-4">
               <div className="col-span-3 flex flex-col text-left">
+                <h2
+                  className={`text-[15px] font-bold sm:text-base ${amount_Color}`}
+                >
+                  {each.transaction_type.charAt(0).toUpperCase() +
+                    each.transaction_type.slice(1).toLowerCase()}
+                </h2>
                 <h2 className=" text-[15px] font-bold sm:text-base">
-                  {each.transaction_type}
+                  {message}
+                </h2>
+                <h2 className=" text-[15px] font-bold sm:text-base">
+                  {message1}
                 </h2>
                 {/* <p className=" text-[12px] sm:text-base">
                   Registration Bonus by Web <br /> Expires on 11-10-2023

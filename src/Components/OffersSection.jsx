@@ -93,10 +93,10 @@ const OffersSection = () => {
               </Swiper>
             </div>
 
-            <div className="hidden md:block   pt-4 px-2">
+            <div className="hidden md:block   pt-4 px-2 z-0">
               <Swiper
                 className=" "
-                // style={{ zIndex: isCal ? -1 : 1 }}
+                style={{ zIndex: true ? -1 : 1 }}
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={10}
                 slidesPerView={3}
@@ -128,7 +128,7 @@ const OffersSection = () => {
           </div>
           <div className="slider m-3 ">
             <Swiper
-              style={{ zIndex: "inherit" }}
+              style={{ zIndex: true ? -1 : 1 }}
               className=""
               modules={[Navigation, Pagination, Autoplay]}
               spaceBetween={50}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
 import { useNavigate } from "react-router-dom";
 import {
@@ -26,6 +26,7 @@ import { NavLink } from "react-router-dom";
 // ];
 const HeroSection = () => {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
   const [routes, setRoutes] = useState([]);
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
@@ -44,7 +45,26 @@ const HeroSection = () => {
     });
     setfilterRoutes(updatedList);
   };
-
+  useEffect(() => {
+    console.log("Adding event listener");
+    function handleClickOutside(event) {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target) &&
+        !event.target.classList.contains("custom-scrollbar")
+      ) {
+        setShowFromRoutes(false);
+        setShowToRoutes(false);
+        setShowCalendar(false);
+        // setIsCalender(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      console.log("Removing event listener");
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [inputRef]);
   const handleDate = (value) => {
     setDate(value);
     setShowCalendar(false);
@@ -118,7 +138,7 @@ const HeroSection = () => {
                         <button className='bg-primarycolors-white text-primarycolors-black m-3 px-4 py-1 rounded-full'>Hotels</button> */}
               </div>
             </div>
-            <div className="md:flex p-5">
+            <div className="md:flex p-5" ref={inputRef}>
               <div className="md:flex mb-2 relative md:bg-primarycolors-white rounded-xl md:rounded-none md:rounded-l-xl">
                 <div className="flex relative bg-primarycolors-white rounded-xl md:rounded-none mx-2 focus:border-2 items-center md:w-full p-2 my-4 md:my-0">
                   <BiSolidNavigation
