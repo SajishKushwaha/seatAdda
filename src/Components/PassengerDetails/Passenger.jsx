@@ -85,11 +85,12 @@ const Passenger = () => {
   if (couponData != null) {
     if (couponData.date.discount_type === "percentage") {
       fare = fare - (fare * couponData.date.discount) / 100;
+      discount = (totalFare * couponData.date.discount) / 100;
     } else if (couponData.date.discount_type === "number") {
       fare = fare - couponData.date.discount;
+      discount = fare - couponData.date.discount;
       // console.log(`fff${fare - couponData.discount}`);
     }
-    discount = (totalFare * couponData.date.discount) / 100;
   }
 
   const walletBalance = () => {
@@ -429,7 +430,7 @@ const Passenger = () => {
                         {totalFare}
                       </span>{" "}
                     </p>{" "}
-                    {couponData.status ? (
+                    {couponData && couponData.status ? (
                       <p className="m-2 flex justify-between">
                         Discount Fare:
                         <span className="font-bold uppercase">
