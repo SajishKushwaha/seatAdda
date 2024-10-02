@@ -6,6 +6,7 @@ import Navbar from "../Navigation";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Footer";
 import FooterDesktop from "../FooterDesktop";
+
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -211,7 +212,7 @@ const Account = () => {
       </div>
 
       <div>
-        <FooterDesktop />
+        <Footer />
       </div>
     </div>
   );

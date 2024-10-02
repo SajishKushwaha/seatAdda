@@ -317,7 +317,7 @@ const SelectBus = () => {
               </div>
             </div>
           </div>
-          <FooterDesktop />
+          <Footer />
           {sidebarOpen && (
             <div
               className={`fixed shadow-md z-[100] h-[100%] top-0 right-0 bottom-0 overflow-y-scroll bg-primarycolors-white  w-[95%]  `}

@@ -52,7 +52,7 @@ const Menu = () => {
           </NavLink>
         ) : (
           <NavLink
-            to="/bookings"
+            to="/login"
             className="fixed overflow-y-hidden z-10 w-full flex items-center justify-around text-primarycolors-white px-2 py-5 bg-primarycolors-textcolor sm:bg-primarycolors-textcolor"
           >
             <div className="text-5xl">
@@ -63,7 +63,7 @@ const Menu = () => {
             </div>
             <div className="text-xl">
               {" "}
-              <NavLink to="/bookings">
+              <NavLink to="/login">
                 {" "}
                 <MdArrowForwardIos />
               </NavLink>

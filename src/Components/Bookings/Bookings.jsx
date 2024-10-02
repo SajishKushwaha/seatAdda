@@ -25,7 +25,7 @@ const Bookings = () => {
     setIsModalOpen(false);
   };
   const handleBackward = () => {
-    navigate("/");
+    navigate("/menu");
   };
   return (
     <div>

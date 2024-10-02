@@ -92,7 +92,9 @@ const Passenger = () => {
       // console.log(`fff${fare - couponData.discount}`);
     }
   }
-
+  if (insurance) {
+    fare = fare + insurance;
+  }
   const walletBalance = () => {
     setDeductionMade(!deductionMade);
   };
@@ -257,6 +259,51 @@ const Passenger = () => {
         } else {
           alert(data.message);
         }
+      } else if (walletBalance > 0 && walletBalance < totalFare) {
+        // Case 2: Wallet balance is less than total fare (partial deduction)
+        const remainingAmount = totalFare - walletBalance; // Amount to pay via payment gateway
+
+        // Deduct the remaining wallet balance
+        const updateWallet = walletBalance;
+
+        const myHeaders = new Headers();
+        myHeaders.append(
+          "Authorization",
+          userIdString.access_token.split("Bearer")[1]
+        );
+
+        const formdata = new FormData();
+        formdata.append("user_id", userIdString.user.user_id);
+        formdata.append("transaction_id", id);
+        formdata.append("transaction_type", "debit");
+        formdata.append("amount", updateWallet); // Deduct wallet balance
+        formdata.append("message", `Ticket Booked ${From},${To}`);
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow",
+        };
+
+        const response = await fetch(
+          "https://seatadda.co.in/auth/api/update-user-wallet",
+          requestOptions
+        );
+        const data = await response.json();
+
+        if (data.status === true) {
+          // Proceed to payment gateway for the remaining amount
+          localStorage.setItem(
+            "totalFare",
+            JSON.stringify({ ...formdata, remainingAmount })
+          );
+          navigate(`/payment?total=${remainingAmount}`); // Redirect to payment gateway
+        } else {
+          alert(data.message);
+        }
+      } else {
+        alert("no sufficient balance");
       }
     } else {
       const passengers = selectedSeats.map((seat, index) => ({
@@ -357,6 +404,9 @@ const Passenger = () => {
     setCouponData(data);
     console.log(couponData);
   };
+  const proceedColor = isdisable
+    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+    : "bg-primarycolors-red/90 hover:bg-primarycolors-red text-primarycolors-white !important";
   return (
     <div>
       <div className="hidden md:block">
@@ -443,6 +493,15 @@ const Passenger = () => {
                         Discount Fare:
                         <span className="font-bold uppercase">
                           <span>&#8377;</span>0
+                        </span>
+                      </p>
+                    )}
+                    {insurance && (
+                      <p className="m-2 flex justify-between">
+                        Travel Insurance:
+                        <span className="font-bold uppercase">
+                          <span>&#8377;</span>
+                          {insurance}
                         </span>
                       </p>
                     )}
@@ -539,11 +598,7 @@ const Passenger = () => {
                 <button
                   disabled={isdisable}
                   onClick={handlePay}
-                  className={`w-full p-2 rounded-md ${
-                    isdisable
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-primarycolors-red/90 hover:bg-primarycolors-red"
-                  } text-primarycolors-white`}
+                  className={`w-full p-2 rounded-md ${proceedColor} `}
                 >
                   Proceed to Pay
                 </button>
@@ -552,7 +607,7 @@ const Passenger = () => {
           </div>
         </div>
         <div>
-          <FooterDesktop />
+          <Footer />
         </div>
       </div>
       <div className="block md:hidden ">
@@ -570,6 +625,8 @@ const Passenger = () => {
               storePassenger={storePassenger}
               storeInsurance={storeInsurance}
               termAndCondition={termAndCondition}
+              wallet={wallet}
+              walletBalance={walletBalance}
             />
           </div>
 
@@ -577,11 +634,7 @@ const Passenger = () => {
             <button
               disabled={isdisable}
               onClick={handlePay}
-              className={`w-full p-2 rounded-md ${
-                isdisable
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-primarycolors-red/90 hover:bg-primarycolors-red"
-              } text-primarycolors-white`}
+              className={`w-full p-2 rounded-md ${proceedColor}`}
             >
               Proceed to Payment
             </button>

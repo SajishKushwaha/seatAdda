@@ -3,11 +3,20 @@ import { BiArrowBack } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import "./index.css";
 import Drawer from "react-modern-drawer";
+import { NavLink } from "react-router-dom";
 import parse from "html-react-parser";
 //import styles 👇
 import "react-modern-drawer/dist/index.css";
 import man from "../../assets/man.png";
 import women from "../../assets/women.png";
+import women1 from "../../assets/women1.png";
+import women1_ from "../../assets/women1_.png";
+import man1png from "../../assets/man1png.png";
+import male from "../../assets/male.svg";
+import maleselected from "../../assets/maleselected.svg";
+import female from "../../assets/female.svg";
+import femaleselected from "../../assets/femaleselected.svg";
+
 import { useNavigate } from "react-router-dom";
 import {
   AiFillInfoCircle,
@@ -15,7 +24,13 @@ import {
   AiOutlineInfoCircle,
   AiOutlineInsurance,
 } from "react-icons/ai";
-const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
+const PassengerDetailsMobile = ({
+  storePassenger,
+  storeInsurance,
+  termAndCondition,
+  wallet,
+  walletBalance,
+}) => {
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
@@ -28,8 +43,9 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
   const [address, setAddress] = React.useState("");
   const [city, setCity] = React.useState(From);
   const [pincode, setPinCode] = React.useState("");
+  const [isSuccess, setIsSuccess] = React.useState(false);
   const [state, setState] = React.useState("");
-
+  // const [isEditable, setIsEditable] = React.useState(true);
   const routeDetails = useSelector(
     (state) => state.busDetailsReducer.routeDetails
   );
@@ -49,9 +65,13 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
   const no_of_travel_insurance = selectedSeats.length;
   const [passDetails, setPassDetails] = React.useState(passengerArray);
   const [passEmail, setPassEmail] = React.useState("");
+  const [coupon, setCoupon] = React.useState("");
+  const [couponData, setCouponData] = React.useState(null);
   const [passPhNo, setPassPhNo] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedGender, setSelectedGender] = React.useState([]);
+  const [check, setcheck] = React.useState(true);
+  const [deductionMade, setDeductionMade] = React.useState(false);
   const handlePassName = (e, indexNo) => {
     const newArr = [...passDetails];
     newArr[indexNo]["name"] = e.target.value;
@@ -144,7 +164,48 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
     };
     insurance();
   }, []);
-
+  const userId = localStorage.getItem("userData");
+  const userIdString = JSON.parse(userId);
+  const ApplyCoupon = async () => {
+    if (!coupon) {
+      alert("coupon cant be empty");
+      return;
+    }
+    const myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      userIdString.access_token.split("Bearer")[1]
+    );
+    const formdata = new FormData();
+    formdata.append("coupon_code", coupon);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+    const response = await fetch(
+      "https://seatadda.co.in/auth/api/coupon-code-verification",
+      requestOptions
+    );
+    const data = await response.json();
+    if (data.status === true) {
+      setIsSuccess(true);
+    } else {
+      setIsSuccess(false);
+    }
+    setCouponData(data);
+    console.log(couponData);
+  };
+  const Passenger = () => {
+    setcheck(!check);
+    const checking = check;
+    console.log(checking);
+    termAndCondition(checking);
+  };
+  const wallet1 = () => {
+    walletBalance();
+  };
   return (
     <div className="m-3 my-5 mb-[7rem]">
       <div className="shadow-md border-[0.2px] rounded-md p-4  border-primarycolors-gray">
@@ -301,7 +362,7 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
                       <span className="ml-2">Female</span>
                     </div>
                   </div> */}
-                  <div className="flex flex-col items-center justify-center -mt-1">
+                  {/* <div className="flex flex-col items-center justify-center -mt-1">
                     <div className="flex items-center justify-center gap-1 w-full">
                       <div className="flex w-1/2">
                         <img
@@ -340,6 +401,54 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
                           }} // Assuming indexNo is defined
                         />
                       </div>
+                    </div>
+                  </div> */}
+                  <div className="flex items-center justify-center gap-1 w-full">
+                    <div className="">
+                      {selectedGender == "male" ? (
+                        <img
+                          src={maleselected}
+                          alt="Male"
+                          className={`w-full rounded-full cursor-pointer `}
+                          onClick={() => {
+                            handlePassGender(index, "male");
+                          }}
+                          style={{ height: "40px", width: "40px" }}
+                        />
+                      ) : (
+                        <img
+                          src={male}
+                          alt="Male"
+                          className={`w-full rounded-full cursor-pointer `}
+                          onClick={() => {
+                            handlePassGender(index, "male");
+                          }}
+                          style={{ height: "40px", width: "40px" }}
+                        />
+                      )}
+                    </div>
+                    <div className="ml-3 ">
+                      {selectedGender == "female" ? (
+                        <img
+                          src={femaleselected}
+                          alt="Female"
+                          className={`w-full rounded-full cursor-pointer `}
+                          onClick={() => {
+                            handlePassGender(index, "female");
+                          }}
+                          style={{ height: "40px", width: "40px" }}
+                        />
+                      ) : (
+                        <img
+                          src={female}
+                          alt="Female"
+                          className={`w-full rounded-full cursor-pointer`}
+                          onClick={() => {
+                            handlePassGender(index, "female");
+                          }}
+                          style={{ height: "40px", width: "40px" }}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -466,6 +575,91 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
           </div>
         </div>
       </div>
+      <div className="my-6">
+        <div className="shadow-md border-[1px] rounded-md py-1 p-2 border-primarycolors-gray">
+          <div className="">
+            <div className="text-start">
+              {" "}
+              {/* <MdFamilyRestroom className="text-base sm:text-xl text-primarycolors-red mr-2" />{" "} */}
+              <h2 className="text-start sm:text-xl  my-2 text-primarycolors-textcolor font-semibold ">
+                Have coupon?
+              </h2>
+            </div>
+            <div className="flex  sm:flex-col items-start sm:items-center mt-2">
+              <input
+                type="text"
+                style={{
+                  borderWidth: "1px", // Add border width
+                  borderStyle: "solid", // Ensure border style is set to "solid"
+                  borderColor: "red !important",
+                  borderTopLeftRadius: "5px",
+                  borderBottomLeftRadius: "5px",
+                  width: "100%",
+                }}
+                className="flex-grow w-full p-2 sm:p-3 "
+                placeholder="Coupon code"
+                value={coupon}
+                onChange={(e) => setCoupon(e.target.value)}
+              />
+
+              <button
+                className=" sm:w-auto p-0 sm:p-4 bg-red-600 text-white"
+                onClick={ApplyCoupon}
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  height: "42px",
+                  borderTopRightRadius: "5px",
+                  borderBottomRightRadius: "5px",
+                  width: "120px",
+                }}
+              >
+                Apply
+              </button>
+            </div>
+            {isSuccess && (
+              <p
+                className="mt-2 text-sm animate-fadeIn"
+                style={{ color: "green" }}
+              >
+                ✔️ Coupon applied successfully!
+              </p>
+            )}
+            {!isSuccess && (
+              <p
+                className="mt-2 text-sm animate-fadeIn"
+                style={{ color: "red" }}
+              >
+                Coupon code is not valid
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="my-6">
+        <div className="shadow-md border-[1px] rounded-md py-1 p-2 border-primarycolors-gray">
+          <div className="">
+            <div className="text-start">
+              {" "}
+              {/* <MdFamilyRestroom className="text-base sm:text-xl text-primarycolors-red mr-2" />{" "} */}
+              <h2 className="text-start sm:text-xl  my-2 text-primarycolors-textcolor font-semibold ">
+                Wallet
+              </h2>
+            </div>
+            <div className="flex  sm:flex-col items-start sm:items-center mt-2 ">
+              <div>
+                <input type="checkbox" id="wallet" onClick={wallet1} />
+                {wallet !== null && (
+                  <label htmlFor="wallet" style={{ marginLeft: "10px" }}>
+                    {wallet.balance_amount}
+                  </label>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className=" ">
         <input
           type="checkbox"
@@ -473,14 +667,15 @@ const PassengerDetailsMobile = ({ storePassenger, storeInsurance }) => {
           id="insurancebox"
           name="insurancebox"
           value="true"
-          // onClick={Passenger}
+          onClick={Passenger}
           // onChange={() => Passenger()}
-          defaultChecked
         />
         I agree to all the{" "}
-        <span className=" text-primarycolors-skyblue">
-          Terms and Conditions
-        </span>
+        <NavLink to="/terms">
+          <span className=" text-primarycolors-skyblue">
+            Terms and Conditions
+          </span>
+        </NavLink>
       </div>
     </div>
   );

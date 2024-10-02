@@ -31,21 +31,24 @@ const Upcoming = ({ bookinghistory }) => {
     const parts = formattedDate.split(" ");
     return `${parts[0]} ${parts[2]} ${parts[1]}`;
   };
-  const futureBookings = bookinghistory.sort((a, b) => {
-    const dateA = new Date(a.arrival_date);
-    const dateB = new Date(b.arrival_date);
-    return dateB - dateA;
-  });
+  const futureBookings =
+    bookinghistory !== null
+      ? bookinghistory.sort((a, b) => {
+          const dateA = new Date(a.arrival_date);
+          const dateB = new Date(b.arrival_date);
+          return dateB - dateA;
+        })
+      : "";
   const ViewTicket = (ticket) => {
     navigate(`/SeatShow?ticketid=${ticket}`);
   };
 
   // console.log(bookinghistory);
-  const BOOKING_DATA = [];
+  // const BOOKING_DATA = [];
   const name = "upcoming";
   return (
     <div className="m-3 childscroll overflow-y-scroll  md:h-[800px] mb-[7rem] sm:mb-[1rem]">
-      {bookinghistory ? (
+      {bookinghistory.length !== 0 ? (
         futureBookings.map((data, index) => {
           // console.log(data);
           return (
@@ -115,7 +118,7 @@ const Upcoming = ({ bookinghistory }) => {
         })
       ) : (
         <div className="my-3">
-          {BOOKING_DATA.length === 0 && <NoBookings name={name} />}
+          <NoBookings name={name} />
         </div>
       )}
     </div>

@@ -24,34 +24,38 @@ export default function ReferAndEarn() {
   };
   const jwtToken = Cookies.get("jwt_token");
   useEffect(() => {
-    const referalCode = async () => {
-      const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        userIdString.access_token.split("Bearer")[1].trim()
-      );
-      const formdata = new FormData();
-      formdata.append("user_id", userIdString.user.user_id);
+    if (userId !== null) {
+      const referalCode = async () => {
+        const myHeaders = new Headers();
+        myHeaders.append(
+          "Authorization",
+          userIdString.access_token.split("Bearer")[1].trim()
+        );
+        const formdata = new FormData();
+        formdata.append("user_id", userIdString.user.user_id);
 
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+        };
+        const response = await fetch(
+          "https://seatadda.co.in/auth/api/get-referral-details",
+          requestOptions
+        );
+        const data = await response.json();
+        setRefferal(data.data);
       };
-      const response = await fetch(
-        "https://seatadda.co.in/auth/api/get-referral-details",
-        requestOptions
-      );
-      const data = await response.json();
-      setRefferal(data.data);
-    };
-    if (jwtToken === undefined) {
-      navigate("/");
+      if (jwtToken === undefined) {
+        navigate("/");
+      } else {
+        referalCode();
+      }
     } else {
-      referalCode();
+      navigate("/login");
     }
   }, []);
-  console.log(referal);
+
   return (
     <>
       <div>

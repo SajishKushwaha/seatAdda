@@ -28,6 +28,7 @@ const Navbar = () => {
   const [modal, setModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [google, setGoogle] = useState(null);
   const [otp, setOtp] = useState("");
   const [verify, setVerify] = useState(false);
   const [googlelogin, setGoogleLogin] = useState(true);
@@ -39,7 +40,7 @@ const Navbar = () => {
   const path = pathname.split("/");
   const url = "https://seatadda.co.in/general-settings";
   const [DATA, set_DATA] = useState([]);
-
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const fetchInfo = async () => {
     return fetch(url)
       .then((res) => res.json())
@@ -84,14 +85,16 @@ const Navbar = () => {
   //   console.log("Decoded User Info:", decoded);
   //   setUser(credentialResponse.credential); // You can now access user's email and profile info
   // };
+
   const handleSuccess = async (response) => {
     const token = response.credential;
     console.log(token);
     const formdata = new FormData();
-    formdata.append("access_token", token);
+    formdata.append("credential", token);
+    setGoogle(token);
     try {
       // Send the token to your backend
-      const res = await fetch(
+      const response = await fetch(
         "https://seatadda.co.in/auth/api/google-login-verify",
         {
           method: "POST",
@@ -103,9 +106,30 @@ const Navbar = () => {
       );
 
       // const data = await res.json();
-      const data = await res;
-      setUser(data.user); // Save user data from backend response
-      console.log("User authenticated", data);
+      if (response.ok) {
+        const data = await response.json();
+        const jwtToken = data.access_token.replace("Bearer ", "");
+        Cookies.set("jwt_token", jwtToken, {
+          expires: data.expires_in / 86400,
+          // path: "/",
+        });
+        localStorage.setItem("authToken", data.access_token);
+        localStorage.setItem("userData", JSON.stringify(data));
+
+        // Store the token
+        dispatch(loginSuccess(data));
+        // console.log(data);
+        handleCloseModal();
+        toast.success("Logged in");
+      } else {
+        const data = await response.json();
+        toast.error(data.message);
+        console.error(
+          "API request failed:",
+          response.status,
+          response.statusText
+        );
+      }
     } catch (error) {
       console.error("Authentication failed", error);
     }
@@ -113,10 +137,10 @@ const Navbar = () => {
   const handleError = () => {
     console.log("Login Failed");
   };
-
+  // console.log(google);
   // const user_details = async () => {
   //   const formdata = new FormData();
-  //   formdata.append("access_token", user);
+  //   formdata.append("access_token", google);
 
   //   const requestOptions = {
   //     method: "POST",
@@ -128,12 +152,15 @@ const Navbar = () => {
   //     "https://seatadda.co.in/auth/api/google-login-verify",
   //     requestOptions
   //   );
-  //   const data = await response.json();
+  //   const data = await response;
   //   console.log(data);
   // };
   // useEffect(() => {
   //   user_details();
   // }, [user]);
+
+  // Load Google Sign-In button when the component is mounted
+
   const handleOpenModal = () => {
     setMobileMenuOpen(false);
 
@@ -290,9 +317,6 @@ const Navbar = () => {
                 </NavLink>
               </>
             ) : (
-              <></>
-            )}
-            {!jwt_token && !userData ? (
               <>
                 <button onClick={handleMobileMenu}>
                   <span className="block text-primarycolors-red">
@@ -300,9 +324,8 @@ const Navbar = () => {
                   </span>
                 </button>
               </>
-            ) : (
-              <></>
             )}
+
             {/* <button onClick={handleMobileMenu}>
               <span className="block text-primarycolors-red">
                 {!mobileMenuOpen ? <BiMenu size={35} /> : <BiX size={35} />}
@@ -695,7 +718,7 @@ const Navbar = () => {
                           </div>
                         ) : (
                           <div className="sm:flex w-full ">
-                            <GoogleOAuthProvider clientId="911392675790-nie1gvdlbupl8tehm092k00b2u614j0u.apps.googleusercontent.com">
+                            <GoogleOAuthProvider clientId="891592173312-j5771oc29p9aghr9r2fv7hnr45k4nbql.apps.googleusercontent.com">
                               {!user ? (
                                 <GoogleLogin
                                   onSuccess={handleSuccess}

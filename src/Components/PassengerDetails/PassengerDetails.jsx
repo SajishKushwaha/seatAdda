@@ -3,6 +3,7 @@ import { BiSolidUserAccount } from "react-icons/bi";
 import { MdAccountCircle, MdFamilyRestroom, MdPhone } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { updateBookingDetails } from "../../Redux/BookBus/action";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./index.css";
 import Drawer from "react-modern-drawer";
 import parse from "html-react-parser";
@@ -381,8 +382,11 @@ const PassengerDetails = ({
           onClick={Passenger}
           // checked
         />
-        <label className="" for="insurancebox">
-          Yes and I accept the terms and conditions
+        <label className="" htmlFor="insurancebox">
+          Yes and I accept the{" "}
+          <NavLink to="/terms" style={{ color: "blue" }}>
+            terms and conditions
+          </NavLink>
         </label>
       </div>
     </div>
