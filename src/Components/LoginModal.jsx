@@ -35,7 +35,6 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   let { search } = useLocation();
   const query = new URLSearchParams(search);
   const referalcode = query.get("referall_code");
-
   const handleOpenModal = () => {
     setMobileMenuOpen(false);
     setModal(true);
@@ -59,8 +58,11 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     setPhoneNumber("");
     setVerify(false);
     setModal(false);
-    navigate("/menu");
+    // onClose();
+    setIsModalOpen(false);
+
     document.body.classList.remove("modal-open");
+    // navigate("/");
   };
   const handleSuccess = async (response) => {
     const token = response.credential;
@@ -124,6 +126,7 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     if (isValidphone) {
       const formData = new FormData();
       formData.append("phone", phoneNumber);
+      formData.append("refferal_code", referalcode);
 
       try {
         const response = await fetch("https://seatadda.co.in/auth/api/login", {
@@ -153,7 +156,7 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   };
   const jwt_token = Cookies.get("jwt_token");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  // console.log(userData.expires_in);
+
   const handleVerify = async () => {
     // console.log(otp);
     const isValidphone = phoneNumberPattern.test(phoneNumber);
@@ -183,7 +186,6 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
           // console.log(data);
           handleCloseModal();
           toast.success("Logged in");
-          navigate("/menu");
         } else {
           const data = await response.json();
           toast.error(data.message);
@@ -202,12 +204,11 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     }
   };
   return (
-    <>
-      {/* The overlay div that will blur the background */}
-      <div className="modal-container">
-        <div className="modal-content flex items-center  justify-center  w-full  overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 outline-none focus:outline-none">
+    <div>
+      <div className="modal-container  ">
+        <div className="modal-content flex items-center   justify-center  w-full  overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 outline-none focus:outline-none">
           <div className=" sm:p-4 md:p-0 rounded-xl w-full max-w-2xl  h-full   ">
-            {/* <Toaster /> */}
+            {/* {<Toaster />} */}
             <div className="p-5 sm:p-2">
               {" "}
               <div className="mt-5 sm:mt-10 bg-primarycolors-textcolor rounded-xl relative ">
@@ -290,8 +291,8 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
                     ) : googlelogin ? (
                       <div className="sm:flex w-full ">
                         {" "}
-                        <div className=" sm:w-3/4   sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5">
-                          <img className="" src={AppImg} alt="" />
+                        <div className=" sm:w-3/4  sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5">
+                          <img src={AppImg} alt="" />
                         </div>
                         <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
                           <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around ">
@@ -336,13 +337,13 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
                                   <span></span> Google
                                 </button>
                                 {/* <button className="p-2 rounded-md mb-0 px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-btncolor">
-                                <BiLogoFacebook className="text-xl mr-1" />
-                                <span></span> Facebook
-                              </button> */}
+                                  <BiLogoFacebook className="text-xl mr-1" />
+                                  <span></span> Facebook
+                                </button> */}
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div>{" "}
                       </div>
                     ) : (
                       <div className="sm:flex w-full ">
@@ -368,7 +369,7 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

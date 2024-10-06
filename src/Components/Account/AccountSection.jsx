@@ -10,6 +10,7 @@ import male from "../../assets/male.svg";
 import maleselected from "../../assets/maleselected.svg";
 import female from "../../assets/female.svg";
 import femaleselected from "../../assets/femaleselected.svg";
+import Cookies from "js-cookie";
 import {
   MdArrowForwardIos,
   MdCardTravel,
@@ -75,6 +76,7 @@ const AccountSection = ({ isEditable, userData }) => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
     // console.log("Logged Out");
+    Cookies.remove("jwt_token");
     toast.success("Logged Out");
     navigate("/");
   };
