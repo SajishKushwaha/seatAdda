@@ -3,7 +3,7 @@ import { BiSolidUserAccount } from "react-icons/bi";
 import { MdAccountCircle, MdFamilyRestroom, MdPhone } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { updateBookingDetails } from "../../Redux/BookBus/action";
-import { NavLink, useNavigate } from "react-router-dom";
+import { json, NavLink, useNavigate } from "react-router-dom";
 import "./index.css";
 import Drawer from "react-modern-drawer";
 import parse from "html-react-parser";
@@ -17,6 +17,8 @@ const PassengerDetails = ({
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
   const no_of_travel_insurance = selectedSeats.length;
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
@@ -29,16 +31,22 @@ const PassengerDetails = ({
   const From = useSelector((state) => state.busDetailsReducer.From);
   let dispatch = useDispatch();
   const [passDetails, setPassDetails] = React.useState(passengerArray);
-  const [passEmail, setPassEmail] = React.useState("");
-  const [passPhNo, setPassPhNo] = React.useState("");
+  const [passEmail, setPassEmail] = React.useState(userData.user.email);
+  const [passPhNo, setPassPhNo] = React.useState(userData.user.phone);
   const [insurancevalue, setInsurancevalue] = React.useState(null);
   const [insurance, setInsurance] = React.useState(false);
+  const [gst, setGst] = React.useState(false);
   const [check, setcheck] = React.useState(true);
   const [address, setAddress] = React.useState("");
+  const [GSTIN, setGSTIN] = React.useState("");
+  const [businessName, setBusinessName] = React.useState("");
+  const [businessAddress, setBusinessAddress] = React.useState("");
+  const [businessEmail, setBusinessEmail] = React.useState("");
   const [city, setCity] = React.useState(From);
   const [pincode, setPinCode] = React.useState("");
   const [state, setState] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
+
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
@@ -81,7 +89,19 @@ const PassengerDetails = ({
     passEmail !== "" &&
     passPhNo !== ""
   ) {
-    storePassenger(passDetails, passEmail, passPhNo);
+    storePassenger(
+      passDetails,
+      passEmail,
+      passPhNo,
+      address,
+      city,
+      pincode,
+      state,
+      GSTIN,
+      businessName,
+      businessEmail,
+      businessAddress
+    );
   }
 
   const travelInsurance = () => {
@@ -347,7 +367,7 @@ const PassengerDetails = ({
               placeholder="City"
               type="text"
               name="name"
-              value={city}
+              // value={city}
               onChange={cityInput}
             />
           </div>
@@ -357,6 +377,7 @@ const PassengerDetails = ({
               placeholder="State"
               type="text"
               name="name"
+              value={state}
               onChange={stateInput}
             />
           </div>
@@ -370,6 +391,59 @@ const PassengerDetails = ({
             />
           </div>
         </div>
+        <div className="mt-3">
+          <input
+            type="checkbox"
+            className="mr-2 "
+            id="insurancebox"
+            name="insurancebox"
+            value="true"
+            onClick={() => setGst(!gst)}
+            // checked
+          />
+          <label>I have a GST number (optional)?</label>
+        </div>
+        {gst && (
+          <div className="sm:flex flex-wrap gap-4 ">
+            <div className="my-2 sm:m-2 sm:ml-0 sm:w-1/4 text-left ">
+              <input
+                className="py-1 px-3 text-sm w-full input"
+                placeholder="GSTIN"
+                type="text"
+                name="name"
+                onChange={(event) => setGSTIN(event.target.value)}
+              />
+            </div>
+            <div className="my-2 sm:m-2 sm:ml-0 sm:w-1/4 text-left ">
+              <input
+                className="py-1 px-3 text-sm w-full input"
+                placeholder="Business Name"
+                type="text"
+                name="name"
+                // value={city}
+                onChange={(event) => setBusinessName(event.target.value)}
+              />
+            </div>
+            <div className="my-2 sm:m-2 sm:ml-0 sm:w-1/4 text-left ">
+              <input
+                className="py-1 px-3 text-sm w-full input"
+                placeholder="Business Address"
+                type="text"
+                name="name"
+                onChange={(event) => setBusinessAddress(event.target.value)}
+              />
+            </div>
+            <div className="my-2 sm:m-2 sm:ml-0 sm:w-1/4 text-left ">
+              <input
+                className="py-1 px-3 text-sm w-full input"
+                placeholder="PIN Code"
+                type="Business Email"
+                name="name"
+                onChange={(event) => setBusinessEmail(event.target.value)}
+              />
+            </div>
+          </div>
+        )}
       </div>
       <div className="flex text-sm items-center my-2 py-2 ">
         {" "}

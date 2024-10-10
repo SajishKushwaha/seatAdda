@@ -11,6 +11,7 @@ import maleselected from "../../assets/maleselected.svg";
 import female from "../../assets/female.svg";
 import femaleselected from "../../assets/femaleselected.svg";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 import {
   MdArrowForwardIos,
   MdCardTravel,
@@ -33,6 +34,7 @@ const AccountSection = ({ isEditable, userData }) => {
   // const isValidphone = phoneNumberPattern.test(phone);
   const [name, setName] = useState(userData[0].name);
   const [mobile, setMobile] = useState(userData[0].mobile);
+  const [mobileError, setMobileError] = useState(false);
   const [email, setEmail] = useState(userData[0].email);
   const [dob, setDob] = useState(userData[0].dob);
   const [address, setAddress] = useState(userData[0].address);
@@ -49,8 +51,17 @@ const AccountSection = ({ isEditable, userData }) => {
   const userInputName = (e) => {
     setName(e.target.value);
   };
+  console.log(`eoor ${mobileError}`);
   const userInputmobile = (e) => {
-    setMobile(e.target.value);
+    const val = e.target.value;
+
+    if (val === userData[0].mobile) {
+      setMobileError(true);
+      setMobile(e.target.value);
+    } else {
+      setMobileError(false);
+      setMobile(e.target.value);
+    }
   };
   const userInputemail = (e) => {
     setEmail(e.target.value);
@@ -84,6 +95,14 @@ const AccountSection = ({ isEditable, userData }) => {
   const userIdString = JSON.parse(userId);
   const saveUserDetails = async (event) => {
     event.preventDefault();
+    if (mobileError) {
+      // Prevent form submission if the mobile number is a duplicate
+      return toast.error("Please enter a different mobile number.");
+    }
+    if (userData[0].email === email) {
+      // Prevent form submission if the mobile number is a duplicate
+      return toast.error("Please enter a different email number.");
+    }
     const myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
@@ -112,8 +131,15 @@ const AccountSection = ({ isEditable, userData }) => {
     );
     const data = await response.json();
     if (data.status === true) {
-      alert(data.message);
-      navigate("/");
+      Swal.fire({
+        position: "top-center",
+        icon: "success",
+        title: data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        navigate("/");
+      });
     }
   };
   return (
@@ -153,6 +179,9 @@ const AccountSection = ({ isEditable, userData }) => {
                 readOnly={isEditable}
               />
               <label htmlFor="usermobile">Mobile</label>
+              {/* {mobileError && (
+                <p style={{ color: "red" }}>Mobile numbers are the same</p>
+              )} */}
             </div>
           </div>
           <hr className="border-primarycolors-gray " />

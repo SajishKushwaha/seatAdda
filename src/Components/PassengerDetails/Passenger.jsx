@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import Navbar from "../Navigation";
 import PassengerDetails from "./PassengerDetails";
 import Footer from "../Footer";
@@ -58,6 +59,10 @@ const Passenger = () => {
   const [city, setCity] = React.useState(null);
   const [pincode, setPincode] = React.useState(null);
   const [state, setState] = React.useState(null);
+  const [GSTIN, setGSTIN] = React.useState(null);
+  const [businessName, setBusinessName] = React.useState(null);
+  const [businessAddress, setBusinessAddress] = React.useState(null);
+  const [businessEmail, setBusinessEmail] = React.useState(null);
   const [insuranceId, setInsuranceId] = React.useState(null);
   const [insurance, setInsurance] = React.useState(0);
   // const [userWallet, setUserWallet] = React.useState("");
@@ -139,7 +144,7 @@ const Passenger = () => {
 
     // Check conditions to determine if button should be disabled
     // console.log(`insu ${insurance}`);
-    if (passEmail !== "" && passPhNo != "" && insurance !== 0 && checkedi) {
+    if (passEmail !== "" && passPhNo != "" && checkedi) {
       setIsDisable(false); // Disable the button
     } else {
       setIsDisable(true); // Enable the button
@@ -230,6 +235,10 @@ const Passenger = () => {
           formdata.append("insuranceSelected", insuranceSelected);
           formdata.append("insurance_id", insuranceId);
           formdata.append("email", passEmail);
+          formdata.append("GSTIN", GSTIN);
+          formdata.append("businessName", businessName);
+          formdata.append("businessAddress", businessAddress);
+          formdata.append("businessEmail", businessEmail);
           passengers.forEach((passenger, index) => {
             for (const key in passenger) {
               formdata.append(`${key}[${index}]`, passenger[key]); // Corrected formdata.append line
@@ -251,13 +260,32 @@ const Passenger = () => {
           //   .catch((error) => console.error(error));
           const data = await response.json();
           if (data.status === true) {
-            alert(data.message);
-            navigate("/bookings");
+            Swal.fire({
+              position: "top-center",
+              icon: "success",
+              title: data.message,
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              navigate("/bookings");
+            });
           } else {
-            alert(data.message);
+            Swal.fire({
+              position: "top-center",
+              icon: "success",
+              title: data.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
           }
         } else {
-          alert(data.message);
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       } else if (walletBalance > 0 && walletBalance < totalFare) {
         // Case 2: Wallet balance is less than total fare (partial deduction)
@@ -300,10 +328,24 @@ const Passenger = () => {
           );
           navigate(`/payment?total=${remainingAmount}`); // Redirect to payment gateway
         } else {
-          alert(data.message);
+          Swal.fire({
+            position: "top-center",
+            icon: "warning",
+            title: data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       } else {
-        alert("no sufficient balance");
+        Swal.fire({
+          position: "top-center",
+          icon: "warning",
+          title: "no sufficient balance",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          navigate("/bookings");
+        });
       }
     } else {
       const passengers = selectedSeats.map((seat, index) => ({
@@ -354,9 +396,17 @@ const Passenger = () => {
     city,
     pincode,
     state,
-    insuranceId
+    insuranceId,
+    GSTIN,
+    businessName,
+    businessEmail,
+    businessAddress
   ) => {
-    console.log(passDetails);
+    console.log(address);
+    setGSTIN(GSTIN);
+    setBusinessName(businessName);
+    setBusinessEmail(businessEmail);
+    setBusinessAddress(businessAddress);
     setPassDetails(passDetails);
     setPassEmail(passEmail);
     setPassPhNo(passPhNo);
@@ -375,7 +425,13 @@ const Passenger = () => {
   };
   const ApplyCoupon = async () => {
     if (!coupon) {
-      alert("coupon cant be empty");
+      Swal.fire({
+        position: "top-center",
+        icon: "warning",
+        title: "coupon cant be empty",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       return;
     }
     const myHeaders = new Headers();
@@ -458,14 +514,14 @@ const Passenger = () => {
                         ))}
                       </div>
                     </div>
-                    {insurance !== 0 && (
+                    {/* {insurance !== 0 && (
                       <div className="m-2 flex  justify-between">
                         <p className="w-fit">Travel Insurance:</p>
                         <div className="font-bold">
                           <p>{insurance}</p>
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </div>
 
                   <hr className="my-2 border-dashed" />

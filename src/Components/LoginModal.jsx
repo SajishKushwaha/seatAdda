@@ -28,13 +28,14 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [google, setGoogle] = useState(null);
   const [otp, setOtp] = useState("");
+  const [referalCode, setReferalCode] = useState("");
   const [verify, setVerify] = useState(false);
   const dispatch = useDispatch();
   const phoneNumberPattern = /^\d{10}$/;
   const navigate = useNavigate();
   let { search } = useLocation();
   const query = new URLSearchParams(search);
-  const referalcode = query.get("referall_code");
+  // const referalcode = query.get("referall_code");
   const handleOpenModal = () => {
     setMobileMenuOpen(false);
     setModal(true);
@@ -59,10 +60,10 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     setVerify(false);
     setModal(false);
     // onClose();
-    setIsModalOpen(false);
+    navigate("/");
+    // setIsModalOpen(false);
 
     document.body.classList.remove("modal-open");
-    // navigate("/");
   };
   const handleSuccess = async (response) => {
     const token = response.credential;
@@ -121,12 +122,15 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   const handleInputOtp = (event) => {
     setOtp(event.target.value);
   };
+  const handlereferralChange = (event) => {
+    setReferalCode(event.target.value);
+  };
   const handleLogin = async () => {
     const isValidphone = phoneNumberPattern.test(phoneNumber);
     if (isValidphone) {
       const formData = new FormData();
       formData.append("phone", phoneNumber);
-      formData.append("refferal_code", referalcode);
+      formData.append("refferal_code", referalCode);
 
       try {
         const response = await fetch("https://seatadda.co.in/auth/api/login", {
@@ -288,79 +292,118 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
                           </div>
                         </div>{" "}
                       </div>
-                    ) : googlelogin ? (
-                      <div className="sm:flex w-full ">
-                        {" "}
-                        <div className=" sm:w-3/4  sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5">
-                          <img src={AppImg} alt="" />
-                        </div>
-                        <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
-                          <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around ">
-                            <div>
-                              {" "}
-                              <div className="mx-5 mb-3">
-                                <input
-                                  className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
-                                  type="tel"
-                                  placeholder="Enter Mobile Number"
-                                  name="phoneNumber"
-                                  value={phoneNumber}
-                                  onChange={handleInputChange}
-                                />
-                              </div>
+                    ) : (
+                      googlelogin && (
+                        <div className="sm:flex w-full ">
+                          {" "}
+                          <div className=" sm:w-3/4  sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5">
+                            <img src={AppImg} alt="" />
+                          </div>
+                          <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
+                            <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around ">
                               <div>
-                                <input className="text-xl " type="checkbox" />{" "}
-                                <span className="text-primarycolors-textcolor">
-                                  Get First Free Ride
-                                </span>
+                                {" "}
+                                <div className="mx-5 mb-3">
+                                  <input
+                                    className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
+                                    type="tel"
+                                    placeholder="Enter Mobile Number"
+                                    name="phoneNumber"
+                                    value={phoneNumber}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+                                <div className="mx-5 mb-3">
+                                  <input
+                                    className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
+                                    type="tel"
+                                    placeholder="Enter Referral Code if Available"
+                                    name="referalCode"
+                                    value={referalCode}
+                                    onChange={handlereferralChange}
+                                  />
+                                </div>
+                                <div>
+                                  <input className="text-xl " type="checkbox" />{" "}
+                                  <span className="text-primarycolors-textcolor">
+                                    Get First Free Ride
+                                  </span>
+                                </div>
+                                <div className="sm:m-3">
+                                  <button
+                                    onClick={handleLogin}
+                                    className="p-2 rounded-md px-4 text-primarycolors-white m-2 bg-primarycolors-red"
+                                  >
+                                    Login/Signup with OTP
+                                  </button>
+                                </div>
                               </div>
-                              <div className="sm:m-3">
-                                <button
-                                  onClick={handleLogin}
-                                  className="p-2 rounded-md px-4 text-primarycolors-white m-2 bg-primarycolors-red"
-                                >
-                                  Login/Signup with OTP
-                                </button>
-                              </div>
-                            </div>
 
-                            <div className="mx-auto mb-0">
-                              <p className="m-5 mb-2 text-sm text-primarycolors-textcolor">
-                                or login with
-                              </p>
-                              <div className="flex flex-row">
-                                <button
-                                  className="p-2 mb-0 rounded-md px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-blue"
-                                  onClick={() => setGoogleLogin(!googlelogin)}
-                                >
-                                  <BiLogoGoogle className="text-xl mr-1" />
-                                  <span></span> Google
-                                </button>
-                                {/* <button className="p-2 rounded-md mb-0 px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-btncolor">
+                              <div className="mx-auto mb-0">
+                                <p className="m-5 mb-2 text-sm text-primarycolors-textcolor">
+                                  or login with
+                                </p>
+                                <div className="flex flex-row">
+                                  <button
+                                    className="p-2 mb-0 rounded-md px-4 flex items-center justify-center text-primarycolors-white m-2 "
+                                    onClick={() => setGoogleLogin(!googlelogin)}
+                                  >
+                                    <GoogleOAuthProvider clientId="891592173312-j5771oc29p9aghr9r2fv7hnr45k4nbql.apps.googleusercontent.com">
+                                      {!user ? (
+                                        <GoogleLogin
+                                          onSuccess={handleSuccess}
+                                          onError={handleError}
+                                        />
+                                      ) : (
+                                        <div>
+                                          <h2>Welcome, {user.name}</h2>
+                                          <p>Email: {user.email}</p>
+                                        </div>
+                                      )}
+                                    </GoogleOAuthProvider>
+                                  </button>
+                                  {/* <button className="p-2 rounded-md mb-0 px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-btncolor">
                                   <BiLogoFacebook className="text-xl mr-1" />
                                   <span></span> Facebook
                                 </button> */}
+                                </div>
+                                <div
+                                  style={{
+                                    color: "grey",
+                                    fontSize: "13px",
+                                  }}
+                                >
+                                  <p>
+                                    By logging in, I understand & agree to
+                                    SeatAdda
+                                  </p>
+                                  <span>
+                                    <NavLink
+                                      to="/terms"
+                                      style={{
+                                        color: "black",
+                                        textDecoration: "underline",
+                                      }}
+                                    >
+                                      Terms of Use
+                                    </NavLink>
+                                    &nbsp; & &nbsp;
+                                    <NavLink
+                                      to="/privacy"
+                                      style={{
+                                        color: "black",
+                                        textDecoration: "underline",
+                                      }}
+                                    >
+                                      Privacy Policy
+                                    </NavLink>
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>{" "}
-                      </div>
-                    ) : (
-                      <div className="sm:flex w-full ">
-                        <GoogleOAuthProvider clientId="891592173312-j5771oc29p9aghr9r2fv7hnr45k4nbql.apps.googleusercontent.com">
-                          {!user ? (
-                            <GoogleLogin
-                              onSuccess={handleSuccess}
-                              onError={handleError}
-                            />
-                          ) : (
-                            <div>
-                              <h2>Welcome, {user.name}</h2>
-                              <p>Email: {user.email}</p>
-                            </div>
-                          )}
-                        </GoogleOAuthProvider>
-                      </div>
+                          </div>{" "}
+                        </div>
+                      )
                     )}
                   </div>
                 </div>

@@ -34,16 +34,28 @@ const HeroSection = () => {
   const [toLocation, setToLocation] = useState("");
   const [showFromRoutes, setShowFromRoutes] = useState(false);
   const [showToRoutes, setShowToRoutes] = useState(false);
-  const [filterRoutes, setfilterRoutes] = useState([]);
+  // const [filterRoutes, setfilterRoutes] = useState([]);
+  const [filterFromRoutes, setfilterFromRoutes] = useState([]);
+  const [filterToRoutes, setfilterToRoutes] = useState([]);
   const isSmallDevice = window.innerWidth <= 768;
 
-  const filterBySearch = (event) => {
+  const filterByToSearch = (event) => {
+    // setfilterRoutes([]);
     const query = event.target.value;
     var updatedList = [...routes];
     updatedList = updatedList.filter((item) => {
       return item.city.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
-    setfilterRoutes(updatedList);
+    setfilterToRoutes(updatedList);
+  };
+  const filterByFromSearch = (event) => {
+    // setfilterRoutes([]);
+    const query = event.target.value;
+    var updatedList = [...routes];
+    updatedList = updatedList.filter((item) => {
+      return item.city.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    });
+    setfilterFromRoutes(updatedList);
   };
   useEffect(() => {
     console.log("Adding event listener");
@@ -105,7 +117,9 @@ const HeroSection = () => {
         const data = await response.json();
         // console.log(data.date);
         setRoutes(data.date);
-        setfilterRoutes(data.date);
+        // setfilterRoutes(data.date);
+        setfilterFromRoutes(data.date);
+        setfilterToRoutes(data.date);
       } catch (error) {
         console.error("Error fetching routes:", error);
       }
@@ -152,20 +166,21 @@ const HeroSection = () => {
                     placeholder="Leaving From"
                     value={fromLocation}
                     onChange={(e) => {
-                      filterBySearch(e);
+                      filterByFromSearch(e);
                       setFromLocation(e.target.value);
                       setShowFromRoutes(true);
                     }}
                     onFocus={() => {
                       setShowFromRoutes(true);
                       setShowToRoutes(false);
+                      // setfilterRoutes([]);
                     }}
                   />{" "}
                   {showFromRoutes && (
                     <div className="absolute w-full rounded-lg top-[41px] overflow-hidden left-0 sm:left-2 ">
                       <div className="custom-scroll-container ">
                         <ul className="custom-scrollbar bg-primarycolors-white list border-[1px] border-primarycolors-textcolor absolute  mt-3 w-[100%] overflow-y-auto max-h-[200px] rounded-lg shadow-lg">
-                          {filterRoutes.map((route) => (
+                          {filterFromRoutes.map((route) => (
                             <li
                               key={route.city}
                               className="cursor-pointer py-1 pl-5 hover:bg-primarycolors-red/50"
@@ -209,7 +224,7 @@ const HeroSection = () => {
                     placeholder="Going to"
                     value={toLocation}
                     onChange={(e) => {
-                      filterBySearch(e);
+                      filterByToSearch(e);
                       setToLocation(e.target.value);
                       setShowToRoutes(true);
                     }}
@@ -222,7 +237,7 @@ const HeroSection = () => {
                     <div className="absolute w-full rounded-lg top-[41px] overflow-hidden  left-0  sm:ml-[10px]">
                       <div className="custom-scroll-container ">
                         <ul className="custom-scrollbar bg-primarycolors-white list border-[1px] border-primarycolors-textcolor absolute  mt-3 w-[100%] overflow-y-auto max-h-[200px] rounded-lg shadow-lg">
-                          {filterRoutes.map((route) => (
+                          {filterToRoutes.map((route) => (
                             <li
                               key={route.city}
                               className="cursor-pointer py-1 pl-5 hover:bg-primarycolors-red/50"

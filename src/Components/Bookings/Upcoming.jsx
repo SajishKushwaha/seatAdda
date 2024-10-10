@@ -64,12 +64,14 @@ const Upcoming = ({ bookinghistory }) => {
                     </h2>
                   </div>
 
-                  <button
-                    className="px-5  view_ticket"
-                    onClick={() => ViewTicket(data.ticket_id)}
-                  >
-                    view ticket
-                  </button>
+                  <div>
+                    <button
+                      className="px-5  view_ticket bg-primarycolors-red"
+                      onClick={() => ViewTicket(data.ticket_id)}
+                    >
+                      view ticket
+                    </button>
+                  </div>
                 </div>
 
                 <div className="  gap-5 p-3 border-t-[1px] border-primarycolors-gray">

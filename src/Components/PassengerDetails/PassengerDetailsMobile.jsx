@@ -34,6 +34,8 @@ const PassengerDetailsMobile = ({
   const selectedSeats = useSelector(
     (state) => state.busDetailsReducer.selectedSeats
   );
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
   const From = useSelector((state) => state.busDetailsReducer.From);
   const To = useSelector((state) => state.busDetailsReducer.To);
   const boardPoint = useSelector((state) => state.busDetailsReducer.boardPoint);
@@ -64,10 +66,10 @@ const PassengerDetailsMobile = ({
   }
   const no_of_travel_insurance = selectedSeats.length;
   const [passDetails, setPassDetails] = React.useState(passengerArray);
-  const [passEmail, setPassEmail] = React.useState("");
+  const [passEmail, setPassEmail] = React.useState(userData.user.email);
   const [coupon, setCoupon] = React.useState("");
   const [couponData, setCouponData] = React.useState(null);
-  const [passPhNo, setPassPhNo] = React.useState("");
+  const [passPhNo, setPassPhNo] = React.useState(userData.user.phone);
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedGender, setSelectedGender] = React.useState([]);
   const [check, setcheck] = React.useState(true);
@@ -551,7 +553,7 @@ const PassengerDetailsMobile = ({
               placeholder="City"
               type="text"
               name="name"
-              value={city}
+              // value={city}
               onChange={cityInput}
             />
           </div>

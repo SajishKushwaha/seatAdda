@@ -37,8 +37,9 @@ import Walletrechargeresponse from "./Components/Wallet/walletrechargeresponse";
 import SeatShow from "./Components/SeatShow";
 
 import ReferAndEarn from "./Components/ReferAndEarn";
+import Feedback from "react-bootstrap/esm/Feedback";
 
-
+import FeedbackForm from './Components/Bookings/feedback'
 function App() {
   const { pathname } = useLocation();
 
@@ -79,6 +80,7 @@ function App() {
           }
         /> */}
         <Route path="/SeatShow" Component={SeatShow}></Route>
+        <Route path="/feedback" Component={FeedbackForm}></Route>
         <Route path="/free-rides" Component={FreeRides}></Route>
         <Route path="/bookings" Component={Bookings}></Route>
         <Route path="/wallet" Component={Wallet}></Route>

@@ -28,10 +28,12 @@ const Navbar = () => {
   const [modal, setModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [referalCode, setReferalCode] = useState("");
   const [google, setGoogle] = useState(null);
   const [otp, setOtp] = useState("");
   const [verify, setVerify] = useState(false);
   const [googlelogin, setGoogleLogin] = useState(true);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -180,6 +182,9 @@ const Navbar = () => {
   const handleInputChange = (event) => {
     setPhoneNumber(event.target.value);
   };
+  const handlereferralChange = (event) => {
+    setReferalCode(event.target.value);
+  };
   const handleInputOtp = (event) => {
     setOtp(event.target.value);
   };
@@ -189,7 +194,7 @@ const Navbar = () => {
     if (isValidphone) {
       const formData = new FormData();
       formData.append("phone", phoneNumber);
-
+      formData.append("referal_code", referalCode);
       try {
         const response = await fetch("https://seatadda.co.in/auth/api/login", {
           method: "POST",
@@ -575,7 +580,7 @@ const Navbar = () => {
             <div className="modal-content flex items-center  justify-center  w-full  overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 outline-none focus:outline-none">
               <div className=" sm:p-4 md:p-0 rounded-xl w-full max-w-2xl  h-full   ">
                 {/* <Toaster /> */}
-                <div className="p-5 sm:p-2">
+                <div className="p-5 sm:p-2 h-full">
                   {" "}
                   <div className="mt-5 sm:mt-10 bg-primarycolors-textcolor rounded-xl relative ">
                     <div className="flex items-center justify-between px-3 border-b rounded-t dark:border-gray-800 ">
@@ -593,146 +598,215 @@ const Navbar = () => {
                       </button>
                     </div>{" "}
                     <div className=" rounded-l-xl ">
-                      <div className="bg-primarycolors-white rounded-b-xl text-gray-500  w-full overflow-hidden">
-                        {verify ? (
-                          <div className="sm:flex w-full ">
-                            {" "}
-                            <div className="w-3/4 sm:w-1/2 flex items-center sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-10 px-10">
-                              <img src={MobImg} alt="" />
-                            </div>
-                            <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
-                              <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around gap-4 ">
-                                <div className="flex flex-col justify-start">
-                                  <div className=" text-primarycolors-blue">
-                                    We have sent verfication Code to <br />
-                                    <div className="my-2">
-                                      <p className=" text-primarycolors-blue">
-                                        +91-{phoneNumber}
-                                      </p>
+                      <div
+                        className="bg-primarycolors-white rounded-b-xl text-gray-500  w-full overflow-hidden "
+                        // style={{ height: "50vh" }}
+                      >
+                        {
+                          verify ? (
+                            <div className="sm:flex w-full ">
+                              {" "}
+                              <div
+                                className="w-3/4 sm:w-1/2 flex items-center sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-10 px-10"
+                                // style={{ height: "50vh" }}
+                              >
+                                <img src={MobImg} alt="" />
+                              </div>
+                              <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
+                                <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around gap-4 ">
+                                  <div className="flex flex-col justify-start">
+                                    <div className=" text-primarycolors-blue">
+                                      We have sent verfication Code to <br />
+                                      <div className="my-2">
+                                        <p className=" text-primarycolors-blue">
+                                          +91-{phoneNumber}
+                                        </p>
+                                        <button
+                                          onClick={() => setVerify(false)}
+                                          className=" text-primarycolors-red"
+                                        >
+                                          Edit
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <div className="mx-5 mb-3">
+                                      <input
+                                        className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
+                                        type="tel"
+                                        placeholder="Enter OTP Code"
+                                        name="otp"
+                                        value={otp}
+                                        onChange={handleInputOtp}
+                                      />
+                                    </div>
+                                    <div className="sm:m-0">
                                       <button
-                                        onClick={() => setVerify(false)}
-                                        className=" text-primarycolors-red"
+                                        onClick={handleVerify}
+                                        className="p-2  px-4 text-primarycolors-white  bg-primarycolors-red"
                                       >
-                                        Edit
+                                        Verify OTP
                                       </button>
                                     </div>
                                   </div>
-                                  <div className="mx-5 mb-3">
-                                    <input
-                                      className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
-                                      type="tel"
-                                      placeholder="Enter OTP Code"
-                                      name="otp"
-                                      value={otp}
-                                      onChange={handleInputOtp}
-                                    />
-                                  </div>
-                                  <div className="sm:m-0">
-                                    <button
-                                      onClick={handleVerify}
-                                      className="p-2  px-4 text-primarycolors-white  bg-primarycolors-red"
-                                    >
-                                      Verify OTP
-                                    </button>
-                                  </div>
-                                </div>
 
-                                <div>
-                                  <p className="my-3 text-[12px]">
-                                    Did not Receive OTP Code?
-                                  </p>
-
-                                  <div className="flex justify-between px-2 ">
-                                    <button className=" text-primarycolors-red">
-                                      Resend OTP
-                                    </button>
-                                    <button className=" text-primarycolors-red">
-                                      Get OTP on Call
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>{" "}
-                          </div>
-                        ) : googlelogin ? (
-                          <div className="sm:flex w-full ">
-                            {" "}
-                            <div className=" sm:w-3/4   sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5">
-                              <img className="" src={AppImg} alt="" />
-                            </div>
-                            <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
-                              <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around ">
-                                <div>
-                                  {" "}
-                                  <div className="mx-5 mb-3">
-                                    <input
-                                      className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
-                                      type="tel"
-                                      placeholder="Enter Mobile Number"
-                                      name="phoneNumber"
-                                      value={phoneNumber}
-                                      onChange={handleInputChange}
-                                    />
-                                  </div>
                                   <div>
-                                    <input
-                                      className="text-xl "
-                                      type="checkbox"
-                                    />{" "}
-                                    <span className="text-primarycolors-textcolor">
-                                      Get First Free Ride
-                                    </span>
-                                  </div>
-                                  <div className="sm:m-3">
-                                    <button
-                                      onClick={handleLogin}
-                                      className="p-2 rounded-md px-4 text-primarycolors-white m-2 bg-primarycolors-red"
-                                    >
-                                      Login/Signup with OTP
-                                    </button>
+                                    <p className="my-3 text-[12px]">
+                                      Did not Receive OTP Code?
+                                    </p>
+
+                                    <div className="flex justify-between px-2 ">
+                                      <button className=" text-primarycolors-red">
+                                        Resend OTP
+                                      </button>
+                                      <button className=" text-primarycolors-red">
+                                        Get OTP on Call
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
+                              </div>{" "}
+                            </div>
+                          ) : (
+                            googlelogin && (
+                              <div className="sm:flex w-full ">
+                                {" "}
+                                <div
+                                  className=" sm:w-3/4   sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5 md:h-[50vh]"
+                                  // style={{ height: "50vh" }}
+                                >
+                                  <img className="" src={AppImg} alt="" />
+                                </div>
+                                <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
+                                  <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around ">
+                                    <div>
+                                      {" "}
+                                      <div className="mx-5 mb-3 mt-5">
+                                        <input
+                                          className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
+                                          type="tel"
+                                          placeholder="Enter Mobile Number"
+                                          name="phoneNumber"
+                                          value={phoneNumber}
+                                          onChange={handleInputChange}
+                                        />
+                                      </div>
+                                      <div className="mx-5 mb-3">
+                                        <input
+                                          className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
+                                          type="tel"
+                                          placeholder="Enter Referral Code if Available"
+                                          name="referalCode"
+                                          value={referalCode}
+                                          onChange={handlereferralChange}
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          className="text-xl "
+                                          type="checkbox"
+                                        />{" "}
+                                        <span className="text-primarycolors-textcolor">
+                                          Get First Free Ride
+                                        </span>
+                                      </div>
+                                      <div className="sm:m-3">
+                                        <button
+                                          onClick={handleLogin}
+                                          className="p-2 rounded-md px-4 text-primarycolors-white m-2 bg-primarycolors-red"
+                                        >
+                                          Login/Signup with OTP
+                                        </button>
+                                      </div>
+                                    </div>
 
-                                <div className="mx-auto mb-0">
-                                  <p className="m-5 mb-2 text-sm text-primarycolors-textcolor">
-                                    or login with
-                                  </p>
-                                  <div className="flex flex-row">
-                                    <button
-                                      className="p-2 mb-0 rounded-md px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-blue"
-                                      onClick={() =>
-                                        setGoogleLogin(!googlelogin)
-                                      }
-                                    >
-                                      <BiLogoGoogle className="text-xl mr-1" />
-                                      <span></span> Google
-                                    </button>
-                                    {/* <button className="p-2 rounded-md mb-0 px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-btncolor">
+                                    <div className="mx-auto mb-0">
+                                      <p className="m-5 mb-2 text-sm text-primarycolors-textcolor">
+                                        or login with
+                                      </p>
+                                      <div className="flex flex-row">
+                                        <button
+                                          className="p-2 mb-0 rounded-md px-4 flex items-center justify-center text-primarycolors-white m-2   "
+                                          onClick={() =>
+                                            setGoogleLogin(!googlelogin)
+                                          }
+                                        >
+                                          {/* <BiLogoGoogle className="text-xl mr-1" /> */}
+
+                                          <GoogleOAuthProvider clientId="891592173312-j5771oc29p9aghr9r2fv7hnr45k4nbql.apps.googleusercontent.com">
+                                            {!user ? (
+                                              <GoogleLogin
+                                                onSuccess={handleSuccess}
+                                                onError={handleError}
+                                              />
+                                            ) : (
+                                              <div>
+                                                <h2>Welcome, {user.name}</h2>
+                                                <p>Email: {user.email}</p>
+                                              </div>
+                                            )}
+                                          </GoogleOAuthProvider>
+                                        </button>
+                                        {/* <button className="p-2 rounded-md mb-0 px-4 flex items-center justify-center text-primarycolors-white m-2 bg-primarycolors-btncolor">
                                       <BiLogoFacebook className="text-xl mr-1" />
                                       <span></span> Facebook
                                     </button> */}
+                                      </div>
+                                      <div
+                                        style={{
+                                          color: "grey",
+                                          fontSize: "13px",
+                                        }}
+                                      >
+                                        <p>
+                                          By logging in, I understand & agree to
+                                          SeatAdda
+                                        </p>
+                                        <span>
+                                          <NavLink
+                                            to="/terms"
+                                            style={{
+                                              color: "black",
+                                              textDecoration: "underline",
+                                            }}
+                                          >
+                                            Terms of Use
+                                          </NavLink>
+                                          &nbsp; & &nbsp;
+                                          <NavLink
+                                            to="/privacy"
+                                            style={{
+                                              color: "black",
+                                              textDecoration: "underline",
+                                            }}
+                                          >
+                                            Privacy Policy
+                                          </NavLink>
+                                        </span>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="sm:flex w-full ">
-                            <GoogleOAuthProvider clientId="891592173312-j5771oc29p9aghr9r2fv7hnr45k4nbql.apps.googleusercontent.com">
-                              {!user ? (
-                                <GoogleLogin
-                                  onSuccess={handleSuccess}
-                                  onError={handleError}
-                                />
-                              ) : (
-                                <div>
-                                  <h2>Welcome, {user.name}</h2>
-                                  <p>Email: {user.email}</p>
-                                </div>
-                              )}
-                            </GoogleOAuthProvider>
-                          </div>
-                        )}
+                            )
+                          )
+                          //: (
+                          //   <div className="sm:flex w-full ">
+                          //     <GoogleOAuthProvider clientId="891592173312-j5771oc29p9aghr9r2fv7hnr45k4nbql.apps.googleusercontent.com">
+                          //       {!user ? (
+                          //         <GoogleLogin
+                          //           onSuccess={handleSuccess}
+                          //           onError={handleError}
+                          //         />
+                          //       ) : (
+                          //         <div>
+                          //           <h2>Welcome, {user.name}</h2>
+                          //           <p>Email: {user.email}</p>
+                          //         </div>
+                          //       )}
+                          //     </GoogleOAuthProvider>
+                          //   </div>
+                          // )
+                        }
                       </div>
                     </div>
                   </div>

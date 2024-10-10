@@ -5,6 +5,8 @@ import { BiArrowBack, BiBus } from "react-icons/bi";
 // import { BiUser } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import "./book.css";
+import Feedback from "react-bootstrap/esm/Feedback";
+//
 // import NoBookings from './NoBookings';
 
 const Past = ({ bookinghistory }) => {
@@ -49,6 +51,9 @@ const Past = ({ bookinghistory }) => {
   const ViewTicket = (ticket) => {
     navigate(`/SeatShow?ticketid=${ticket}`);
   };
+  const feedback = (ticket) => {
+    navigate(`/feedback?ticketid=${ticket}`);
+  };
   return (
     <div className="m-3 childscroll overflow-y-scroll  md:h-[800px] mb-[7rem] sm:mb-[1rem]">
       {futureBookings.map((data, index) => {
@@ -65,12 +70,21 @@ const Past = ({ bookinghistory }) => {
                     {`${data.travels_name} (${data.reg_no})`}
                   </h2>
                 </div>
-                <button
-                  className="px-5  view_ticket"
-                  onClick={() => ViewTicket(data.ticket_id)}
-                >
-                  view ticket
-                </button>
+                <div className="flex justify-between items-center ">
+                  <button
+                    className="px-5  view_ticket bg-primarycolors-red mr-3 md:h-auto h-[45px]"
+                    // style={{ height: "45px" }}
+                    onClick={() => feedback(data.ticket_id)}
+                  >
+                    Feedback
+                  </button>
+                  <button
+                    className="px-5  view_ticket bg-primarycolors-red"
+                    onClick={() => ViewTicket(data.ticket_id)}
+                  >
+                    view ticket
+                  </button>
+                </div>
               </div>
 
               <div className="  gap-5 p-3 border-t-[1px] border-primarycolors-gray">
