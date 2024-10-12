@@ -18,14 +18,14 @@ const PassengerDetails = ({
     (state) => state.busDetailsReducer.selectedSeats
   );
   const userData = JSON.parse(localStorage.getItem("userData"));
-
+  const account = JSON.parse(localStorage.getItem("Edit"));
   const no_of_travel_insurance = selectedSeats.length;
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
     passengerArray.push({
-      name: "",
+      name: userData.user.name,
       age: "",
-      gender: "",
+      gender: account[0].gender,
     });
   }
   const From = useSelector((state) => state.busDetailsReducer.From);
@@ -37,14 +37,14 @@ const PassengerDetails = ({
   const [insurance, setInsurance] = React.useState(false);
   const [gst, setGst] = React.useState(false);
   const [check, setcheck] = React.useState(true);
-  const [address, setAddress] = React.useState("");
+  const [address, setAddress] = React.useState(account[0].address);
   const [GSTIN, setGSTIN] = React.useState("");
   const [businessName, setBusinessName] = React.useState("");
   const [businessAddress, setBusinessAddress] = React.useState("");
   const [businessEmail, setBusinessEmail] = React.useState("");
-  const [city, setCity] = React.useState(From);
-  const [pincode, setPinCode] = React.useState("");
-  const [state, setState] = React.useState("");
+  const [city, setCity] = React.useState(account[0].city);
+  const [pincode, setPinCode] = React.useState(account[0].pin_code);
+  const [state, setState] = React.useState(account[0].state);
   const [isOpen, setIsOpen] = React.useState(false);
 
   const toggleDrawer = () => {
@@ -259,6 +259,7 @@ const PassengerDetails = ({
                           type="radio"
                           name={"gender" + index}
                           value="Male"
+                          checked={passDetails[index]["gender"] === "male"}
                         />
                         <span className="ml-2">Male</span>
                       </div>
@@ -268,6 +269,7 @@ const PassengerDetails = ({
                           type="radio"
                           name={"gender" + index}
                           value="Female"
+                          checked={passDetails[index]["gender"] === "female"}
                         />
                         <span className="ml-2">Female</span>
                       </div>
@@ -358,6 +360,7 @@ const PassengerDetails = ({
               placeholder="Address"
               type="text"
               name="name"
+              value={address}
               onChange={addressInput}
             />
           </div>
@@ -367,7 +370,7 @@ const PassengerDetails = ({
               placeholder="City"
               type="text"
               name="name"
-              // value={city}
+              value={city}
               onChange={cityInput}
             />
           </div>
@@ -387,6 +390,7 @@ const PassengerDetails = ({
               placeholder="PIN Code"
               type="number"
               name="name"
+              value={pincode}
               onChange={pincodeInput}
             />
           </div>

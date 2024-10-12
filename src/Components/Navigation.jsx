@@ -3,7 +3,7 @@ import logo from "../assets/logo2.png";
 // import logo from "../assets/logo1.svg"
 import AppImg from "../assets/Bus Stop-pana.svg";
 import MobImg from "../assets/msg-mobile.avif";
-
+import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 // To decode the JWT token to extract user info
@@ -122,7 +122,13 @@ const Navbar = () => {
         dispatch(loginSuccess(data));
         // console.log(data);
         handleCloseModal();
-        toast.success("Logged in");
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Successfully Login",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } else {
         const data = await response.json();
         toast.error(data.message);
@@ -273,14 +279,21 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    Cookies.remove("jwt_token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
-
     // console.log("Logged Out");
+    localStorage.removeItem("Edit");
+    Cookies.remove("jwt_token");
     toast.success("Logged Out");
-    handleLinkClick();
-    navigate("/");
+    Swal.fire({
+      position: "top-center",
+      icon: "success",
+      title: "Successfully Logout",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      navigate("/");
+    });
   };
 
   const handleProfile = () => {
@@ -476,8 +489,10 @@ const Navbar = () => {
                       <li className="cursor-pointer w-full px-4 py-2 hover:bg-gray-100">
                         <NavLink to="/wallet">Wallet</NavLink>
                       </li>
-                      <li className="cursor-pointer w-full px-4 py-2 hover:bg-gray-100">
-                        <NavLink onClick={handleLogout}>Logout</NavLink>
+                      <li className="cursor-pointer w-full px-4 py-2 ">
+                        <button className=" ml-3" onClick={handleLogout}>
+                          Logout
+                        </button>
                       </li>
                     </ul>
                   </div>

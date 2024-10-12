@@ -75,6 +75,7 @@ const Account = () => {
     );
     const data = await response.json();
     setUserData(data.data);
+    localStorage.setItem("Edit", JSON.stringify(data.data));
     console.log(data.data);
   };
   useEffect(() => {

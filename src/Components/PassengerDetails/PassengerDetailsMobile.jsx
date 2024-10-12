@@ -35,18 +35,18 @@ const PassengerDetailsMobile = ({
     (state) => state.busDetailsReducer.selectedSeats
   );
   const userData = JSON.parse(localStorage.getItem("userData"));
-
+  const account = JSON.parse(localStorage.getItem("Edit"));
   const From = useSelector((state) => state.busDetailsReducer.From);
   const To = useSelector((state) => state.busDetailsReducer.To);
   const boardPoint = useSelector((state) => state.busDetailsReducer.boardPoint);
   const dropPoint = useSelector((state) => state.busDetailsReducer.dropPoint);
   const [insurancevalue, setInsurancevalue] = React.useState(null);
   const [insurance, setInsurance] = React.useState(false);
-  const [address, setAddress] = React.useState("");
-  const [city, setCity] = React.useState(From);
-  const [pincode, setPinCode] = React.useState("");
+  const [address, setAddress] = React.useState(account[0].address);
+  const [city, setCity] = React.useState(account[0].city);
+  const [pincode, setPinCode] = React.useState(account[0].pin_code);
   const [isSuccess, setIsSuccess] = React.useState(false);
-  const [state, setState] = React.useState("");
+  const [state, setState] = React.useState(account[0].state);
   // const [isEditable, setIsEditable] = React.useState(true);
   const routeDetails = useSelector(
     (state) => state.busDetailsReducer.routeDetails
@@ -59,9 +59,9 @@ const PassengerDetailsMobile = ({
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
     passengerArray.push({
-      name: "",
+      name: account[0].name,
       age: "",
-      gender: "",
+      gender: account[0].gender,
     });
   }
   const no_of_travel_insurance = selectedSeats.length;
@@ -71,7 +71,7 @@ const PassengerDetailsMobile = ({
   const [couponData, setCouponData] = React.useState(null);
   const [passPhNo, setPassPhNo] = React.useState(userData.user.phone);
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedGender, setSelectedGender] = React.useState([]);
+  const [selectedGender, setSelectedGender] = React.useState(account[0].gender);
   const [check, setcheck] = React.useState(true);
   const [deductionMade, setDeductionMade] = React.useState(false);
   const handlePassName = (e, indexNo) => {
@@ -544,6 +544,7 @@ const PassengerDetailsMobile = ({
               placeholder="Address"
               type="text"
               name="name"
+              value={address}
               onChange={addressInput}
             />
           </div>
@@ -553,7 +554,7 @@ const PassengerDetailsMobile = ({
               placeholder="City"
               type="text"
               name="name"
-              // value={city}
+              value={city}
               onChange={cityInput}
             />
           </div>
@@ -563,6 +564,7 @@ const PassengerDetailsMobile = ({
               placeholder="State"
               type="text"
               name="name"
+              value={city}
               onChange={stateInput}
             />
           </div>
@@ -572,6 +574,7 @@ const PassengerDetailsMobile = ({
               placeholder="PIN Code"
               type="text"
               name="name"
+              value={pincode}
               onChange={pincodeInput}
             />
           </div>

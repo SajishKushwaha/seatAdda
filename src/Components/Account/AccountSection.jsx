@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BiMapPin, BiMobile, BiUser } from "react-icons/bi";
 import "./account.css";
+
 import man from "../../assets/man.png";
 import women from "../../assets/women.png";
 import women1 from "../../assets/women1.png";
@@ -87,9 +88,18 @@ const AccountSection = ({ isEditable, userData }) => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
     // console.log("Logged Out");
+    localStorage.removeItem("Edit");
     Cookies.remove("jwt_token");
-    toast.success("Logged Out");
-    navigate("/");
+
+    Swal.fire({
+      position: "top-center",
+      icon: "success",
+      title: "Successfully Logout",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      navigate("/");
+    });
   };
   const userId = localStorage.getItem("userData");
   const userIdString = JSON.parse(userId);

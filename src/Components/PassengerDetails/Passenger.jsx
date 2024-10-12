@@ -161,39 +161,211 @@ const Passenger = () => {
 
   const id = generateRandomId();
   const handlePay = async () => {
-    if (deductionMade) {
-      if (wallet.balance_amount >= totalFare) {
-        const updateWallet = fare;
-        // console.log(updateWallet);
-        const myHeaders = new Headers();
-        myHeaders.append(
-          "Authorization",
-          userIdString.access_token.split("Bearer")[1]
-        );
-        const formdata = new FormData();
-        formdata.append("user_id", userIdString.user.user_id);
-        formdata.append("transaction_id", id);
-        formdata.append("transaction_type", "debit");
-        formdata.append("amount", updateWallet);
-        formdata.append("message", `Ticket Booked ${From},${To}`);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (deductionMade) {
+          if (wallet.balance_amount >= totalFare) {
+            const updateWallet = fare;
+            // console.log(updateWallet);
+            const myHeaders = new Headers();
+            myHeaders.append(
+              "Authorization",
+              userIdString.access_token.split("Bearer")[1]
+            );
+            const formdata = new FormData();
+            formdata.append("user_id", userIdString.user.user_id);
+            formdata.append("transaction_id", id);
+            formdata.append("transaction_type", "debit");
+            formdata.append("amount", updateWallet);
+            formdata.append("message", `Ticket Booked ${From},${To}`);
 
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: formdata,
-          redirect: "follow",
-        };
-        const response = await fetch(
-          "https://seatadda.co.in/auth/api/update-user-wallet",
-          requestOptions
-        );
-        const data = await response.json();
-        if (data.status === true) {
-          const myHeaders = new Headers();
-          myHeaders.append(
-            "Authorization",
-            userIdString.access_token.split("Bearer")[1]
-          );
+            const requestOptions = {
+              method: "POST",
+              headers: myHeaders,
+              body: formdata,
+              redirect: "follow",
+            };
+            const response = await fetch(
+              "https://seatadda.co.in/auth/api/update-user-wallet",
+              requestOptions
+            );
+            const data = await response.json();
+            if (data.status === true) {
+              const myHeaders = new Headers();
+              myHeaders.append(
+                "Authorization",
+                userIdString.access_token.split("Bearer")[1]
+              );
+              const passengers = selectedSeats.map((seat, index) => ({
+                seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
+                seat_number: selectedSeats[index], // Seat number ko assign karenge
+                passenger_name: passDetails[index].name, // Passenger ka naam assign karenge (assume ki sirf ek passenger hai)
+                age: passDetails[index].age, // Passenger ki umar assign karenge
+                gender: passDetails[index].gender, // Passenger ka gender assign karenge
+              }));
+              const formdata = new FormData();
+              formdata.append("user_id", userIdString.user.user_id);
+              formdata.append("bus_schedule_id", busData.bus_schedule_id);
+              formdata.append("travels_name", busData.travels_name);
+              formdata.append("service_name", busData.service_name);
+              formdata.append("reg_no", busData.reg_no);
+              formdata.append("fare", totalFare);
+              formdata.append("sourse", From);
+              formdata.append("destination", To);
+              formdata.append("boading_points", foundObject.boading_points);
+              formdata.append("bording_type", foundObject.bording_type);
+              formdata.append("boarding_date", foundObject.date);
+              formdata.append("boarding_time", foundObject.time);
+              formdata.append("arrival_date", arrival.date);
+              formdata.append("arrival_time", arrival.time);
+              // formdata.append("seat_types", selectedTypes[0]);
+              // formdata.append("seat_number", selectedSeats[0]);
+              // for (let i = 0; i < passDetails.length; i++) {
+              //     formdata.append("passenger_name",passDetails[i].name);
+              //   }
+              // for (let i = 0; i < passDetails.length; i++) {
+              // formdata.append("age", passDetails[i].age);
+              // }
+              // for (let i = 0; i < passDetails.length; i++) {
+              //     formdata.append("gender", passDetails[i].gender);
+              //   }
+              formdata.append("phone", passPhNo);
+              formdata.append("address", address);
+              formdata.append("city", city);
+              formdata.append("pincode", pincode);
+              formdata.append("state", state);
+              formdata.append("insuranceSelected", insuranceSelected);
+              formdata.append("insurance_id", insuranceId);
+              formdata.append("email", passEmail);
+              formdata.append("GSTIN", GSTIN);
+              formdata.append("businessName", businessName);
+              formdata.append("businessAddress", businessAddress);
+              formdata.append("businessEmail", businessEmail);
+              passengers.forEach((passenger, index) => {
+                for (const key in passenger) {
+                  formdata.append(`${key}[${index}]`, passenger[key]); // Corrected formdata.append line
+                }
+              });
+              const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: formdata,
+                redirect: "follow",
+              };
+              const response = await fetch(
+                "https://seatadda.co.in/auth/api/bus-booking",
+                requestOptions
+              );
+              //   .then((response) => response.text())
+              //   .then((result) => if(result.status=='false'){
+              //   })
+              //   .catch((error) => console.error(error));
+              const data = await response.json();
+              if (data.status === true) {
+                Swal.fire({
+                  position: "top-center",
+                  icon: "success",
+                  title: data.message,
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(() => {
+                  navigate("/bookings");
+                });
+              } else {
+                Swal.fire({
+                  position: "top-center",
+                  icon: "warning",
+                  title: data.message,
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              }
+            } else {
+              Swal.fire({
+                position: "top-center",
+                icon: "warning",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          } else if (walletBalance > 0 && walletBalance < totalFare) {
+            // Case 2: Wallet balance is less than total fare (partial deduction)
+            const remainingAmount = totalFare - walletBalance; // Amount to pay via payment gateway
+
+            // Deduct the remaining wallet balance
+            const updateWallet = walletBalance;
+
+            const myHeaders = new Headers();
+            myHeaders.append(
+              "Authorization",
+              userIdString.access_token.split("Bearer")[1]
+            );
+
+            const formdata = new FormData();
+            formdata.append("user_id", userIdString.user.user_id);
+            formdata.append("transaction_id", id);
+            formdata.append("transaction_type", "debit");
+            formdata.append("amount", updateWallet); // Deduct wallet balance
+            formdata.append("message", `Ticket Booked ${From},${To}`);
+
+            const requestOptions = {
+              method: "POST",
+              headers: myHeaders,
+              body: formdata,
+              redirect: "follow",
+            };
+
+            const response = await fetch(
+              "https://seatadda.co.in/auth/api/update-user-wallet",
+              requestOptions
+            );
+            const data = await response.json();
+
+            if (data.status === true) {
+              // Proceed to payment gateway for the remaining amount
+              localStorage.setItem(
+                "totalFare",
+                JSON.stringify({ ...formdata, remainingAmount })
+              );
+              // Swal.fire({
+              //   position: "top-center",
+              //   icon: "warning",
+              //   title: data.message,
+              //   showConfirmButton: false,
+              //   timer: 1500,
+              // }).then(() => {
+              navigate(`/payment?total=${remainingAmount}`); // Redirect to payment gateway
+              // });
+            } else {
+              Swal.fire({
+                position: "top-center",
+                icon: "warning",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          } else {
+            Swal.fire({
+              position: "top-center",
+              icon: "warning",
+              title: "no sufficient balance",
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              navigate("/bookings");
+            });
+          }
+        } else {
           const passengers = selectedSeats.map((seat, index) => ({
             seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
             seat_number: selectedSeats[index], // Seat number ko assign karenge
@@ -201,188 +373,36 @@ const Passenger = () => {
             age: passDetails[index].age, // Passenger ki umar assign karenge
             gender: passDetails[index].gender, // Passenger ka gender assign karenge
           }));
-          const formdata = new FormData();
-          formdata.append("user_id", userIdString.user.user_id);
-          formdata.append("bus_schedule_id", busData.bus_schedule_id);
-          formdata.append("travels_name", busData.travels_name);
-          formdata.append("service_name", busData.service_name);
-          formdata.append("reg_no", busData.reg_no);
-          formdata.append("fare", totalFare);
-          formdata.append("sourse", From);
-          formdata.append("destination", To);
-          formdata.append("boading_points", foundObject.boading_points);
-          formdata.append("bording_type", foundObject.bording_type);
-          formdata.append("boarding_date", foundObject.date);
-          formdata.append("boarding_time", foundObject.time);
-          formdata.append("arrival_date", arrival.date);
-          formdata.append("arrival_time", arrival.time);
-          // formdata.append("seat_types", selectedTypes[0]);
-          // formdata.append("seat_number", selectedSeats[0]);
-          // for (let i = 0; i < passDetails.length; i++) {
-          //     formdata.append("passenger_name",passDetails[i].name);
-          //   }
-          // for (let i = 0; i < passDetails.length; i++) {
-          // formdata.append("age", passDetails[i].age);
-          // }
-          // for (let i = 0; i < passDetails.length; i++) {
-          //     formdata.append("gender", passDetails[i].gender);
-          //   }
-          formdata.append("phone", passPhNo);
-          formdata.append("address", address);
-          formdata.append("city", city);
-          formdata.append("pincode", pincode);
-          formdata.append("state", state);
-          formdata.append("insuranceSelected", insuranceSelected);
-          formdata.append("insurance_id", insuranceId);
-          formdata.append("email", passEmail);
-          formdata.append("GSTIN", GSTIN);
-          formdata.append("businessName", businessName);
-          formdata.append("businessAddress", businessAddress);
-          formdata.append("businessEmail", businessEmail);
-          passengers.forEach((passenger, index) => {
-            for (const key in passenger) {
-              formdata.append(`${key}[${index}]`, passenger[key]); // Corrected formdata.append line
-            }
-          });
-          const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formdata,
-            redirect: "follow",
+          const formdata = {
+            user_id: userIdString.user.user_id,
+            bus_schedule_id: busData.bus_schedule_id,
+            travels_name: busData.travels_name,
+            service_name: busData.service_name,
+            reg_no: busData.reg_no,
+            fare: totalFare,
+            sourse: From,
+            destination: To,
+            boading_points: foundObject.boading_points,
+            bording_type: foundObject.bording_type,
+            boarding_date: foundObject.date,
+            boarding_time: foundObject.time,
+            arrival_date: arrival.date,
+            arrival_time: arrival.time,
+            phone: passPhNo,
+            address: address,
+            city: city,
+            pincode: pincode,
+            state: state,
+            insuranceSelected: insuranceSelected,
+            email: passEmail,
+            passengers: passengers,
+            insurance_id: insuranceId,
           };
-          const response = await fetch(
-            "https://seatadda.co.in/auth/api/bus-booking",
-            requestOptions
-          );
-          //   .then((response) => response.text())
-          //   .then((result) => if(result.status=='false'){
-          //   })
-          //   .catch((error) => console.error(error));
-          const data = await response.json();
-          if (data.status === true) {
-            Swal.fire({
-              position: "top-center",
-              icon: "success",
-              title: data.message,
-              showConfirmButton: false,
-              timer: 1500,
-            }).then(() => {
-              navigate("/bookings");
-            });
-          } else {
-            Swal.fire({
-              position: "top-center",
-              icon: "success",
-              title: data.message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        } else {
-          Swal.fire({
-            position: "top-center",
-            icon: "success",
-            title: data.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
+          localStorage.setItem("totalFare", JSON.stringify(formdata));
+          navigate(`/payment?total=${totalFare}`);
         }
-      } else if (walletBalance > 0 && walletBalance < totalFare) {
-        // Case 2: Wallet balance is less than total fare (partial deduction)
-        const remainingAmount = totalFare - walletBalance; // Amount to pay via payment gateway
-
-        // Deduct the remaining wallet balance
-        const updateWallet = walletBalance;
-
-        const myHeaders = new Headers();
-        myHeaders.append(
-          "Authorization",
-          userIdString.access_token.split("Bearer")[1]
-        );
-
-        const formdata = new FormData();
-        formdata.append("user_id", userIdString.user.user_id);
-        formdata.append("transaction_id", id);
-        formdata.append("transaction_type", "debit");
-        formdata.append("amount", updateWallet); // Deduct wallet balance
-        formdata.append("message", `Ticket Booked ${From},${To}`);
-
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: formdata,
-          redirect: "follow",
-        };
-
-        const response = await fetch(
-          "https://seatadda.co.in/auth/api/update-user-wallet",
-          requestOptions
-        );
-        const data = await response.json();
-
-        if (data.status === true) {
-          // Proceed to payment gateway for the remaining amount
-          localStorage.setItem(
-            "totalFare",
-            JSON.stringify({ ...formdata, remainingAmount })
-          );
-          navigate(`/payment?total=${remainingAmount}`); // Redirect to payment gateway
-        } else {
-          Swal.fire({
-            position: "top-center",
-            icon: "warning",
-            title: data.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      } else {
-        Swal.fire({
-          position: "top-center",
-          icon: "warning",
-          title: "no sufficient balance",
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          navigate("/bookings");
-        });
       }
-    } else {
-      const passengers = selectedSeats.map((seat, index) => ({
-        seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
-        seat_number: selectedSeats[index], // Seat number ko assign karenge
-        passenger_name: passDetails[index].name, // Passenger ka naam assign karenge (assume ki sirf ek passenger hai)
-        age: passDetails[index].age, // Passenger ki umar assign karenge
-        gender: passDetails[index].gender, // Passenger ka gender assign karenge
-      }));
-      const formdata = {
-        user_id: userIdString.user.user_id,
-        bus_schedule_id: busData.bus_schedule_id,
-        travels_name: busData.travels_name,
-        service_name: busData.service_name,
-        reg_no: busData.reg_no,
-        fare: totalFare,
-        sourse: From,
-        destination: To,
-        boading_points: foundObject.boading_points,
-        bording_type: foundObject.bording_type,
-        boarding_date: foundObject.date,
-        boarding_time: foundObject.time,
-        arrival_date: arrival.date,
-        arrival_time: arrival.time,
-        phone: passPhNo,
-        address: address,
-        city: city,
-        pincode: pincode,
-        state: state,
-        insuranceSelected: insuranceSelected,
-        email: passEmail,
-        passengers: passengers,
-        insurance_id: insuranceId,
-      };
-      localStorage.setItem("totalFare", JSON.stringify(formdata));
-      navigate(`/payment?total=${totalFare}`);
-    }
+    });
   };
 
   const handleBackward = () => {
@@ -654,7 +674,21 @@ const Passenger = () => {
                 <button
                   disabled={isdisable}
                   onClick={handlePay}
-                  className={`w-full p-2 rounded-md ${proceedColor} `}
+                  // className={`w-full p-2 rounded-md ${proceedColor} `}
+
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    borderRadius: "0.375rem",
+                    backgroundColor: isdisable
+                      ? "gray"
+                      : "rgba(239, 68, 68, 0.9)", // bg-gray-100 or bg-primarycolors-red/90
+                    color: isdisable ? "#ffffff" : "#ffffff", // text-gray-500 or text-primarycolors-white
+                    cursor: isdisable ? "not-allowed" : "pointer",
+                    ...(isdisable
+                      ? {}
+                      : { transition: "background-color 0.3s ease" }),
+                  }}
                 >
                   Proceed to Pay
                 </button>
@@ -690,7 +724,18 @@ const Passenger = () => {
             <button
               disabled={isdisable}
               onClick={handlePay}
-              className={`w-full p-2 rounded-md ${proceedColor}`}
+              // className={`w-full p-2 rounded-md ${proceedColor}`}
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                borderRadius: "0.375rem",
+                backgroundColor: isdisable ? "gray" : "rgba(239, 68, 68, 0.9)", // bg-gray-100 or bg-primarycolors-red/90
+                color: isdisable ? "#ffffff" : "#ffffff", // text-gray-500 or text-primarycolors-white
+                cursor: isdisable ? "not-allowed" : "pointer",
+                ...(isdisable
+                  ? {}
+                  : { transition: "background-color 0.3s ease" }),
+              }}
             >
               Proceed to Payment
             </button>
