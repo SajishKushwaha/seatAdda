@@ -65,6 +65,7 @@ const Passenger = () => {
   const [businessEmail, setBusinessEmail] = React.useState(null);
   const [insuranceId, setInsuranceId] = React.useState(null);
   const [insurance, setInsurance] = React.useState(0);
+  const [user, setUserData] = React.useState({});
   // const [userWallet, setUserWallet] = React.useState("");
   const [deductionMade, setDeductionMade] = React.useState(false);
   const insuranceSelected = insurance !== 0 ? 1 : 0;
@@ -87,6 +88,34 @@ const Passenger = () => {
   // };
   let fare = totalFare;
   let discount;
+
+  const user_details = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      userIdString.access_token.split("Bearer")[1]
+    );
+    const formdata = new FormData();
+    formdata.append("user_id", userIdString.user.user_id);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    const response = await fetch(
+      "https://seatadda.co.in/auth/api/user-details",
+      requestOptions
+    );
+    const data = await response.json();
+    setUserData(data.data);
+    localStorage.setItem("Edit", JSON.stringify(data.data));
+    console.log(data.data);
+  };
+  useEffect(() => {
+    user_details();
+  }, [user]);
   if (couponData != null) {
     if (couponData.date.discount_type === "percentage") {
       fare = fare - (fare * couponData.date.discount) / 100;
@@ -494,6 +523,7 @@ const Passenger = () => {
                 storePassenger={storePassenger}
                 storeInsurance={storeInsurance}
                 termAndCondition={termAndCondition}
+                user={user}
               />
             </div>
             <div className="flex flex-col gap-[1rem]">
@@ -717,6 +747,7 @@ const Passenger = () => {
               termAndCondition={termAndCondition}
               wallet={wallet}
               walletBalance={walletBalance}
+              user={user}
             />
           </div>
 

@@ -19,7 +19,9 @@ const PassengerDetails = ({
   );
   const userData = JSON.parse(localStorage.getItem("userData"));
   const account = JSON.parse(localStorage.getItem("Edit"));
+
   const no_of_travel_insurance = selectedSeats.length;
+
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
     passengerArray.push({
@@ -45,7 +47,10 @@ const PassengerDetails = ({
   const [city, setCity] = React.useState(account[0].city);
   const [pincode, setPinCode] = React.useState(account[0].pin_code);
   const [state, setState] = React.useState(account[0].state);
+
   const [isOpen, setIsOpen] = React.useState(false);
+  const userId = localStorage.getItem("userData");
+  const userIdString = JSON.parse(userId);
 
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
@@ -67,7 +72,7 @@ const PassengerDetails = ({
     newArr[indexNo]["gender"] = e.target.value;
     setPassDetails(newArr);
   };
-  const insuranceId = insurancevalue !== null && insurancevalue[0].id;
+  // const insuranceId = insurancevalue !== null && insurancevalue[0].id;
   // const Passenger = () => {
   //   storePassenger(
   //     passDetails,
@@ -113,7 +118,7 @@ const PassengerDetails = ({
       // Update the insurance state and value
       setInsurance(!insurance);
       // setInsurancevalue(newInsuranceValue);
-      console.log(`hhhh${newInsuranceValue}`);
+      // console.log(`hhhh${newInsuranceValue}`);
       // Pass the updated value to storeInsurance using a callback
       storeInsurance(newInsuranceValue);
     }
@@ -121,7 +126,7 @@ const PassengerDetails = ({
   const Passenger = () => {
     setcheck(!check);
     const checking = check;
-    console.log(checking);
+    // console.log(checking);
     termAndCondition(checking);
   };
   const addressInput = (e) => {

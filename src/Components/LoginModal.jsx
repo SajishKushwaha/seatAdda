@@ -296,14 +296,14 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
                       googlelogin && (
                         <div className="sm:flex w-full ">
                           {" "}
-                          <div className=" sm:w-3/4  sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5">
+                          <div className=" sm:w-3/4  sm:bg-primarycolors-gray/80 md:block mx-auto sm:mx-0  bg-indigo-500 py-5 px-5 md:h-[50vh]">
                             <img src={AppImg} alt="" />
                           </div>
                           <div className="w-full sm:w-1/2 md:w-3/5 mx-auto sm:mx-0  ">
                             <div className="flex flex-col sm:h-[350px] p-3 sm:p-0 justify-start  sm:justify-around ">
                               <div>
                                 {" "}
-                                <div className="mx-5 mb-3">
+                                <div className="mx-5 mb-3 mt-4">
                                   <input
                                     className="w-full text-center text-sm p-3 px-4 focus:outline-none border-[1px] border-primarycolors-textcolor"
                                     type="tel"
