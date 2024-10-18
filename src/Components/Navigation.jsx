@@ -258,10 +258,24 @@ const Navbar = () => {
           dispatch(loginSuccess(data));
           // console.log(data);
           handleCloseModal();
-          toast.success("Logged in");
+          // toast.success("Logged in");
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
         } else {
           const data = await response.json();
-          toast.error(data.message);
+          // toast.error(data.message);
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
           console.error(
             "API request failed:",
             response.status,

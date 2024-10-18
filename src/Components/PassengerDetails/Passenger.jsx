@@ -65,7 +65,7 @@ const Passenger = () => {
   const [businessEmail, setBusinessEmail] = React.useState(null);
   const [insuranceId, setInsuranceId] = React.useState(null);
   const [insurance, setInsurance] = React.useState(0);
-  const [user, setUserData] = React.useState({});
+  const [user, setUserData] = React.useState(null);
   // const [userWallet, setUserWallet] = React.useState("");
   const [deductionMade, setDeductionMade] = React.useState(false);
   const insuranceSelected = insurance !== 0 ? 1 : 0;
@@ -519,12 +519,14 @@ const Passenger = () => {
         <div className="container mx-auto ">
           <div className="grid md:grid-cols-4 p-2 sm:p-5 gap-4">
             <div className="md:col-span-3">
-              <PassengerDetails
-                storePassenger={storePassenger}
-                storeInsurance={storeInsurance}
-                termAndCondition={termAndCondition}
-                user={user}
-              />
+              {user !== null && (
+                <PassengerDetails
+                  storePassenger={storePassenger}
+                  storeInsurance={storeInsurance}
+                  termAndCondition={termAndCondition}
+                  user={user}
+                />
+              )}
             </div>
             <div className="flex flex-col gap-[1rem]">
               <div className="border-[1px] border-dashed  px-4  text-left h-fit  shadow-2xl  flex flex-col justify-between ">
@@ -741,14 +743,16 @@ const Passenger = () => {
         </div>
         <div className="relative top-[3rem]">
           <div className="">
-            <PassengerDetailsMobile
-              storePassenger={storePassenger}
-              storeInsurance={storeInsurance}
-              termAndCondition={termAndCondition}
-              wallet={wallet}
-              walletBalance={walletBalance}
-              user={user}
-            />
+            {user !== null && (
+              <PassengerDetailsMobile
+                storePassenger={storePassenger}
+                storeInsurance={storeInsurance}
+                termAndCondition={termAndCondition}
+                wallet={wallet}
+                walletBalance={walletBalance}
+                user={user}
+              />
+            )}
           </div>
 
           <div className="fixed  bg-primarycolors-white shadow-inner w-[98%] ml-1 -bottom-1 flex justify-center py-2">
