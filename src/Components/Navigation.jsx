@@ -299,15 +299,15 @@ const Navbar = () => {
     localStorage.removeItem("Edit");
     Cookies.remove("jwt_token");
     toast.success("Logged Out");
-    Swal.fire({
-      position: "top-center",
-      icon: "success",
-      title: "Successfully Logout",
-      showConfirmButton: false,
-      timer: 1500,
-    }).then(() => {
-      navigate("/");
-    });
+    // Swal.fire({
+    //   position: "top-center",
+    //   icon: "success",
+    //   title: "Successfully Logout",
+    //   showConfirmButton: false,
+    //   timer: 1500,
+    // }).then(() => {
+    navigate("/");
+    // });
   };
 
   const handleProfile = () => {

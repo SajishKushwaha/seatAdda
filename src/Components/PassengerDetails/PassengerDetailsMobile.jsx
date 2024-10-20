@@ -60,7 +60,7 @@ const PassengerDetailsMobile = ({
     const ageDate = new Date(diff); // Epoch time conversion
     return Math.abs(ageDate.getUTCFullYear() - 1970); // Account for epoch starting at 1970
   };
-  const age = calculateAge(account[0].dob);
+  const age = account !== null && calculateAge(account[0].dob);
 
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
@@ -168,7 +168,6 @@ const PassengerDetailsMobile = ({
       );
       const data = await response.json();
       setInsurancevalue(data.data);
-      console.log(data);
     };
     insurance();
   }, []);
@@ -203,12 +202,11 @@ const PassengerDetailsMobile = ({
       setIsSuccess(false);
     }
     setCouponData(data);
-    console.log(couponData);
   };
   const Passenger = () => {
     setcheck(!check);
     const checking = check;
-    console.log(checking);
+
     termAndCondition(checking);
   };
   const wallet1 = () => {
