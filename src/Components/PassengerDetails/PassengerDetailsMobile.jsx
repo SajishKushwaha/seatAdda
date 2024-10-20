@@ -55,12 +55,18 @@ const PassengerDetailsMobile = ({
   let foundObject = routeDetails.find(
     (item) => item.boading_points === boardPoint
   );
+  const calculateAge = (dob) => {
+    const diff = new Date() - new Date(dob);
+    const ageDate = new Date(diff); // Epoch time conversion
+    return Math.abs(ageDate.getUTCFullYear() - 1970); // Account for epoch starting at 1970
+  };
+  const age = calculateAge(account[0].dob);
 
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
     passengerArray.push({
       name: account[0].name,
-      age: "",
+      age: age,
       gender: account[0].gender,
     });
   }

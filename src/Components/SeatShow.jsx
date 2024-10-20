@@ -142,7 +142,7 @@ const SeatShow = () => {
     <>
       <div>
         {" "}
-        <div className="hidden md:block ">
+        <div className="hidden md:block footer">
           <Navbar />
         </div>
         <div className="md:hidden navbar block mb-20">
@@ -613,7 +613,7 @@ const SeatShow = () => {
               </div>
             </div>
           </div>
-          <div className="">
+          <div className="footer">
             <Footer />
           </div>
         </div>

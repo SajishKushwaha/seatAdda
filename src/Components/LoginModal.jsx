@@ -59,9 +59,9 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     setPhoneNumber("");
     setVerify(false);
     setModal(false);
-    // onClose();
-    navigate("/");
-    // setIsModalOpen(false);
+    onClose();
+    // navigate("/select-bus");
+    setIsModalOpen(false);
 
     document.body.classList.remove("modal-open");
   };

@@ -149,8 +149,13 @@ export default function ReferAndEarn() {
                 >
                   <i class="fa-brands fa-square-twitter shareContainer twitter"></i>
                 </a>
-
-                <i class="fa-brands fa-instagram shareContainer instagram"></i>
+                <a
+                  href={`https://instagram.com/share?url=https://seatadda.com?referall_code=${referal[0].referral_code}&amp;text=Check%20out%20this%20awesome%20website&amp;hashtags=seatadda`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i class="fa-brands fa-instagram shareContainer instagram"></i>
+                </a>
               </div>
               <div className="text-start successContainer">
                 <div>

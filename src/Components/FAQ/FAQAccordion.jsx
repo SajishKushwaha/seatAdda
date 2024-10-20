@@ -9,7 +9,6 @@ const FAQAccordion = ({ open, toggle, title, desc }) => {
         className={`my-2 bg-primarycolors-white border-primarycolors-gray  ${
           open ? "shadow-md border-0" : "border"
         } `}
-        onClick={toggle}
       >
         {" "}
         <h2>
@@ -20,6 +19,7 @@ const FAQAccordion = ({ open, toggle, title, desc }) => {
                 ? "bg-primarycolors-textcolor/70 text-primarycolors-white"
                 : ""
             }   border-primarycolors-gray `}
+            onClick={toggle}
           >
             <span>{title}</span>
 

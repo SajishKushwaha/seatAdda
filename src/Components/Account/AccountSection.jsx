@@ -37,6 +37,7 @@ const AccountSection = ({ isEditable, userData }) => {
   const [mobile, setMobile] = useState(userData[0].mobile);
   const [mobileError, setMobileError] = useState(false);
   const [email, setEmail] = useState(userData[0].email);
+  const [emailError, setEmailError] = useState(false);
   const [dob, setDob] = useState(userData[0].dob);
   const [address, setAddress] = useState(userData[0].address);
   const [state, setState] = useState(userData[0].state);
@@ -58,14 +59,22 @@ const AccountSection = ({ isEditable, userData }) => {
 
     if (val === userData[0].mobile) {
       setMobileError(true);
-      setMobile(e.target.value);
+      setMobile(null);
     } else {
       setMobileError(false);
       setMobile(e.target.value);
     }
   };
   const userInputemail = (e) => {
-    setEmail(e.target.value);
+    const val = e.target.value;
+    if (val === userData[0].email) {
+      setEmailError(true);
+      setEmail(null);
+    } else {
+      setEmailError(false);
+
+      setEmail(e.target.value);
+    }
   };
   const userInputdob = (e) => {
     setDob(e.target.value);
@@ -105,11 +114,11 @@ const AccountSection = ({ isEditable, userData }) => {
   const userIdString = JSON.parse(userId);
   const saveUserDetails = async (event) => {
     event.preventDefault();
-    if (mobileError) {
+    if (mobile == null) {
       // Prevent form submission if the mobile number is a duplicate
       return toast.error("Please enter a different mobile number.");
     }
-    if (userData[0].email === email) {
+    if (email == null) {
       // Prevent form submission if the mobile number is a duplicate
       return toast.error("Please enter a different email number.");
     }
@@ -174,49 +183,64 @@ const AccountSection = ({ isEditable, userData }) => {
             </div>
           </div>
           <hr className="border-primarycolors-gray " />
-          <div className="flex gap-0 mt-5">
-            <div className="flex">
-              <BiMobile className="text-2xl text-primarycolors-red" />
+          <div>
+            <div className="flex gap-0 mt-5">
+              <div className="flex">
+                <BiMobile className="text-2xl text-primarycolors-red" />
+              </div>
+              <div className="group flex gap-3 items-center">
+                <input
+                  name="usermobile"
+                  placeholder=""
+                  type="tel"
+                  required=""
+                  value={mobile}
+                  onChange={userInputmobile}
+                  readOnly={isEditable}
+                />
+                <label htmlFor="usermobile">Mobile</label>
+              </div>
             </div>
-            <div className="group flex gap-3 items-center">
-              <input
-                name="usermobile"
-                placeholder=""
-                type="tel"
-                required=""
-                value={mobile}
-                onChange={userInputmobile}
-                readOnly={isEditable}
-              />
-              <label htmlFor="usermobile">Mobile</label>
-              {/* {mobileError && (
-                <p style={{ color: "red" }}>Mobile numbers are the same</p>
-              )} */}
-            </div>
-          </div>
-          <hr className="border-primarycolors-gray " />
-          <div className="flex gap-0 mt-5">
-            <div className="flex">
-              <MdMailOutline className="text-2xl text-primarycolors-red" />
-            </div>
-            <div className="group flex gap-3 items-center">
-              <input
-                name="useremail"
-                // placeholder=""
-                type="text"
-                // required=""
-                value={email}
-                onChange={userInputemail}
-                readOnly={isEditable}
-                style={{
-                  width: "100vw ",
-                }}
-                emailcss
-              />
-              <label htmlFor="useremail">Email</label>
-            </div>
+            {mobileError && (
+              <p
+                style={{ color: "red", textAlign: "start", marginLeft: "20px" }}
+              >
+                Mobile numbers are the same
+              </p>
+            )}
           </div>
 
+          <hr className="border-primarycolors-gray " />
+          <div>
+            <div className="flex gap-0 mt-5">
+              <div className="flex">
+                <MdMailOutline className="text-2xl text-primarycolors-red" />
+              </div>
+              <div className="group flex gap-3 items-center">
+                <input
+                  name="useremail"
+                  // placeholder=""
+                  type="text"
+                  // required=""
+                  value={email}
+                  onChange={userInputemail}
+                  readOnly={isEditable}
+                  style={{
+                    width: "100vw ",
+                  }}
+                  emailcss
+                />
+                <label htmlFor="useremail">Email</label>
+              </div>
+            </div>
+            {emailError && (
+              <p
+                style={{ color: "red", textAlign: "start", marginLeft: "20px" }}
+              >
+                Email are the same
+              </p>
+            )}
+          </div>
           <hr className="border-primarycolors-gray " />
           <div className="grid grid-cols-2 gap-0 mt-5">
             <div className="flex   ">

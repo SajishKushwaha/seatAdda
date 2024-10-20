@@ -160,6 +160,9 @@ tr:nth-child(even) {
   .navbar {
     display: none;
   }
+  .footer {
+    display: none;
+  }
 }
 .custom-table {
   width: 100%;

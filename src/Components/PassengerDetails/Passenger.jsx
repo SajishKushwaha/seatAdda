@@ -435,7 +435,7 @@ const Passenger = () => {
   };
 
   const handleBackward = () => {
-    navigate("/");
+    navigate(`/select-bus?departure=${From}&arrival=${To}&date=${date}`);
   };
   const storePassenger = (
     passDetails,

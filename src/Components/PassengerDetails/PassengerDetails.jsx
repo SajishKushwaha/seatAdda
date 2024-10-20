@@ -21,12 +21,18 @@ const PassengerDetails = ({
   const account = JSON.parse(localStorage.getItem("Edit"));
 
   const no_of_travel_insurance = selectedSeats.length;
+  const calculateAge = (dob) => {
+    const diff = new Date() - new Date(dob);
+    const ageDate = new Date(diff); // Epoch time conversion
+    return Math.abs(ageDate.getUTCFullYear() - 1970); // Account for epoch starting at 1970
+  };
+  const age = calculateAge(account[0].dob);
 
   var passengerArray = [];
   for (var ele = 0; ele < selectedSeats.length; ele++) {
     passengerArray.push({
       name: userData.user.name,
-      age: "",
+      age: age,
       gender: account[0].gender,
     });
   }
@@ -148,10 +154,9 @@ const PassengerDetails = ({
       );
       const data = await response.json();
       setInsurancevalue(data.data);
-      console.log(data);
     };
     insurance();
-  }, []);
+  }, [insurancevalue]);
 
   return (
     <div className="shadow-md rounded-md border-[1px] border-primarycolors-black p-2 sm:p-5">
