@@ -7,15 +7,18 @@ import ChatUs from "../ChatUS";
 import FooterDesktop from "../FooterDesktop";
 
 const FAQ = () => {
-   
-    return (
-        <>
-            <ChatUs />
-            <Navbar />
-            <FAQ_Item />
-            <Footer />
-        </>
-    );
+  return (
+    <>
+      <ChatUs />
+      <Navbar />
+
+      <FAQ_Item />
+      <div className="p-9">&nbsp;</div>
+      <div className="fixed bottom-0 left-0 w-full">
+        <Footer />
+      </div>
+    </>
+  );
 };
 
 export default FAQ;

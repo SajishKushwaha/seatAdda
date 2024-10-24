@@ -42,6 +42,7 @@ const Navbar = () => {
   const path = pathname.split("/");
   const url = "https://seatadda.co.in/general-settings";
   const [DATA, set_DATA] = useState([]);
+  // console.log(DATA);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const fetchInfo = async () => {
     return fetch(url)
@@ -328,9 +329,11 @@ const Navbar = () => {
             <NavLink to="/">
               <img
                 className=""
-                src={`https://seatadda.in/admin/Settings/${DATA.brand_logo}`}
+                src={DATA.brand_logo}
                 alt=""
                 srcSet=""
+                height={100}
+                width={100}
               />
             </NavLink>
           </div>
@@ -376,9 +379,11 @@ const Navbar = () => {
             <NavLink to="/">
               <img
                 className=""
-                src={`https://seatadda.in/admin/Settings/${DATA.brand_logo}`}
+                src={DATA.brand_logo}
                 alt=""
                 srcSet=""
+                height={100}
+                width={200}
               />
             </NavLink>
           </div>

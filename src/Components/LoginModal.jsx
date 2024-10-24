@@ -59,7 +59,7 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
     setPhoneNumber("");
     setVerify(false);
     setModal(false);
-    onClose();
+    // onClose();
     // navigate("/select-bus");
     setIsModalOpen(false);
 

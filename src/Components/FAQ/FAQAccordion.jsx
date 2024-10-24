@@ -4,7 +4,7 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 
 const FAQAccordion = ({ open, toggle, title, desc }) => {
   return (
-    <div>
+    <div className="">
       <div
         className={`my-2 bg-primarycolors-white border-primarycolors-gray  ${
           open ? "shadow-md border-0" : "border"
@@ -26,7 +26,7 @@ const FAQAccordion = ({ open, toggle, title, desc }) => {
             {open ? <FaMinus /> : <FaPlus />}
           </button>
         </h2>
-        <Collapse isOpened={open}>
+        <Collapse isOpened={open} className="">
           <div className="p-3 border text-sm sm:text-base text-left border-primarycolors-gray dark:border-gray-700 dark:bg-gray-900">
             <p
               className="mb-2 text-gray-500 dark:text-gray-400"

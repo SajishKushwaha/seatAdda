@@ -59,7 +59,7 @@ const FAQ_Item = () => {
           FAQ's
         </h2>
       </div>
-      <div className="px-4 sm:px-6">
+      <div className="px-4 sm:px-6 ">
         {FAQ_DATA.map((data, index) => {
           return (
             <FAQAccordion
