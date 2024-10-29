@@ -224,20 +224,19 @@ const SelectBus = () => {
 
           <div className="">
             {/* <Toaster /> */}
-            <div className="fixed md:hidden bg-primarycolors-textcolor shadow-lg  rounded-md bottom-2 left-2 right-2 ">
-              {/* <div className="flex justify-between  ">
-                
+            <div className="mb-12  md:hidden bg-primarycolors-textcolor shadow-lg  rounded-md bottom-2 left-2 right-2 ">
+              <div className="flex justify-between  ">
                 <div
-                  className="overflow-x-auto px-4 py-1"
+                  className="overflow-x-auto px-3 py-0"
                   style={{ maxHeight: "200px" }}
                 >
                   <div className="flex w-full gap-4 py-2">
                     {busTypes.map((busType) => (
                       <div
                         key={busType.name}
-                        className={`w-20  h-12 flex flex-col items-center justify-center px-3 py-1 border-t border-primarycolors-gray  bg-primarycolors-textcolor shadow-xl rounded-lg ${
+                        className={`w-10  h-10 flex flex-col items-center justify-center px-3 py-1 border-t border-primarycolors-gray  bg-primarycolors-textcolor shadow-xl rounded-lg ${
                           filterBusType[busType.name]
-                            ? "bg-blue-500 text-primarycolors-red" 
+                            ? "bg-blue-500 text-primarycolors-red"
                             : ""
                         }`}
                         onClick={() => handleBusTypeClick(busType.name)}
@@ -252,9 +251,9 @@ const SelectBus = () => {
                           {busType.icon}
                         </p>
                         <p
-                          className={` font-bold uppercase text-[9px] w-[50px]  ${
+                          className={` font-bold uppercase text-[6px] w-[50px]  ${
                             filterBusType[busType.name]
-                              ? "text-primarycolors-red" 
+                              ? "text-primarycolors-red"
                               : "text-primarycolors-white"
                           }`}
                         >
@@ -267,16 +266,16 @@ const SelectBus = () => {
                       <div
                         onClick={() => handleDepartureTime(item.timeRange)}
                         key={item.timeRange}
-                        className={`w-80  h-12 flex flex-col items-center justify-center px-3 py-1 border-t border-primarycolors-gray   shadow-xl rounded-lg ${
+                        className={`w-10  h-10 flex flex-col items-center justify-center px-3 py-1 border-t border-primarycolors-gray   shadow-xl rounded-lg ${
                           filterDepartureTime[item.timeRange]
-                            ? " text-primarycolors-red" 
+                            ? " text-primarycolors-red"
                             : ""
                         }`}
                       >
                         <p
-                          className={`  text-sm my-1 ${
+                          className={`  my-1 ${
                             filterDepartureTime[item.timeRange]
-                              ? " text-primarycolors-red" 
+                              ? " text-primarycolors-red"
                               : "text-primarycolors-white"
                           }`}
                         >
@@ -284,15 +283,14 @@ const SelectBus = () => {
                         </p>
 
                         <h3
-                          className={` font-bold uppercase text-[9px] w-[60px] ${
+                          className={` text-[6px]  font-bold uppercase  w-[50px] ${
                             filterDepartureTime[item.timeRange]
-                              ? " text-primarycolors-red" 
+                              ? " text-primarycolors-red"
                               : "text-primarycolors-white"
                           }`}
                         >
                           {item.label}
                         </h3>
-                       
                       </div>
                     ))}
 
@@ -302,7 +300,7 @@ const SelectBus = () => {
                     ></div>
                   </div>
                 </div>
-              
+
                 <div
                   className="bg-primarycolors-red shadow-lg flex items-center justify-center rounded-r-lg"
                   onClick={handleSidebarToggle}
@@ -314,7 +312,7 @@ const SelectBus = () => {
                     </p>
                   </div>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
           <Footer />

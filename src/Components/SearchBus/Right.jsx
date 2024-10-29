@@ -446,7 +446,7 @@ const Right = ({ setIsModalOpen, isCal }) => {
           No Bus Found.
         </div>
       )}
-      <div className="p-2 sm:p-4 sm:px-2 mb-20 sm:mb-0">
+      <div className="p-2 sm:p-4 sm:px-2  sm:mb-0">
         {filteredMatchedBuses.map((bus, index) => {
           // console.log(bus);
           return (
