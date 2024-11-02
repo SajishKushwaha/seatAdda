@@ -42,7 +42,7 @@ const Navbar = () => {
   const path = pathname.split("/");
   const url = "https://seatadda.co.in/general-settings";
   const [DATA, set_DATA] = useState([]);
-  // console.log(DATA);
+  console.log(DATA);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const fetchInfo = async () => {
     return fetch(url)
@@ -247,6 +247,7 @@ const Navbar = () => {
 
         if (response.ok) {
           const data = await response.json();
+          // console.log(data);
           const jwtToken = data.access_token.replace("Bearer ", "");
           Cookies.set("jwt_token", jwtToken, {
             expires: data.expires_in / 86400,
@@ -263,7 +264,7 @@ const Navbar = () => {
           Swal.fire({
             position: "top-center",
             icon: "success",
-            title: data.message,
+            title: "Login Success",
             showConfirmButton: false,
             timer: 1500,
           });

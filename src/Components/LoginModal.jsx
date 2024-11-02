@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, logout } from "../Redux/auth/action";
 import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
+
 import { jwtDecode } from "jwt-decode";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -55,13 +56,21 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
   //   }
   // }, []);
   // Function to handle closing the modal
+  const From = useSelector((state) => state.busDetailsReducer.From);
+  const To = useSelector((state) => state.busDetailsReducer.To);
+  const date = useSelector((state) => state.busDetailsReducer.date);
   const handleCloseModal = () => {
     setPhoneNumber("");
     setVerify(false);
     setModal(false);
     // onClose();
     // navigate("/select-bus");
-    setIsModalOpen(false);
+    if (window.innerWidth <= 768) {
+      // Check if screen width is <= 768px (typically mobile)
+      navigate("/");
+    } else {
+      setIsModalOpen(false);
+    }
 
     document.body.classList.remove("modal-open");
   };
@@ -169,40 +178,41 @@ const LoginModal = ({ onClose, setIsModalOpen }) => {
       formData.append("phone", phoneNumber);
       formData.append("otp", otp);
 
-      try {
-        const response = await fetch("https://seatadda.co.in/auth/verify-otp", {
-          method: "POST",
-          body: formData,
+      // try {
+      const response = await fetch("https://seatadda.co.in/auth/verify-otp", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const jwtToken = data.access_token.replace("Bearer ", "");
+        Cookies.set("jwt_token", jwtToken, {
+          expires: data.expires_in / 86400,
+          // path: "/",
         });
+        localStorage.setItem("authToken", data.access_token);
+        localStorage.setItem("userData", JSON.stringify(data));
 
-        if (response.ok) {
-          const data = await response.json();
-          const jwtToken = data.access_token.replace("Bearer ", "");
-          Cookies.set("jwt_token", jwtToken, {
-            expires: data.expires_in / 86400,
-            // path: "/",
-          });
-          localStorage.setItem("authToken", data.access_token);
-          localStorage.setItem("userData", JSON.stringify(data));
-
-          // Store the token
-          dispatch(loginSuccess(data));
-          // console.log(data);
-          handleCloseModal();
-          toast.success("Logged in");
-        } else {
-          const data = await response.json();
-          toast.error(data.message);
-          console.error(
-            "API request failed:",
-            response.status,
-            response.statusText
-          );
-        }
-      } catch (error) {
-        toast.error("Error Occured");
-        console.error("Error while making API request:", error);
+        // Store the token
+        dispatch(loginSuccess(data));
+        // console.log(data);
+        handleCloseModal();
+        toast.success("Logged in");
+      } else {
+        const data = await response.json();
+        toast.error(data.message);
+        console.error(
+          "API request failed:",
+          response.status,
+          response.statusText
+        );
       }
+      // }
+      // catch (error) {
+      //   toast.error("Error Occured");
+      //   console.error("Error while making API request:", error);
+      // }
     } else {
       alert("Enter Valid OTP");
     }
