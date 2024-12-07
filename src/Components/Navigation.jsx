@@ -42,7 +42,7 @@ const Navbar = () => {
   const path = pathname.split("/");
   const url = "https://seatadda.co.in/general-settings";
   const [DATA, set_DATA] = useState([]);
-  console.log(DATA);
+  // console.log(DATA);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const fetchInfo = async () => {
     return fetch(url)

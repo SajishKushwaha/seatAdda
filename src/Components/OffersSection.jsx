@@ -15,7 +15,7 @@ import headerbg from "../assets/headerbg.webp";
 import OfferCard from "./OfferCard";
 import { NavLink } from "react-router-dom";
 const OffersSection = () => {
-  const url = "https://seatadda.co.in/api/offers-list";
+  const url = "https://seatadda.co.in/api/slider-offers-list";
   const [allOffers, setallOffers] = useState([]);
   const isLoading = useSelector((state) => state.busDetailsReducer.isLoading);
   const isError = useSelector((state) => state.busDetailsReducer.isError);
@@ -69,12 +69,20 @@ const OffersSection = () => {
                 slidesPerView={1.5}
                 autoplay={true}
               >
-                <SwiperSlide>
-                  {" "}
-                  <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-                </SwiperSlide>
+                {allOffers.map((e) => {
+                  return (
+                    <SwiperSlide key={e.id}>
+                      <OfferCardMob image={e.offer_img} />
+                    </SwiperSlide>
+                  );
+                })}
 
-                <SwiperSlide>
+                {/* <SwiperSlide>
+                  {" "}
+                  <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
+                </SwiperSlide> */}
+
+                {/* <SwiperSlide>
                   {" "}
                   <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
                 </SwiperSlide>
@@ -89,7 +97,7 @@ const OffersSection = () => {
                 <SwiperSlide>
                   {" "}
                   <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-                </SwiperSlide>
+                </SwiperSlide> */}
               </Swiper>
             </div>
 
@@ -102,7 +110,7 @@ const OffersSection = () => {
                 slidesPerView={3}
                 autoplay={true}
               >
-                <SwiperSlide>
+                {/* <SwiperSlide>
                   {" "}
                   <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
                 </SwiperSlide>
@@ -122,11 +130,19 @@ const OffersSection = () => {
                 <SwiperSlide>
                   {" "}
                   <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-                </SwiperSlide>
+                </SwiperSlide> */}
+
+                {allOffers.map((e) => {
+                  return (
+                    <SwiperSlide key={e.id}>
+                      <OfferCardMob image={e.offer_img} />
+                    </SwiperSlide>
+                  );
+                })}
               </Swiper>
             </div>
           </div>
-          <div className="slider m-3 ">
+          {/* <div className="slider m-3 ">
             <Swiper
               style={{ zIndex: true ? -1 : 1 }}
               className=""
@@ -146,8 +162,8 @@ const OffersSection = () => {
                 },
               }}
               autoplay={true}
-              /*  onSlideChange={() => console.log('slide change')}
-                     onSwiper={(swiper) => console.log(swiper)} */
+              onSlideChange={() => console.log("slide change")}
+              onSwiper={(swiper) => console.log(swiper)}
             >
               {allOffers.map((offer, index) => {
                 return (
@@ -157,7 +173,7 @@ const OffersSection = () => {
                 );
               })}
             </Swiper>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

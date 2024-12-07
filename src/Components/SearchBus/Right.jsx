@@ -48,7 +48,8 @@ const resetState = {
 };
 const Right = ({ setIsModalOpen, isCal }) => {
   let { search } = useLocation();
-
+  const url = "https://seatadda.co.in/api/slider-offers-list";
+  const [allOffers, setallOffers] = useState([]);
   const query = new URLSearchParams(search);
 
   const departure = query.get("departure");
@@ -64,7 +65,7 @@ const Right = ({ setIsModalOpen, isCal }) => {
   );
   // console.log(matchedBuses);
   var filteredMatchedBuses = [...matchedBuses];
-  console.log(filteredMatchedBuses);
+  // console.log(filteredMatchedBuses);
   const selectedBoardingPoints = useSelector(
     (state) => state.updateFilterDetailsReducer.selectedBoardingPoints
   );
@@ -304,7 +305,15 @@ const Right = ({ setIsModalOpen, isCal }) => {
   // useEffect(() => {
   //   console.log("isCalender value:", isCal);
   // }, [isCal]);
-
+  const fetchInfo = async () => {
+    return fetch(url)
+      .then((res) => res.json())
+      .then((d) => setallOffers(d));
+  };
+  console.log(allOffers);
+  useEffect(() => {
+    fetchInfo();
+  }, []);
   return (
     <div>
       {/*   {departure},{arrival},{date} */}
@@ -324,12 +333,21 @@ const Right = ({ setIsModalOpen, isCal }) => {
               /*  onSlideChange={() => console.log('slide change')}
            onSwiper={(swiper) => console.log(swiper)} */
             >
-              <SwiperSlide>
+              {allOffers.map((e) => {
+                return (
+                  <SwiperSlide key={e.id}>
+                    {" "}
+                    {/* Ensure each slide has a unique key */}
+                    <OfferCardMob image={e.offer_img} />
+                  </SwiperSlide>
+                );
+              })}
+              {/* <SwiperSlide>
                 {" "}
                 <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-              </SwiperSlide>
+              </SwiperSlide> */}
 
-              <SwiperSlide>
+              {/* <SwiperSlide>
                 {" "}
                 <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
               </SwiperSlide>
@@ -344,7 +362,7 @@ const Right = ({ setIsModalOpen, isCal }) => {
               <SwiperSlide>
                 {" "}
                 <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-              </SwiperSlide>
+              </SwiperSlide>  */}
             </Swiper>
           </div>
 
@@ -357,27 +375,16 @@ const Right = ({ setIsModalOpen, isCal }) => {
               slidesPerView={3}
               autoplay={true}
             >
-              <SwiperSlide>
-                {" "}
-                <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-              </SwiperSlide>
-
-              <SwiperSlide>
-                {" "}
-                <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                {" "}
-                <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                {" "}
-                <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                {" "}
-                <OfferCardMob image="https://static.abhibus.com/busgallery/offerbanners/Dec2022/30/1672393950/476X220.webp" />{" "}
-              </SwiperSlide>
+              {allOffers.map((e) => {
+                console.log(`logo image ${e.offer_img}`);
+                return (
+                  <SwiperSlide key={e.id}>
+                    {" "}
+                    {/* Ensure each slide has a unique key */}
+                    <OfferCardMob image={e.offer_img} />
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
           </div>
         </>

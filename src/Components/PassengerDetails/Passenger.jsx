@@ -17,6 +17,7 @@ const Passenger = () => {
     (state) => state.busDetailsReducer.selectedSeats
   );
   const totalFare = useSelector((state) => state.busDetailsReducer.totalFare);
+  // const totalFare = 317;
   const From = useSelector((state) => state.busDetailsReducer.From);
   const To = useSelector((state) => state.busDetailsReducer.To);
   const date = useSelector((state) => state.busDetailsReducer.date);
@@ -55,6 +56,7 @@ const Passenger = () => {
   const [checkedi, setChecked] = React.useState(false);
   const [passPhNo, setPassPhNo] = React.useState("");
   const [wallet, setWallet] = React.useState(null);
+  const [Cupon, setCuppon] = React.useState([]);
   const [address, setAddress] = React.useState(null);
   const [city, setCity] = React.useState(null);
   const [pincode, setPincode] = React.useState(null);
@@ -88,7 +90,7 @@ const Passenger = () => {
   // };
   let fare = totalFare;
   let discount;
-
+  // console.log(totalFare.toFixed(2));
   const user_details = async () => {
     const myHeaders = new Headers();
     myHeaders.append(
@@ -111,8 +113,9 @@ const Passenger = () => {
     const data = await response.json();
     setUserData(data.data);
     localStorage.setItem("Edit", JSON.stringify(data.data));
-    console.log(data.data);
+    // console.log(data.data);
   };
+
   useEffect(() => {
     user_details();
   }, [user]);
@@ -326,63 +329,322 @@ const Passenger = () => {
                 timer: 1500,
               });
             }
-          } else if (walletBalance > 0 && walletBalance < totalFare) {
+          } else if (
+            wallet.balance_amount > 0 &&
+            wallet.balance_amount < totalFare
+          ) {
             // Case 2: Wallet balance is less than total fare (partial deduction)
-            const remainingAmount = totalFare - walletBalance; // Amount to pay via payment gateway
+            const remainingAmount = totalFare - wallet.balance_amount; // Amount to pay via payment gateway
+            const orderId = `ORDER_${new Date().getTime()}`;
+            const txnAmount = remainingAmount.toFixed(2);
+            // const txnAmount = "1.00";
+            const userId = userIdString.user.user_id;
+            console.log(`hello${userId}`);
+            // try {
+            var form = new FormData();
+            form.append("txnAmount", txnAmount);
+            form.append("orderId", orderId);
+            form.append("user_id", userId);
 
-            // Deduct the remaining wallet balance
-            const updateWallet = walletBalance;
-
-            const myHeaders = new Headers();
-            myHeaders.append(
-              "Authorization",
-              userIdString.access_token.split("Bearer")[1]
-            );
-
-            const formdata = new FormData();
-            formdata.append("user_id", userIdString.user.user_id);
-            formdata.append("transaction_id", id);
-            formdata.append("transaction_type", "debit");
-            formdata.append("amount", updateWallet); // Deduct wallet balance
-            formdata.append("message", `Ticket Booked ${From},${To}`);
-
-            const requestOptions = {
-              method: "POST",
-              headers: myHeaders,
-              body: formdata,
-              redirect: "follow",
-            };
-
+            // const formdata1 = new FormData();
+            // formdata1.append("txnAmount", txnAmount);
+            // formdata1.append("orderId", orderId);
+            // formdata1.append("user_id", userId);
             const response = await fetch(
-              "https://seatadda.co.in/auth/api/update-user-wallet",
-              requestOptions
+              "https://seatadda.co.in/auth/api/payment/initializePayment",
+              {
+                method: "POST",
+                // headers: { "Content-Type": "application/json" },
+                body: form,
+                redirect: "follow",
+              }
             );
-            const data = await response.json();
 
-            if (data.status === true) {
-              // Proceed to payment gateway for the remaining amount
-              localStorage.setItem(
-                "totalFare",
-                JSON.stringify({ ...formdata, remainingAmount })
-              );
-              // Swal.fire({
-              //   position: "top-center",
-              //   icon: "warning",
-              //   title: data.message,
-              //   showConfirmButton: false,
-              //   timer: 1500,
-              // }).then(() => {
-              navigate(`/payment?total=${remainingAmount}`); // Redirect to payment gateway
-              // });
-            } else {
-              Swal.fire({
-                position: "top-center",
-                icon: "warning",
-                title: data.message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Server Error: ${errorText}`);
             }
+
+            const data = await response.json();
+            console.log(data);
+            if (data.data.body?.txnToken) {
+              window.Paytm.CheckoutJS.init({
+                root: "",
+                flow: "DEFAULT",
+                data: {
+                  orderId,
+                  token: data.data.body.txnToken,
+                  tokenType: "TXN_TOKEN",
+                  amount: txnAmount,
+                },
+                // handler: {
+                //   notifyMerchant: (eventName, eventData) => {
+                //     console.log('Event:', eventName, eventData);
+                //     if (eventName === 'APPROVED') alert('Payment Successful!');
+                //     else if (eventName === 'FAILED') alert('Payment Failed!');
+                //   },
+                // },
+                merchant: {
+                  redirect: false,
+                },
+                handler: {
+                  transactionStatus: async function (paymentStatus) {
+                    console.log("paymentStatus => ", paymentStatus);
+                    if (paymentStatus.STATUS == "TXN_SUCCESS") {
+                      // try {
+                      const formdata = new FormData();
+                      formdata.append("orderId", paymentStatus.ORDERID);
+                      formdata.append("user_id", userIdString.user.user_id);
+
+                      const requestOptions = {
+                        method: "POST",
+                        body: formdata,
+                        redirect: "follow",
+                      };
+
+                      const response = await fetch(
+                        "https://seatadda.co.in/auth/api/payment/verifyPayment",
+                        requestOptions
+                      );
+                      console.log(response.json());
+                      if (response.ok == true) {
+                        const fetch1 = async () => {
+                          const updateWallet = fare;
+                          const myHeaders = new Headers();
+                          myHeaders.append(
+                            "Authorization",
+                            userIdString.access_token.split("Bearer")[1]
+                          );
+                          const formdata = new FormData();
+                          formdata.append("user_id", userIdString.user.user_id);
+                          formdata.append("transaction_id", id);
+                          formdata.append("transaction_type", "debit");
+                          formdata.append("amount", updateWallet);
+                          formdata.append(
+                            "message",
+                            `Ticket Booked ${From},${To}`
+                          );
+
+                          const requestOptions = {
+                            method: "POST",
+                            headers: myHeaders,
+                            body: formdata,
+                            redirect: "follow",
+                          };
+                          const response = await fetch(
+                            "https://seatadda.co.in/auth/api/update-user-wallet",
+                            requestOptions
+                          );
+                          const data = await response.json();
+
+                          if (data.status === true) {
+                            const myHeaders = new Headers();
+                            myHeaders.append(
+                              "Authorization",
+                              userIdString.access_token.split("Bearer")[1]
+                            );
+                            const passengers = selectedSeats.map(
+                              (seat, index) => ({
+                                seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
+                                seat_number: selectedSeats[index], // Seat number ko assign karenge
+                                passenger_name: passDetails[index].name, // Passenger ka naam assign karenge (assume ki sirf ek passenger hai)
+                                age: passDetails[index].age, // Passenger ki umar assign karenge
+                                gender: passDetails[index].gender, // Passenger ka gender assign karenge
+                              })
+                            );
+                            const formdata = new FormData();
+                            formdata.append(
+                              "user_id",
+                              userIdString.user.user_id
+                            );
+                            formdata.append(
+                              "bus_schedule_id",
+                              busData.bus_schedule_id
+                            );
+                            formdata.append(
+                              "travels_name",
+                              busData.travels_name
+                            );
+                            formdata.append(
+                              "service_name",
+                              busData.service_name
+                            );
+                            formdata.append("reg_no", busData.reg_no);
+                            formdata.append("fare", totalFare);
+                            formdata.append("sourse", From);
+                            formdata.append("destination", To);
+                            formdata.append(
+                              "boading_points",
+                              foundObject.boading_points
+                            );
+                            formdata.append(
+                              "bording_type",
+                              foundObject.bording_type
+                            );
+                            formdata.append("boarding_date", foundObject.date);
+                            formdata.append("boarding_time", foundObject.time);
+                            formdata.append("arrival_date", arrival.date);
+                            formdata.append("arrival_time", arrival.time);
+                            // formdata.append("seat_types", selectedTypes[0]);
+                            // formdata.append("seat_number", selectedSeats[0]);
+                            // for (let i = 0; i < passDetails.length; i++) {
+                            //     formdata.append("passenger_name",passDetails[i].name);
+                            //   }
+                            // for (let i = 0; i < passDetails.length; i++) {
+                            // formdata.append("age", passDetails[i].age);
+                            // }
+                            // for (let i = 0; i < passDetails.length; i++) {
+                            //     formdata.append("gender", passDetails[i].gender);
+                            //   }
+                            formdata.append("phone", passPhNo);
+                            formdata.append("address", address);
+                            formdata.append("city", city);
+                            formdata.append("pincode", pincode);
+                            formdata.append("state", state);
+                            formdata.append(
+                              "insuranceSelected",
+                              insuranceSelected
+                            );
+                            formdata.append("insurance_id", insuranceId);
+                            formdata.append("email", passEmail);
+                            formdata.append("GSTIN", GSTIN);
+                            formdata.append("businessName", businessName);
+                            formdata.append("businessAddress", businessAddress);
+                            formdata.append("businessEmail", businessEmail);
+                            passengers.forEach((passenger, index) => {
+                              for (const key in passenger) {
+                                formdata.append(
+                                  `${key}[${index}]`,
+                                  passenger[key]
+                                ); // Corrected formdata.append line
+                              }
+                            });
+                            const requestOptions = {
+                              method: "POST",
+                              headers: myHeaders,
+                              body: formdata,
+                              redirect: "follow",
+                            };
+                            const response = await fetch(
+                              "https://seatadda.co.in/auth/api/bus-booking",
+                              requestOptions
+                            );
+                            //   .then((response) => response.text())
+                            //   .then((result) => if(result.status=='false'){
+                            //   })
+                            //   .catch((error) => console.error(error));
+                            const data = await response.json();
+                            if (data.status === true) {
+                              Swal.fire({
+                                position: "top-center",
+                                icon: "success",
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                              }).then(() => {
+                                navigate("/bookings");
+                              });
+                            } else {
+                              Swal.fire({
+                                position: "top-center",
+                                icon: "warning",
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                              });
+                            }
+                          } else {
+                            Swal.fire({
+                              position: "top-center",
+                              icon: "warning",
+                              title: data.message,
+                              showConfirmButton: false,
+                              timer: 1500,
+                            });
+                          }
+                        };
+                        fetch1();
+                      }
+                      // } catch {
+                      //   console.error("error");
+                      // }
+                    }
+
+                    // Close the popup after receiving payment status
+                    window.Paytm.CheckoutJS.close();
+                  },
+                  notifyMerchant: function (eventName, data) {
+                    console.log("notifyMerchant handler function called");
+                    console.log("eventName => ", eventName);
+                    console.log("data => ", data);
+                    if (eventName === "APP_CLOSED") {
+                      alert("Pop-up closed");
+                    }
+                  },
+                },
+              })
+                .then(() => window.Paytm.CheckoutJS.invoke())
+                .catch((error) =>
+                  console.error("Error in Paytm Checkout:", error)
+                );
+            } else {
+              console.error("Token generation failed:", data);
+              alert("Failed to generate transaction token. Try again.");
+            }
+            // Deduct the remaining wallet balance
+            // const updateWallet = walletBalance;
+
+            // const myHeaders = new Headers();
+            // myHeaders.append(
+            //   "Authorization",
+            //   userIdString.access_token.split("Bearer")[1]
+            // );
+
+            // const formdata = new FormData();
+            // formdata.append("user_id", userIdString.user.user_id);
+            // formdata.append("transaction_id", id);
+            // formdata.append("transaction_type", "debit");
+            // formdata.append("amount", updateWallet); // Deduct wallet balance
+            // formdata.append("message", `Ticket Booked ${From},${To}`);
+
+            // const requestOptions = {
+            //   method: "POST",
+            //   headers: myHeaders,
+            //   body: formdata,
+            //   redirect: "follow",
+            // };
+
+            // const response = await fetch(
+            //   "https://seatadda.co.in/auth/api/update-user-wallet",
+            //   requestOptions
+            // );
+            // const data = await response.json();
+
+            // if (data.status === true) {
+            //   // Proceed to payment gateway for the remaining amount
+            //   localStorage.setItem(
+            //     "totalFare",
+            //     JSON.stringify({ ...formdata, remainingAmount })
+            //   );
+            //   // Swal.fire({
+            //   //   position: "top-center",
+            //   //   icon: "warning",
+            //   //   title: data.message,
+            //   //   showConfirmButton: false,
+            //   //   timer: 1500,
+            //   // }).then(() => {
+            //   // navigate(`/payment?total=${remainingAmount}`); // Redirect to payment gateway
+
+            //   // });
+            // } else {
+            //   Swal.fire({
+            //     position: "top-center",
+            //     icon: "warning",
+            //     title: data.message,
+            //     showConfirmButton: false,
+            //     timer: 1500,
+            //   });
+            // }
           } else {
             Swal.fire({
               position: "top-center",
@@ -428,7 +690,258 @@ const Passenger = () => {
             insurance_id: insuranceId,
           };
           localStorage.setItem("totalFare", JSON.stringify(formdata));
-          navigate(`/payment?total=${totalFare}`);
+          // navigate(`/payment?total=${totalFare}`);
+          const orderId = `ORDER_${new Date().getTime()}`;
+          const txnAmount = totalFare.toFixed(2);
+          // const txnAmount = "1.00";
+          const userId = userIdString.user.user_id;
+          console.log(`hello${userId}`);
+          // try {
+          var form = new FormData();
+          form.append("txnAmount", txnAmount);
+          form.append("orderId", orderId);
+          form.append("user_id", userId);
+
+          // const formdata1 = new FormData();
+          // formdata1.append("txnAmount", txnAmount);
+          // formdata1.append("orderId", orderId);
+          // formdata1.append("user_id", userId);
+          const response = await fetch(
+            "https://seatadda.co.in/auth/api/payment/initializePayment",
+            {
+              method: "POST",
+              // headers: { "Content-Type": "application/json" },
+              body: form,
+              redirect: "follow",
+            }
+          );
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server Error: ${errorText}`);
+          }
+
+          const data = await response.json();
+          console.log(data);
+          if (data.data.body?.txnToken) {
+            window.Paytm.CheckoutJS.init({
+              root: "",
+              flow: "DEFAULT",
+              data: {
+                orderId,
+                token: data.data.body.txnToken,
+                tokenType: "TXN_TOKEN",
+                amount: txnAmount,
+              },
+              // handler: {
+              //   notifyMerchant: (eventName, eventData) => {
+              //     console.log('Event:', eventName, eventData);
+              //     if (eventName === 'APPROVED') alert('Payment Successful!');
+              //     else if (eventName === 'FAILED') alert('Payment Failed!');
+              //   },
+              // },
+              merchant: {
+                redirect: false,
+              },
+              handler: {
+                transactionStatus: async function (paymentStatus) {
+                  console.log("paymentStatus => ", paymentStatus);
+                  if (paymentStatus.STATUS == "TXN_SUCCESS") {
+                    // try {
+                    const formdata = new FormData();
+                    formdata.append("orderId", paymentStatus.ORDERID);
+                    formdata.append("user_id", userIdString.user.user_id);
+
+                    const requestOptions = {
+                      method: "POST",
+                      body: formdata,
+                      redirect: "follow",
+                    };
+
+                    const response = await fetch(
+                      "https://seatadda.co.in/auth/api/payment/verifyPayment",
+                      requestOptions
+                    );
+                    console.log(response.json());
+                    if (response.ok == true) {
+                      const fetch1 = async () => {
+                        const updateWallet = fare;
+                        const myHeaders = new Headers();
+                        myHeaders.append(
+                          "Authorization",
+                          userIdString.access_token.split("Bearer")[1]
+                        );
+                        const formdata = new FormData();
+                        formdata.append("user_id", userIdString.user.user_id);
+                        formdata.append("transaction_id", id);
+                        formdata.append("transaction_type", "debit");
+                        formdata.append("amount", updateWallet);
+                        formdata.append(
+                          "message",
+                          `Ticket Booked ${From},${To}`
+                        );
+
+                        const requestOptions = {
+                          method: "POST",
+                          headers: myHeaders,
+                          body: formdata,
+                          redirect: "follow",
+                        };
+                        const response = await fetch(
+                          "https://seatadda.co.in/auth/api/update-user-wallet",
+                          requestOptions
+                        );
+                        const data = await response.json();
+
+                        if (data.status === true) {
+                          const myHeaders = new Headers();
+                          myHeaders.append(
+                            "Authorization",
+                            userIdString.access_token.split("Bearer")[1]
+                          );
+                          const passengers = selectedSeats.map(
+                            (seat, index) => ({
+                              seat_types: selectedTypes[index], // Index ke hisab se seat type ko assign karenge
+                              seat_number: selectedSeats[index], // Seat number ko assign karenge
+                              passenger_name: passDetails[index].name, // Passenger ka naam assign karenge (assume ki sirf ek passenger hai)
+                              age: passDetails[index].age, // Passenger ki umar assign karenge
+                              gender: passDetails[index].gender, // Passenger ka gender assign karenge
+                            })
+                          );
+                          const formdata = new FormData();
+                          formdata.append("user_id", userIdString.user.user_id);
+                          formdata.append(
+                            "bus_schedule_id",
+                            busData.bus_schedule_id
+                          );
+                          formdata.append("travels_name", busData.travels_name);
+                          formdata.append("service_name", busData.service_name);
+                          formdata.append("reg_no", busData.reg_no);
+                          formdata.append("fare", totalFare);
+                          formdata.append("sourse", From);
+                          formdata.append("destination", To);
+                          formdata.append(
+                            "boading_points",
+                            foundObject.boading_points
+                          );
+                          formdata.append(
+                            "bording_type",
+                            foundObject.bording_type
+                          );
+                          formdata.append("boarding_date", foundObject.date);
+                          formdata.append("boarding_time", foundObject.time);
+                          formdata.append("arrival_date", arrival.date);
+                          formdata.append("arrival_time", arrival.time);
+                          // formdata.append("seat_types", selectedTypes[0]);
+                          // formdata.append("seat_number", selectedSeats[0]);
+                          // for (let i = 0; i < passDetails.length; i++) {
+                          //     formdata.append("passenger_name",passDetails[i].name);
+                          //   }
+                          // for (let i = 0; i < passDetails.length; i++) {
+                          // formdata.append("age", passDetails[i].age);
+                          // }
+                          // for (let i = 0; i < passDetails.length; i++) {
+                          //     formdata.append("gender", passDetails[i].gender);
+                          //   }
+                          formdata.append("phone", passPhNo);
+                          formdata.append("address", address);
+                          formdata.append("city", city);
+                          formdata.append("pincode", pincode);
+                          formdata.append("state", state);
+                          formdata.append(
+                            "insuranceSelected",
+                            insuranceSelected
+                          );
+                          formdata.append("insurance_id", insuranceId);
+                          formdata.append("email", passEmail);
+                          formdata.append("GSTIN", GSTIN);
+                          formdata.append("businessName", businessName);
+                          formdata.append("businessAddress", businessAddress);
+                          formdata.append("businessEmail", businessEmail);
+                          passengers.forEach((passenger, index) => {
+                            for (const key in passenger) {
+                              formdata.append(
+                                `${key}[${index}]`,
+                                passenger[key]
+                              ); // Corrected formdata.append line
+                            }
+                          });
+                          const requestOptions = {
+                            method: "POST",
+                            headers: myHeaders,
+                            body: formdata,
+                            redirect: "follow",
+                          };
+                          const response = await fetch(
+                            "https://seatadda.co.in/auth/api/bus-booking",
+                            requestOptions
+                          );
+                          //   .then((response) => response.text())
+                          //   .then((result) => if(result.status=='false'){
+                          //   })
+                          //   .catch((error) => console.error(error));
+                          const data = await response.json();
+                          if (data.status === true) {
+                            Swal.fire({
+                              position: "top-center",
+                              icon: "success",
+                              title: data.message,
+                              showConfirmButton: false,
+                              timer: 1500,
+                            }).then(() => {
+                              navigate("/bookings");
+                            });
+                          } else {
+                            Swal.fire({
+                              position: "top-center",
+                              icon: "warning",
+                              title: data.message,
+                              showConfirmButton: false,
+                              timer: 1500,
+                            });
+                          }
+                        } else {
+                          Swal.fire({
+                            position: "top-center",
+                            icon: "warning",
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 1500,
+                          });
+                        }
+                      };
+                      fetch1();
+                    }
+                    // } catch {
+                    //   console.error("error");
+                    // }
+                  }
+
+                  // Close the popup after receiving payment status
+                  window.Paytm.CheckoutJS.close();
+                },
+                notifyMerchant: function (eventName, data) {
+                  console.log("notifyMerchant handler function called");
+                  console.log("eventName => ", eventName);
+                  console.log("data => ", data);
+                  if (eventName === "APP_CLOSED") {
+                    alert("Pop-up closed");
+                  }
+                },
+              },
+            })
+              .then(() => window.Paytm.CheckoutJS.invoke())
+              .catch((error) =>
+                console.error("Error in Paytm Checkout:", error)
+              );
+          } else {
+            console.error("Token generation failed:", data);
+            alert("Failed to generate transaction token. Try again.");
+          }
+          // } catch (error) {
+          //   console.error("Error:", error);
+          //   alert("Error initiating payment. Check console for details.");
+          // }
         }
       }
     });
@@ -451,7 +964,7 @@ const Passenger = () => {
     businessEmail,
     businessAddress
   ) => {
-    console.log(address);
+    // console.log(address);
     setGSTIN(GSTIN);
     setBusinessName(businessName);
     setBusinessEmail(businessEmail);
@@ -466,7 +979,7 @@ const Passenger = () => {
     setInsuranceId(insuranceId);
   };
   const storeInsurance = (insurancevalue) => {
-    console.log(insurancevalue);
+    // console.log(insurancevalue);
     setInsurance(insurancevalue);
   };
   const termAndCondition = (termAndCondition) => {
@@ -507,8 +1020,24 @@ const Passenger = () => {
       setIsSuccess(false);
     }
     setCouponData(data);
-    console.log(couponData);
+    // console.log(couponData);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://seatadda.co.in/api/coupon-code-list"
+        );
+        const data = await response.json();
+        setCuppon(data.date);
+      } catch (error) {
+        console.error("Error fetching coupon codes:", error);
+      }
+    };
+
+    fetchData();
+  }, [Cupon]);
+  // console.log(Cupon);
   const proceedColor = isdisable
     ? "bg-gray-100 text-gray-500 cursor-not-allowed"
     : "bg-primarycolors-red/90 hover:bg-primarycolors-red text-primarycolors-white !important";
@@ -650,11 +1179,38 @@ const Passenger = () => {
                         </button>
                       </span>
                     </div>
-                    {/* {isSuccess && (
+                    {Cupon != undefined ? (
+                      <div className="bg-white p-4 rounded-md shadow-lg">
+                        {Cupon.map((data, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center my-2 py-2"
+                          >
+                            <input
+                              type="checkbox"
+                              className="custom-checkbox mr-2"
+                              id={`insurancebox-${index}`}
+                              name="insurancebox"
+                              value="true"
+                            />
+                            <label
+                              htmlFor={`insurancebox-${index}`}
+                              className="text-sm cursor-pointer"
+                            >
+                              {data.coupon_code}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
+                    {isSuccess && (
                       <span className="absolute right-2 top-2 text-green-500 animate-bounce">
                         ✔️ hhhhhhhhh
                       </span>
-                    )} */}
+                    )}
                     {isSuccess && (
                       <p
                         className="mt-2 text-sm animate-fadeIn"
@@ -663,14 +1219,14 @@ const Passenger = () => {
                         ✔️ Coupon applied successfully!
                       </p>
                     )}
-                    {!isSuccess && (
+                    {/* {!isSuccess && (
                       <p
                         className="mt-2 text-sm animate-fadeIn"
                         style={{ color: "red" }}
                       >
                         Coupon code is not valid
                       </p>
-                    )}
+                    )} */}
                   </div>
 
                   <hr className="my-2 border-dashed" />

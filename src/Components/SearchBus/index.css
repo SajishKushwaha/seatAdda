@@ -19,6 +19,17 @@
 .boradingPoint {
   text-align: start;
 }
+.boradingPoint .react-select__control {
+  border: 2px solid red !important; /* Set border color to red */
+}
+
+.boradingPoint .react-select__control:hover {
+  border-color: red; /* Change border color on hover */
+}
+
+.boradingPoint .react-select__single-value {
+  color: red; /* Change selected value color */
+}
 .boradingPoint {
   border-style: none;
   border-width: 0px;

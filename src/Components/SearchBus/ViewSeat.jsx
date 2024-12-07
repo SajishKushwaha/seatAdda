@@ -16,6 +16,31 @@ import { updateBookingDetails } from "../../Redux/BookBus/action";
 import { useNavigate } from "react-router-dom";
 import VerticalSleeper from "./VerticalSleeper";
 import "./index.css";
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    borderColor: "red",
+    "&:hover": {
+      borderColor: "red",
+    },
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: "red",
+
+    backgroundColor: "transparent",
+  }),
+
+  menu: (provided) => ({
+    ...provided,
+    color: "red",
+  }),
+  option: (provided, { isFocused }) => ({
+    ...provided,
+    color: isFocused ? "white" : "red",
+    backgroundColor: isFocused ? "#ef4444" : "white",
+  }),
+};
 const ViewSeat = ({
   seat_json,
   routeDetails,
@@ -27,7 +52,6 @@ const ViewSeat = ({
   date,
   setIsModalOpen,
 }) => {
-  console.log(seat_json);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectBoardingPoint, setSelectBoardingPoint] = useState(null);
@@ -70,7 +94,11 @@ const ViewSeat = ({
           item.boading_points.slice(1) +
           " " +
           item.city.charAt(0).toUpperCase() +
-          item.city.slice(1),
+          item.city.slice(1) +
+          "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
+          // formatDate(item.date) +
+          // " " +
+          convertTo12HourFormat(item.time),
       }));
     setBoardingOptions(boardingPoints);
   }, [routeDetails, setBoardingOptions]); // Include setOptions as a dependency
@@ -84,10 +112,11 @@ const ViewSeat = ({
           item.boading_points.slice(1) +
           " " +
           item.city.charAt(0).toUpperCase() +
-          item.city.slice(1),
-        // formatDate(item.date) +
-        // " " +
-        // convertTo12HourFormat(item.time),
+          item.city.slice(1) +
+          "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
+          // formatDate(item.date) +
+          // " " +
+          convertTo12HourFormat(item.time),
       }));
     setdropingOptions(droppingPoints);
   }, [routeDetails, setdropingOptions]);
@@ -288,6 +317,7 @@ const ViewSeat = ({
     } else {
       selectedRows = totalRows;
     }
+
     // console.log(selectedRows);
     let match = [];
     return selectedRows.map((row, rowIndex) => {
@@ -391,6 +421,7 @@ const ViewSeat = ({
       //         ))}
       //     </div>
       // );
+
       return (
         <tr key={rowIndex}>
           {seatsToRender.map((seat, index) =>
@@ -692,16 +723,16 @@ const ViewSeat = ({
       </div>
       <div>
         {selectedSeats.length === 0 && (
-          <div className="flex flex-col  h-full justify-evenly items-center ">
+          <div className="flex flex-col  h-full justify-evenly  ">
             <div className="mx-auto my-3">
               <div style={{ fontWeight: "bold" }}>SEAT LEGEND</div>
-              <div className="flex flex-wrap justify-start md:justify-center items-center">
+              <div className="flex flex-col flex-wrap justify-start md:justify-center items-center">
                 <div className="p-3">
                   <MdCheckBoxOutlineBlank className="bg-primarycolors-gray text-xl" />
                   &nbsp;&nbsp;
                   <span>Available</span>
                 </div>
-                <div className="p-3">
+                <div className="p-3 pl-8">
                   <MdCheckBoxOutlineBlank className="bg-primarycolors-red outline-none text-xl" />
                   &nbsp;&nbsp;
                   <span>Unavailable</span>
@@ -817,6 +848,7 @@ const ViewSeat = ({
                     }}
                     placeholder="Search Boarding Point"
                     options={boardingoptions}
+                    styles={customStyles}
                   />
                 </div>
                 {isOpenDrop && (
@@ -829,6 +861,7 @@ const ViewSeat = ({
                       }
                       placeholder="Search Droping Point"
                       options={dropingoptions}
+                      styles={customStyles}
                     />
                   </div>
                 )}
